@@ -1,0 +1,98 @@
+{
+  "id": "basic_qualification",
+  "season": "season-zero",
+  "title": "Basic Qualification",
+  "event_type": "qualification",
+  "difficulty": 1,
+  "timebox_minutes": 15,
+  "expected_seconds": { "min": 180, "max": 2700 },
+  "par_seconds": 420,
+  "time_points": 5,
+  "xp_base": 200,
+  "summary": "Enlist, verify your local Gemma4 field AI, catch one bad model claim, and file your first mission artifact.",
+  "skills": ["Cursor cockpit basics", "local model verification", "submission workflow"],
+  "answer_fields": [
+    { "key": "gemma_verified", "type": "boolean", "prompt": "Did `cybertf verify-model` confirm a real local Gemma model? (true/false)" },
+    { "key": "relay_station_count", "type": "string", "prompt": "How many active relay stations does the HALCYON grid roster list?" },
+    { "key": "model_claim_verdict", "type": "string", "prompt": "Is the archived field-AI advisory's claim about the grid true or false?" },
+    { "key": "claim_correction", "type": "string", "prompt": "Which sector actually hosts the standby relay?" },
+    { "key": "verification_note", "type": "string", "prompt": "2-3 sentences: what did the advisory get wrong, and how did you verify it?" },
+    { "key": "evidence", "type": "list", "prompt": "Workspace file paths that support your answers." }
+  ],
+  "checks": [
+    {
+      "id": "gemma_verified",
+      "type": "field_equals",
+      "field": "gemma_verified",
+      "value": true,
+      "points": 10,
+      "dimension": "tool_reliability",
+      "label": "Local field AI verified with cybertf verify-model"
+    },
+    {
+      "id": "relay_station_count",
+      "type": "hash_match_any",
+      "field": "relay_station_count",
+      "normalize": "loose",
+      "sha256_any": [
+        "572a218340cc9e3c6d73e3c7b03bab99de21acccf033f67f9efa0889ce4f44e9",
+        "c3ccd2b178e5e8e02e25eba387465458e740db3e5fab388b5d1b0fe5487a71ed",
+        "64eae3809567123f9932fd4b56034a4e578ff216fe986da2011dc44e40ef455c",
+        "111f4af59c5e8ef95b84a626c87448e40622b78f52696430e0474741b12da350"
+      ],
+      "points": 15,
+      "dimension": "mission_completion",
+      "label": "Correct relay station count from the roster"
+    },
+    {
+      "id": "model_claim_verdict",
+      "type": "hash_match",
+      "field": "model_claim_verdict",
+      "normalize": "loose",
+      "sha256": "252e10a674bfbd85663d179de9495d5abee46ed04659b4ad8956a1b197225f35",
+      "points": 15,
+      "dimension": "hallucination_resistance",
+      "label": "Bad field-AI advisory correctly identified as false"
+    },
+    {
+      "id": "claim_correction",
+      "type": "hash_match_any",
+      "field": "claim_correction",
+      "normalize": "loose",
+      "sha256_any": [
+        "b7dad853fb1d3492cfe1e2044d087fdb6a890faaa9396ae6533b5fae1db087b3",
+        "46216cdfce1a53506105f93705e4b0e12cd982887f85c240d8cee8595fd8ff15",
+        "328d1c5dd5801bce53f203c524e18171d46deb0527258255461e0c62a7d757b7",
+        "e6bef75a49f2ad33304aa3137c07cb806eff2612b18068a68130060df0103855"
+      ],
+      "points": 15,
+      "dimension": "recovery_from_bad_ai_guidance",
+      "label": "Advisory corrected with the real standby-relay sector"
+    },
+    {
+      "id": "evidence_roster",
+      "type": "evidence_includes",
+      "path": "relay_roster",
+      "points": 10,
+      "dimension": "evidence_discipline",
+      "label": "Roster file cited as evidence"
+    },
+    {
+      "id": "asked_field_ai",
+      "type": "ask_used",
+      "min_asks": 1,
+      "points": 10,
+      "dimension": "prompt_discipline",
+      "label": "Consulted the local field AI at least once"
+    },
+    {
+      "id": "verification_note",
+      "type": "field_min_length",
+      "field": "verification_note",
+      "min_length": 80,
+      "points": 10,
+      "dimension": "communication_quality",
+      "label": "Substantive verification note filed"
+    }
+  ]
+}

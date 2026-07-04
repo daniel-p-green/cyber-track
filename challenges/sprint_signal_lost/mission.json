@@ -1,0 +1,127 @@
+{
+  "id": "sprint_signal_lost",
+  "season": "season-zero",
+  "title": "Signal Lost",
+  "event_type": "sprint",
+  "difficulty": 2,
+  "timebox_minutes": 10,
+  "expected_seconds": { "min": 120, "max": 2400 },
+  "par_seconds": 300,
+  "time_points": 5,
+  "xp_base": 300,
+  "summary": "An edge sensor grid is dropping packets after a config push. Find the real root cause before you trust the model's first guess.",
+  "skills": ["log triage", "evidence discipline", "model verification"],
+  "answer_fields": [
+    { "key": "root_cause_parameter", "type": "string", "prompt": "Which configuration parameter caused the packet loss?" },
+    { "key": "outage_start_utc", "type": "string", "prompt": "When (UTC, HH:MM) did the packet loss begin?" },
+    { "key": "false_lead", "type": "string", "prompt": "What was the tempting false lead you ruled out?" },
+    { "key": "ops_note", "type": "string", "prompt": "3-5 sentence operational note: root cause, evidence, fix, and what you ruled out." },
+    { "key": "evidence", "type": "list", "prompt": "Workspace file paths that support your findings." }
+  ],
+  "checks": [
+    {
+      "id": "root_cause_parameter",
+      "type": "hash_match_any",
+      "field": "root_cause_parameter",
+      "normalize": "loose",
+      "sha256_any": [
+        "f0253252a5b5f5cc241f6fdff49b7882e112662257475b1865a46cbf5670b6aa",
+        "a73292b407ff291b3e538c8db586cb2f45b3fe8b59da4ded417988341823c6ee",
+        "b62fa1f748cb601c992b87e2f127378defa35e1eafd07a748491783057188717",
+        "a5f7af2e182b86b16de222987b3148b7ca3e5bd31823a88d827292a7c66d3e9f"
+      ],
+      "points": 20,
+      "dimension": "mission_completion",
+      "label": "Root-cause parameter identified"
+    },
+    {
+      "id": "config_patched",
+      "type": "file_contains",
+      "file": "config/uplink.conf",
+      "regex": "^\\s*link_mtu\\s+1500\\b",
+      "points": 15,
+      "dimension": "mission_completion",
+      "label": "Config patched back to a safe value"
+    },
+    {
+      "id": "bad_value_removed",
+      "type": "file_excludes",
+      "file": "config/uplink.conf",
+      "regex": "^\\s*link_mtu\\s+9000\\b",
+      "points": 5,
+      "dimension": "terminal_recovery",
+      "label": "Faulty value no longer present in live config"
+    },
+    {
+      "id": "outage_start_utc",
+      "type": "hash_match_any",
+      "field": "outage_start_utc",
+      "normalize": "loose",
+      "sha256_any": [
+        "83ab578ac989cce41921301377bfebf30f582e57f34d5c180bd834e79c167a56",
+        "3cc290868607cd3cea200975afd3d63dcf9696c392592f45a5d0b6c1f8aa0049",
+        "3f59cc93dcb9f8252b1e5a8212f9fa57e4c6dc30e84482e79fd9e38f54f690d8",
+        "74c9d30fa15593cbe098699a52bd70be00aa6f7ddee7ac3712061ba9e951e86f",
+        "2f7a13c30d9606c092c14a2cf4693c1a93e48757454c5a8ec650e890bb929271"
+      ],
+      "points": 10,
+      "dimension": "evidence_discipline",
+      "label": "Outage start time pinned from the gateway log"
+    },
+    {
+      "id": "false_lead",
+      "type": "hash_match_any",
+      "field": "false_lead",
+      "normalize": "loose",
+      "sha256_any": [
+        "b8861fad4cc975b5c0eeafd85b8a3f4c8a747315272ac9798051f43bd0224fd0",
+        "373875434c5407f4889d4d5265ff2985c9998be11ff96db03cefa2ef0274c313",
+        "83bdb18035e54f1c0f54ebe3e286d48a174108d810731fbee181b89234620c09",
+        "9efce0fe7c46c10e340c95e001cef84886b0f0428946ba43a1ca860f9aa3322d",
+        "32b72d85ab113f543e8d06b3de5d130a216e9d1865cda66ced0b8e8f2148aa29",
+        "49b44aafa22cfe0cb7612d946e963523fff51bd40a89bac08acd6d7b5863ce97",
+        "86d5ee424f6fa57a6cbbca86ccbc9313f67a34ee889d10302575fb78a247eb6a",
+        "48bb2c554ec73737d8b2d477b2e0ac36606796833b7effc0d8f793aaaa093e77",
+        "ec5b994fac148e0799bb6b0e550845ac988639eeee0ed414f43781042ca3eb2b",
+        "a174081dec80a944f6050b7f79a6ed6466b8285d3047ff8ef9d08d05d6a97018",
+        "3172834d1418c9aee560b3fb23b549b07d591632db1b2406e72a36e24cde950a"
+      ],
+      "points": 15,
+      "dimension": "recovery_from_bad_ai_guidance",
+      "label": "False lead identified and ruled out"
+    },
+    {
+      "id": "evidence_gateway_log",
+      "type": "evidence_includes",
+      "path": "gateway.log",
+      "points": 5,
+      "dimension": "evidence_discipline",
+      "label": "Gateway log cited as evidence"
+    },
+    {
+      "id": "evidence_maintenance_note",
+      "type": "evidence_includes",
+      "path": "maintenance_note",
+      "points": 5,
+      "dimension": "evidence_discipline",
+      "label": "Maintenance note cited as evidence"
+    },
+    {
+      "id": "asked_field_ai",
+      "type": "ask_used",
+      "min_asks": 1,
+      "points": 5,
+      "dimension": "prompt_discipline",
+      "label": "Consulted the local field AI at least once"
+    },
+    {
+      "id": "ops_note",
+      "type": "field_min_length",
+      "field": "ops_note",
+      "min_length": 120,
+      "points": 10,
+      "dimension": "communication_quality",
+      "label": "Operational note filed with root cause, evidence, and fix"
+    }
+  ]
+}

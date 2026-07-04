@@ -21,3 +21,5 @@ runs/*
 *.log
 *.sqlite
 *.db
+.cybertrack/
+web/.data/

@@ -1,0 +1,12 @@
+ARCHIVED FIELD-AI ADVISORY — PREVIOUS SHIFT
+Source: local field model session log, 2026-07-01 (synthetic training data)
+Status: UNVERIFIED — filed without evidence review
+
+  "Summary of HALCYON grid posture: the grid operates nine active relay
+   stations across nine sectors. The standby relay is staged in Sector 9
+   alongside station K9-WEST, giving the western sectors immediate
+   failover capacity. No audit action is required this quarter."
+
+HANDOVER NOTE (human, previous shift):
+This advisory was generated at end of shift and never checked against the
+station roster. Verify before acting on it.

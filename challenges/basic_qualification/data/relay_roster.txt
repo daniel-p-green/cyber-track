@@ -1,0 +1,28 @@
+HALCYON RELAY GRID — STATION ROSTER
+Synthetic training data. Not a real network.
+Last audit: 2026-06-28
+
+ACTIVE RELAY STATIONS (7):
+
+  ID          SECTOR    ROLE        STATUS
+  K1-NORTH    1         primary     active
+  K2-NORTH    2         primary     active
+  K3-CENTRAL  3         primary     active
+  K4-EAST     4         primary     active
+  K5-EAST     5         primary     active
+  K6-SOUTH    6         primary     active
+  K7-SOUTH    7         primary     active
+
+STANDBY ASSETS:
+
+  K4-STANDBY  4         standby relay   cold-ready
+  (Standby relay is staged in Sector 4, co-located with K4-EAST.)
+
+DECOMMISSIONED (do not count as active):
+
+  K8-WEST     8         retired 2025-11-02
+  K9-WEST     9         retired 2025-11-02
+
+NOTES:
+- Sector 9 has no staffed assets since the K9-WEST retirement.
+- Coverage for Sectors 8-9 is handled by K6/K7 overlap.
