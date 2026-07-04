@@ -8,6 +8,7 @@ export default function EnlistForm() {
   const router = useRouter();
   const [callsign, setCallsign] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
+  const [xUrl, setXUrl] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -21,12 +22,16 @@ export default function EnlistForm() {
       const res = await fetch("/api/operators", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ callsign: callsign.trim(), github_url: githubUrl.trim() || undefined }),
+        body: JSON.stringify({
+          callsign: callsign.trim(),
+          github_url: githubUrl.trim() || undefined,
+          x_url: xUrl.trim() || undefined,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
         setStatus("error");
-        setMessage(data.error ?? "Enlistment failed.");
+        setMessage(data.error ?? "Callsign failed.");
         return;
       }
       setStatus("success");
@@ -75,6 +80,20 @@ export default function EnlistForm() {
             autoComplete="off"
           />
         </div>
+        <div className={styles.field}>
+          <label className={`display ${styles.label}`} htmlFor="x-url">
+            X URL <span className={styles.optional}>(optional)</span>
+          </label>
+          <input
+            id="x-url"
+            type="url"
+            className={`mono ${styles.input}`}
+            value={xUrl}
+            onChange={(e) => setXUrl(e.target.value)}
+            placeholder="https://x.com/handle"
+            autoComplete="off"
+          />
+        </div>
       </div>
 
       <div className={styles.actionRow}>
@@ -83,11 +102,16 @@ export default function EnlistForm() {
           className="btn btn-primary"
           disabled={status === "loading" || !callsign.trim()}
         >
-          {status === "loading" ? "Enlisting…" : "Enlist →"}
+          {status === "loading" ? "Locking…" : "Claim Callsign →"}
         </button>
-        <button type="button" className="btn btn-disabled" disabled title="Coming in a future season">
-          🔒 Cursor Identity — coming soon
-        </button>
+        <a
+          href="https://cursor.com/origin?ref=CyberTrack"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.originLink}
+        >
+          Cursor Origin · Coming Soon
+        </a>
       </div>
 
       {message && (

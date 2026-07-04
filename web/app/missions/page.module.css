@@ -1,84 +1,208 @@
-.root {
-  padding: 48px 0;
-}
+.root { padding: 48px 0 64px; }
+
 .header {
-  margin-bottom: 48px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
 }
 .title {
-  font-size: 48px;
+  font-size: clamp(36px, 5vw, 52px);
   font-weight: 800;
-  color: var(--text);
-  margin-bottom: 12px;
+  line-height: 1;
+  margin-bottom: 10px;
 }
 .subtitle {
   color: var(--muted);
   font-size: 15px;
-  max-width: 560px;
+  line-height: 1.7;
+  max-width: 58ch;
 }
-.group {
-  margin-bottom: 48px;
-}
-.missionGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-}
-.card {
-  padding: 24px;
+.edgeStatus {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  text-decoration: none;
-  transition: border-color 140ms ease-out;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
 }
-.card:hover {
-  border-color: var(--ice);
-  text-decoration: none;
+.edgeNote {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
 }
-.cardTop {
+
+/* Progression rail */
+.railPanel {
+  padding: 20px 12px 16px;
+  margin-bottom: 44px;
+}
+.rail {
+  display: flex;
+  overflow-x: auto;
+}
+.railStop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 104px;
+  padding: 0 6px;
+  text-decoration: none;
+  text-align: center;
+}
+.railStop:hover { text-decoration: none; }
+.railStop:hover .railLabel { color: var(--ice); }
+.railLine {
+  position: absolute;
+  top: 19px;
+  right: calc(50% + 26px);
+  width: calc(100% - 52px);
+  border-top: 1.5px dashed var(--line-strong);
+}
+.railLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1.15;
+  transition: color 120ms ease-out;
+}
+
+/* Groups */
+.group { margin-bottom: 44px; }
+.missionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* Dossier cards */
+.dossier {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+}
+.dossierHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+}
+.dossierIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  color: var(--signal);
+  background: var(--panel-2);
+}
+.dossierId {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 .pips {
-  font-size: 14px;
-  color: var(--amber);
+  font-size: 13px;
   letter-spacing: 2px;
 }
-.cardTitle {
+.pips { color: var(--amber); }
+
+.dossierTitle {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text);
-  line-height: 1.2;
+  line-height: 1.1;
 }
-.cardSummary {
+
+.fieldLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
   color: var(--muted);
-  font-size: 13px;
-  line-height: 1.6;
-  flex: 1;
+  margin-bottom: 4px;
 }
-.skills {
+
+.objective p {
+  color: var(--text);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 0;
+}
+.metaGrid span:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+}
+.constraintVal { color: var(--ice); font-size: 12px; }
+
+.evidence ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.evidence li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.dimChips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
-.skill {
-  font-size: 10px;
-}
-.cardMeta {
+
+.dossierFoot {
   display: flex;
-  gap: 16px;
   align-items: center;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
-  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 6px;
 }
-.flyLink {
-  margin-left: auto;
+.boardLink {
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--ice);
+  color: var(--muted);
+}
+.boardLink:hover { color: var(--ice); }
+
+@media (max-width: 900px) {
+  .header { flex-direction: column; align-items: flex-start; }
+  .edgeStatus { align-items: flex-start; }
+  .missionGrid { grid-template-columns: 1fr; }
 }

@@ -19,10 +19,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CyberTrack — Offline AI Operator Readiness",
+  title: "CyberTrack — Train decision quality when the cloud goes dark",
   description:
-    "CyberTrack is a mission league for AI operators. Complete timed missions in Cursor using only local Gemma4, then climb the Season Zero scoreboard.",
+    "CyberTrack is a mission arena for AI operators. Complete timed missions in Cursor using only local Gemma4, then climb the Season Zero scoreboard.",
 };
+
+const THEME_BOOT = `(function(){try{var t=localStorage.getItem("cybertrack-theme");if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t}}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -30,8 +32,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <style>{`
           :root {
             --font-display: var(--font-barlow), "Arial Narrow", sans-serif;

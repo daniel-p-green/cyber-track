@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAllOperators, getAllSubmissions, Submission, Operator } from "@/lib/store";
+import { getAllOperators, getAllSubmissions, Operator } from "@/lib/store";
 import { getRankForXP } from "@/lib/ranks";
 import { MISSIONS } from "@/lib/missions";
 

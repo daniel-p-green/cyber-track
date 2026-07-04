@@ -1,195 +1,151 @@
 import Link from "next/link";
 import EnlistForm from "../components/EnlistForm";
+import { RANKS } from "@/lib/ranks";
+import {
+  IconOffline,
+  IconTerminal,
+  IconExternal,
+  RankChevrons,
+} from "../components/svg";
 import styles from "./page.module.css";
 
-const STEPS = [
+interface WizardStep {
+  id: string;
+  title: string;
+  body: React.ReactNode;
+  action?: "callsign";
+}
+
+function Code({ children }: { children: React.ReactNode }) {
+  return (
+    <div className={`panel-2 mono ${styles.code}`}>
+      {children}
+    </div>
+  );
+}
+
+const STEPS: WizardStep[] = [
   {
     id: "01",
-    title: "Enlist — Claim Your Callsign",
-    status: "start",
-    content: (
+    title: "Install Cursor — the cockpit",
+    body: (
       <>
         <p>
-          Choose a callsign: 3–20 characters, uppercase letters, digits, or hyphens.
-          This is your permanent identity on the Season Zero scoreboard.
+          Every CyberTrack mission is completed inside a Cursor workspace: reading
+          evidence, patching configs, talking to your field AI from the integrated
+          terminal. If you already use Cursor, you already have the cockpit.
         </p>
-        <p>
-          No email. No password. Your callsign is your handle.
-          Use something memorable — you can't change it once you've submitted a run.
-        </p>
+        <div className={styles.linkRow}>
+          <a href="https://cursor.com?ref=CyberTrack" target="_blank" rel="noopener noreferrer">
+            Download Cursor <IconExternal size={11} />
+          </a>
+          <a href="https://cursor.com/students?ref=CyberTrack" target="_blank" rel="noopener noreferrer">
+            Cursor for Students <IconExternal size={11} />
+          </a>
+        </div>
       </>
     ),
-    action: "enlist",
   },
   {
     id: "02",
-    title: "Open the Cursor Workspace",
-    status: "cursor",
-    content: (
+    title: "Install Ollama — the local model runtime",
+    body: (
       <>
         <p>
-          Clone the CyberTrack mission workspace and open it in Cursor.
-          Everything you need for every mission is already there.
+          Ollama runs Gemma4 entirely on your machine. No API key, no account,
+          no cloud dependency — which is the point.
         </p>
-        <div className="panel-2" style={{ padding: "16px", borderRadius: "6px", margin: "12px 0" }}>
-          <code className="mono" style={{ fontSize: "13px", color: "var(--signal)" }}>
-            git clone https://github.com/cybertrack-labs/missions.git
-          </code>
+        <div className={styles.linkRow}>
+          <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer">
+            Install Ollama <IconExternal size={11} />
+          </a>
         </div>
-        <p>
-          Do not use a cloud AI inside this workspace. Your only field AI is the local Gemma4
-          model running on your machine via Ollama. That constraint is the whole point.
-        </p>
       </>
     ),
   },
   {
     id: "03",
-    title: "Verify Your Local Gemma4",
-    status: "verify",
-    content: (
+    title: "Pull and verify local Gemma4",
+    body: (
       <>
+        <p>Pull the model, then prove the local path works before any mission:</p>
+        <Code>
+          <div><span className={styles.prompt}>$</span> <span className="signal">ollama pull</span> gemma4</div>
+          <div><span className={styles.prompt}>$</span> <span className="signal">cybertf verify-model</span></div>
+        </Code>
         <p>
-          Before your first mission, confirm your local AI is running and connected.
-          Open the integrated terminal in Cursor and run:
+          You should see your model listed, a latency reading, and{" "}
+          <code className={`mono ${styles.inline}`}>FIELD AI ONLINE</code> at{" "}
+          <code className={`mono ${styles.inline}`}>localhost:11434</code>. If that
+          badge is green, you are mission-capable offline.
         </p>
-        <div className="panel-2" style={{ padding: "16px", borderRadius: "6px", margin: "12px 0" }}>
-          <code className="mono" style={{ fontSize: "13px", color: "var(--signal)" }}>
-            cybertf verify-model
-          </code>
-        </div>
-        <p>
-          You should see your Gemma4 model listed, a latency reading, and confirmation that
-          it is running at <code className="mono">localhost:11434</code>.
-          If not, start Ollama and pull the model:
-        </p>
-        <div className="panel-2" style={{ padding: "16px", borderRadius: "6px", margin: "12px 0" }}>
-          <div className="mono" style={{ fontSize: "13px", display: "flex", flexDirection: "column", gap: "6px" }}>
-            <div><span style={{ color: "var(--line)" }}>$</span> <span style={{ color: "var(--signal)" }}>ollama pull</span> <span style={{ color: "var(--ice)" }}>gemma4:latest</span></div>
-            <div><span style={{ color: "var(--line)" }}>$</span> <span style={{ color: "var(--signal)" }}>ollama serve</span></div>
-          </div>
-        </div>
       </>
     ),
   },
   {
     id: "04",
-    title: "Run the Basic Qualification Mission",
-    status: "run",
-    content: (
+    title: "Open the CyberTrack workspace in Cursor",
+    body: (
       <>
         <p>
-          Start the qualification mission. The timer starts now.
-          You have 15 minutes.
+          Clone the mission workspace and open the folder in Cursor. Every Season
+          Zero mission — briefs, synthetic evidence, the{" "}
+          <code className={`mono ${styles.inline}`}>cybertf</code> CLI — ships in
+          the repo.
         </p>
-        <div className="panel-2" style={{ padding: "16px", borderRadius: "6px", margin: "12px 0" }}>
-          <code className="mono" style={{ fontSize: "13px", color: "var(--signal)" }}>
-            cybertf run basic_qualification
-          </code>
-        </div>
-        <p>
-          Read the brief inside the workspace. Follow the instructions.
-          Your field AI is waiting at the <code className="mono">cybertf ask</code> command.
-        </p>
+        <Code>
+          <div><span className={styles.prompt}>$</span> <span className="signal">git clone</span> https://github.com/daniel-p-green/cyber-track.git</div>
+          <div><span className={styles.prompt}>$</span> <span className="signal">cursor</span> cyber-track</div>
+        </Code>
       </>
     ),
   },
   {
     id: "05",
-    title: "Ask Gemma — Then Verify",
-    status: "ask",
-    content: (
-      <>
-        <p>
-          Use your local Gemma4 to help — but verify everything it says before you write it in your answer.
-        </p>
-        <div className="panel-2" style={{ padding: "16px", borderRadius: "6px", margin: "12px 0" }}>
-          <code className="mono" style={{ fontSize: "13px" }}>
-            <span style={{ color: "var(--signal)" }}>cybertf ask</span>{" "}
-            <span style={{ color: "var(--amber)" }}>&quot;What does the model claim about the sensor error?&quot;</span>
-          </code>
-        </div>
-        <p>
-          The qualification mission includes one bad claim from the model.
-          Your job is to catch it using the evidence in the workspace — not to trust
-          the model and copy its answer.
-        </p>
-        <p>
-          <strong style={{ color: "var(--amber)" }}>This is the core skill CyberTrack measures:</strong>{" "}
-          knowing when to trust your AI, and when to override it.
-        </p>
-      </>
+    title: "Claim your callsign",
+    body: (
+      <p>
+        Your callsign is your arena identity — 3 to 20 characters, no email, no
+        password. GitHub and X links are optional and appear on your operator
+        record.
+      </p>
     ),
+    action: "callsign",
   },
   {
     id: "06",
-    title: "Submit Your Answers",
-    status: "submit",
-    content: (
+    title: "Fly Basic Qualification and submit evidence",
+    body: (
       <>
         <p>
-          When you have completed the mission, submit your answer file:
+          Start the first mission. The timer arms immediately — 15 minutes. The
+          brief includes one deliberately bad model claim; your job is to catch it
+          with evidence, not to copy the model&apos;s answer.
         </p>
-        <div className="panel-2" style={{ padding: "16px", borderRadius: "6px", margin: "12px 0" }}>
-          <div className="mono" style={{ fontSize: "13px", display: "flex", flexDirection: "column", gap: "6px" }}>
-            <div><span style={{ color: "var(--signal)" }}>cybertf submit</span> <span style={{ color: "var(--ice)" }}>basic_qualification answer.json</span></div>
-            <div><span style={{ color: "var(--signal)" }}>cybertf report</span> <span style={{ color: "var(--muted)" }}>&lt;run_id&gt;</span></div>
-          </div>
-        </div>
+        <Code>
+          <div><span className={styles.prompt}>$</span> <span className="signal">cybertf run</span> basic_qualification</div>
+          <div><span className={styles.prompt}>$</span> <span className="signal">cybertf ask</span> <span className="amber">&quot;What does the advisory claim?&quot;</span></div>
+          <div><span className={styles.prompt}>$</span> <span className="signal">cybertf submit</span> basic_qualification answer.json</div>
+          <div><span className={styles.prompt}>$</span> <span className="signal">cybertf publish</span> &lt;run_id&gt;</div>
+        </Code>
         <p>
-          The <code className="mono">submit</code> command scores your run deterministically.
-          The <code className="mono">report</code> command writes your after-action review.
-          Read it carefully — the AAR is how you improve.
+          <code className={`mono ${styles.inline}`}>submit</code> scores your run
+          deterministically and writes your after-action report.{" "}
+          <code className={`mono ${styles.inline}`}>publish</code> posts the score
+          to this arena. Read the AAR — that is how you improve.
         </p>
       </>
     ),
   },
-  {
-    id: "07",
-    title: "Read Your AAR — Then Publish",
-    status: "aar",
-    content: (
-      <>
-        <p>
-          Your after-action report (AAR) shows exactly what you got right and wrong, dimension by dimension.
-          Scores are <strong>training feedback</strong>, not rankings of your worth.
-        </p>
-        <p>
-          When you are ready to post your score to the arena scoreboard, publish it:
-        </p>
-        <div className="panel-2" style={{ padding: "16px", borderRadius: "6px", margin: "12px 0" }}>
-          <code className="mono" style={{ fontSize: "13px" }}>
-            <span style={{ color: "var(--signal)" }}>cybertf publish</span>{" "}
-            <span style={{ color: "var(--muted)" }}>&lt;run_id&gt;</span>
-          </code>
-        </div>
-        <p>
-          Your score will appear on the scoreboard. If you are promoted, you will see it here.
-        </p>
-      </>
-    ),
-  },
-  {
-    id: "08",
-    title: "Check Your Promotion + Climb Season Zero",
-    status: "promoted",
-    content: (
-      <>
-        <p>
-          Visit your service record to see your rank, XP total, and mission history.
-          Then take on the Sprint, Field, Relay, and Marathon missions to climb Season Zero.
-        </p>
-        <p>
-          The rank ladder:
-          {" "}<strong style={{ color: "var(--signal)" }}>Recruit → Operator → Specialist → Sentinel → Warden → Commander → Field Marshal</strong>.
-        </p>
-        <p>
-          Speed matters a little. Correctness matters a lot. Suspicious times get flagged and
-          excluded from podium positions. The arena is watching.
-        </p>
-      </>
-    ),
-  },
+];
+
+const QUICK_REF = [
+  { cmd: "cybertf verify-model", desc: "Prove local Gemma4 is online" },
+  { cmd: "cybertf run <id>", desc: "Start a mission (arms timer)" },
+  { cmd: "cybertf ask \"...\"", desc: "Query the local field AI" },
+  { cmd: "cybertf submit <id> answer.json", desc: "Score the run" },
+  { cmd: "cybertf report <run_id>", desc: "Generate the AAR" },
+  { cmd: "cybertf publish <run_id>", desc: "Post score to the arena" },
 ];
 
 export default function QualificationPage() {
@@ -198,62 +154,64 @@ export default function QualificationPage() {
       <div className="container">
         {/* Header */}
         <div className={styles.header}>
-          <div className={`tag tag-signal`} style={{ marginBottom: "12px" }}>
-            Season Zero · Qualification
+          <div className={styles.kicker}>
+            <span className="pulse-dot" />
+            Season Zero · Start Here
           </div>
-          <h1 className={`display ${styles.title}`}>
-            Basic Qualification
-          </h1>
+          <h1 className={`display ${styles.title}`}>Basic Qualification</h1>
           <p className={styles.subtitle}>
-            Your entry point into Season Zero. Complete this mission and you are
-            on the board. Everything you need is below.
+            Six steps from zero to your first scored mission. Fifteen minutes on
+            the clock once you start.
           </p>
-          <div className={styles.missionMeta}>
-            <span className={`tag tag-signal`}>Qualification</span>
-            <span className="mono" style={{ color: "var(--amber)", fontSize: "13px" }}>⏱ 15m timebox</span>
-            <span className="mono" style={{ color: "var(--signal)", fontSize: "13px" }}>+200 XP base</span>
-            <span className="mono" style={{ color: "var(--ice)", fontSize: "13px" }}>Difficulty ▮▯▯▯▯</span>
+        </div>
+
+        {/* Constraint banner — impossible to miss */}
+        <div className={`hud-corners hud-corners-signal ${styles.constraint}`}>
+          <IconOffline size={26} className={styles.constraintIcon} />
+          <div>
+            <div className={`display ${styles.constraintTitle}`}>
+              Mission constraint: local Gemma4 only
+            </div>
+            <p>
+              Every mission runs offline. Cloud AI is out of bounds inside the
+              workspace — your only field AI is the Gemma4 model running on your own
+              machine. That constraint is the training.
+            </p>
           </div>
         </div>
 
-        {/* Steps */}
-        <div className={styles.stepsLayout}>
-          <div className={styles.stepsList}>
+        {/* Wizard + aside */}
+        <div className={styles.layout}>
+          <ol className={styles.steps}>
             {STEPS.map((step, i) => (
-              <div key={step.id} className={`panel ${styles.step}`}>
-                <div className={styles.stepHeader}>
-                  <div className={`mono ${styles.stepNum}`}>{step.id}</div>
-                  <h2 className={`display ${styles.stepTitle}`}>{step.title}</h2>
+              <li key={step.id} className={`panel ${styles.step}`}>
+                <div className={styles.stepMarker} aria-hidden>
+                  <span className={`mono ${styles.stepNum}`}>{step.id}</span>
+                  {i < STEPS.length - 1 && <span className={styles.stepLine} />}
                 </div>
-                <div className={styles.stepContent}>{step.content}</div>
-                {step.action === "enlist" && (
-                  <div className={styles.stepAction}>
-                    <EnlistForm />
-                  </div>
-                )}
-                {i < STEPS.length - 1 && (
-                  <div className={styles.stepConnector}>│</div>
-                )}
-              </div>
+                <div className={styles.stepBody}>
+                  <h2 className={`display ${styles.stepTitle}`}>{step.title}</h2>
+                  <div className={styles.stepContent}>{step.body}</div>
+                  {step.action === "callsign" && (
+                    <div className={styles.stepAction}>
+                      <EnlistForm />
+                    </div>
+                  )}
+                </div>
+              </li>
             ))}
-          </div>
+          </ol>
 
-          {/* Right: quick reference */}
-          <aside className={styles.quickRef}>
+          <aside className={styles.aside}>
             <div className={`panel ${styles.refCard}`}>
-              <div className="section-label">Quick Reference</div>
+              <div className="section-label">
+                <IconTerminal size={13} /> Command Reference
+              </div>
               <div className={styles.refList}>
-                {[
-                  { cmd: "cybertf run <id>", desc: "Start a mission" },
-                  { cmd: "cybertf ask \"...\"", desc: "Ask local Gemma4" },
-                  { cmd: "cybertf submit <id> answer.json", desc: "Score your run" },
-                  { cmd: "cybertf report <run_id>", desc: "Generate AAR" },
-                  { cmd: "cybertf publish <run_id>", desc: "Post to arena" },
-                  { cmd: "cybertf verify-model", desc: "Check Gemma4 status" },
-                ].map((item) => (
+                {QUICK_REF.map((item) => (
                   <div key={item.cmd} className={styles.refItem}>
                     <code className={`mono ${styles.refCmd}`}>{item.cmd}</code>
-                    <span className={`muted ${styles.refDesc}`}>{item.desc}</span>
+                    <span className={styles.refDesc}>{item.desc}</span>
                   </div>
                 ))}
               </div>
@@ -261,29 +219,44 @@ export default function QualificationPage() {
 
             <div className={`panel ${styles.refCard}`}>
               <div className="section-label">Rank Ladder</div>
-              {[
-                { name: "Recruit", xp: "0", glyph: "△" },
-                { name: "Operator", xp: "250", glyph: "▲" },
-                { name: "Specialist", xp: "700", glyph: "▲▲" },
-                { name: "Sentinel", xp: "1,400", glyph: "◆▲" },
-                { name: "Warden", xp: "2,400", glyph: "◆▲▲" },
-                { name: "Commander", xp: "3,800", glyph: "◆◆▲▲" },
-                { name: "Field Marshal", xp: "5,600", glyph: "◆◆◆▲▲" },
-              ].map((r) => (
+              {RANKS.map((r, i) => (
                 <div key={r.name} className={styles.rankRow}>
-                  <span className={`mono ${styles.rankGlyph}`}>{r.glyph}</span>
+                  <RankChevrons tier={i + 1} max={7} size={9} />
                   <span className={`display ${styles.rankName}`}>{r.name}</span>
-                  <span className={`mono ${styles.rankXp}`}>{r.xp} XP</span>
+                  <span className={`mono ${styles.rankXp}`}>
+                    {r.xp_min.toLocaleString()} XP
+                  </span>
                 </div>
               ))}
             </div>
 
-            <div className={styles.ruleNote}>
-              <p>Scores are <strong>training and readiness feedback only</strong> —
-              never job suitability signals, never hiring criteria.</p>
+            <div className={`panel ${styles.originCard}`}>
+              <div className="section-label">Roadmap</div>
+              <div className={`display ${styles.originTitle}`}>Cursor Origin</div>
+              <p>
+                One-tap operator identity through Cursor is on the Season One
+                roadmap. Callsigns are all you need today.
+              </p>
+              <a
+                href="https://cursor.com/origin?ref=CyberTrack"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.originLink}
+              >
+                About Cursor Origin <IconExternal size={11} />
+              </a>
             </div>
 
-            <Link href="/missions/basic_qualification" className="btn btn-outline" style={{ width: "100%", justifyContent: "center" }}>
+            <div className={styles.ruleNote}>
+              Scores are <strong>training and readiness feedback only</strong> —
+              never hiring criteria or job-suitability signals.
+            </div>
+
+            <Link
+              href="/missions/basic_qualification"
+              className="btn btn-outline"
+              style={{ width: "100%", justifyContent: "center" }}
+            >
               Full Mission Brief →
             </Link>
           </aside>

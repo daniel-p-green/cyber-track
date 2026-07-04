@@ -2,69 +2,120 @@
 
 .header {
   max-width: 700px;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
+}
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 16px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
 }
 .title {
-  font-size: 48px;
+  font-size: clamp(36px, 5vw, 52px);
   font-weight: 800;
+  line-height: 1;
   margin-bottom: 12px;
 }
 .subtitle {
   color: var(--muted);
   font-size: 15px;
   line-height: 1.7;
-  margin-bottom: 16px;
-}
-.missionMeta {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex-wrap: wrap;
 }
 
-/* ── Layout ─────────────────────────────────────────────────────────────── */
-.stepsLayout {
+/* ── Constraint banner ─────────────────────────────────────────────────── */
+.constraint {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 20px 24px;
+  margin-bottom: 40px;
+  background: color-mix(in srgb, var(--signal) 6%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--signal) 30%, transparent);
+}
+.constraintIcon {
+  color: var(--signal);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.constraintTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--signal);
+  margin-bottom: 4px;
+}
+.constraint p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+  max-width: 72ch;
+}
+
+/* ── Layout ────────────────────────────────────────────────────────────── */
+.layout {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: minmax(0, 1fr) 300px;
   gap: 32px;
   align-items: start;
 }
-.stepsList {
+
+/* Wizard steps */
+.steps {
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 .step {
-  padding: 28px;
-  position: relative;
-  margin-bottom: 0;
-  border-radius: 0;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 4px;
+  padding: 26px 26px 26px 18px;
 }
-.step:first-child { border-radius: 6px 6px 0 0; }
-.step:last-child { border-radius: 0 0 6px 6px; }
 .step + .step { border-top: none; }
 
-.stepHeader {
+.stepMarker {
+  position: relative;
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 16px;
+  flex-direction: column;
+  align-items: center;
 }
 .stepNum {
-  font-size: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 50%;
+  font-size: 12px;
   font-weight: 700;
-  color: var(--line);
-  line-height: 1;
-  min-width: 36px;
+  color: var(--signal);
+  background: var(--panel-2);
+  z-index: 1;
 }
+.stepLine {
+  position: absolute;
+  top: 38px;
+  bottom: -28px;
+  width: 0;
+  border-left: 1.5px dashed var(--line-strong);
+}
+
+.stepBody { min-width: 0; }
 .stepTitle {
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 700;
   color: var(--text);
   line-height: 1.2;
+  margin-bottom: 10px;
+  padding-top: 7px;
 }
 .stepContent {
-  padding-left: 52px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -73,19 +124,55 @@
   color: var(--muted);
   font-size: 14px;
   line-height: 1.7;
+  max-width: 65ch;
 }
-.stepAction {
-  padding-left: 52px;
-  padding-top: 16px;
+.stepAction { padding-top: 16px; }
+
+.code {
+  padding: 14px 16px;
+  font-size: 12.5px;
+  line-height: 2;
+  overflow-x: auto;
+  white-space: nowrap;
 }
-.stepConnector {
-  display: none;
+.prompt { color: var(--muted); }
+.inline {
+  font-size: 12px;
+  color: var(--ice);
+  background: var(--panel-2);
+  padding: 1px 5px;
+  border-radius: 2px;
 }
 
-/* ── Quick ref aside ────────────────────────────────────────────────────── */
-.quickRef {
+.linkRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.linkRow a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: 2px;
+}
+.linkRow a:hover {
+  border-color: var(--ice);
+  color: var(--ice);
+  text-decoration: none;
+}
+
+/* ── Aside ─────────────────────────────────────────────────────────────── */
+.aside {
   position: sticky;
-  top: 80px;
+  top: 76px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -105,17 +192,37 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 0;
+  padding: 7px 0;
   border-bottom: 1px solid var(--line);
 }
 .rankRow:last-child { border-bottom: none; }
-.rankGlyph {
-  font-size: 13px;
-  color: var(--amber);
-  min-width: 52px;
-}
 .rankName { font-size: 12px; color: var(--text); flex: 1; }
 .rankXp { font-size: 11px; color: var(--muted); }
+
+/* Cursor Origin roadmap */
+.originCard { padding: 20px; }
+.originTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.originCard p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.originLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
 
 .ruleNote {
   font-size: 12px;
@@ -123,12 +230,12 @@
   line-height: 1.6;
   padding: 12px 16px;
   border-left: 2px solid var(--signal);
-  background: rgba(61,220,151,0.04);
-  border-radius: 0 4px 4px 0;
+  background: color-mix(in srgb, var(--signal) 4%, transparent);
 }
 .ruleNote strong { color: var(--signal); font-weight: 600; }
 
 @media (max-width: 900px) {
-  .stepsLayout { grid-template-columns: 1fr; }
-  .quickRef { position: static; }
+  .layout { grid-template-columns: 1fr; }
+  .aside { position: static; }
+  .step { grid-template-columns: 44px minmax(0, 1fr); padding: 22px 18px 22px 12px; }
 }

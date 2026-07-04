@@ -1,11 +1,22 @@
 import Link from "next/link";
 import { getAllOperators, getAllSubmissions, Submission, Operator } from "@/lib/store";
-import { getRankForXP } from "@/lib/ranks";
+import { getRankForXP, RANKS } from "@/lib/ranks";
 import { MISSIONS } from "@/lib/missions";
 import { formatElapsed } from "@/lib/utils";
+import {
+  GemmaStatus,
+  RankChevrons,
+  RankPlate,
+  IconSuspicious,
+  IconOffline,
+} from "../components/svg";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
+
+function rankTier(xp: number): number {
+  return RANKS.findIndex((r) => r.name === getRankForXP(xp).name) + 1;
+}
 
 function buildGlobalEntries(ops: Operator[], subs: Submission[]) {
   return ops
@@ -14,11 +25,10 @@ function buildGlobalEntries(ops: Operator[], subs: Submission[]) {
       pos: i + 1,
       callsign: op.callsign,
       rank: op.rank,
-      glyph: getRankForXP(op.xp).glyph,
+      tier: rankTier(op.xp),
       xp: op.xp,
       missions: subs.filter((s) => s.callsign === op.callsign && !s.flags.suspicious_fast).length,
       seeded: op.seeded,
-      flags: { suspicious_fast: false, missing_telemetry: false },
     }));
 }
 
@@ -41,11 +51,10 @@ function buildSeasonEntries(ops: Operator[], subs: Submission[]) {
         pos: i + 1,
         callsign,
         rank: op?.rank ?? "Recruit",
-        glyph: getRankForXP(op?.xp ?? 0).glyph,
+        tier: rankTier(op?.xp ?? 0),
         xp,
         missions: countMap.get(callsign) ?? 0,
         seeded: op?.seeded,
-        flags: { suspicious_fast: false, missing_telemetry: false },
       };
     });
 }
@@ -65,18 +74,28 @@ function buildMissionEntries(missionId: string, ops: Operator[], subs: Submissio
         pos: sub.flags.suspicious_fast ? null : i + 1,
         callsign: sub.callsign,
         rank: op?.rank ?? "Recruit",
-        glyph: getRankForXP(op?.xp ?? 0).glyph,
+        tier: rankTier(op?.xp ?? 0),
         score: sub.total,
         maxScore: sub.max_total,
         elapsed: sub.elapsed_seconds,
         runId: sub.run_id,
         seeded: sub.seeded,
         flags: sub.flags,
+        local: sub.local_model?.simulated === false,
       };
     });
 }
 
-export default async function LeaderboardPage({
+function SeedMark({ seeded }: { seeded?: boolean }) {
+  if (!seeded) return null;
+  return (
+    <span className={styles.seedMark} title="Demo seed row — sample data, not a real run">
+      s
+    </span>
+  );
+}
+
+export default async function ArenaPage({
   searchParams,
 }: {
   searchParams: Promise<{ scope?: string; mission_id?: string }>;
@@ -90,14 +109,54 @@ export default async function LeaderboardPage({
   const globalEntries = buildGlobalEntries([...ops], subs);
   const seasonEntries = buildSeasonEntries([...ops], subs);
   const missionEntries = buildMissionEntries(missionId, ops, subs);
-
   const activeMission = MISSIONS.find((m) => m.id === missionId) ?? MISSIONS[0];
+
+  const podium = globalEntries.slice(0, 3);
 
   return (
     <div className={styles.root}>
       <div className="container">
-        <h1 className={`display ${styles.title}`}>Scoreboard</h1>
-        <p className={styles.subtitle}>Season Zero · Offline AI Operator Readiness</p>
+        {/* Header */}
+        <div className={styles.header}>
+          <div>
+            <div className={styles.kicker}>
+              <span className="pulse-dot" />
+              Season Zero Arena
+            </div>
+            <h1 className={`display ${styles.title}`}>Scoreboard</h1>
+          </div>
+          <GemmaStatus />
+        </div>
+
+        {/* Podium — global standings */}
+        {scope === "global" && podium.length >= 3 && (
+          <div className={styles.podium}>
+            {[podium[1], podium[0], podium[2]].map((entry, visualIdx) => {
+              const isFirst = visualIdx === 1;
+              return (
+                <Link
+                  key={entry.callsign}
+                  href={`/operators/${entry.callsign}`}
+                  className={`panel ${styles.podiumCard} ${isFirst ? `hud-corners hud-corners-signal ${styles.podiumFirst}` : ""}`}
+                >
+                  <span className={`mono ${styles.podiumPos}`}>
+                    {String(entry.pos).padStart(2, "0")}
+                  </span>
+                  <RankPlate letter={entry.callsign[0]} size={isFirst ? 52 : 42} />
+                  <span className={`mono ${styles.podiumCallsign}`}>
+                    {entry.callsign}
+                    <SeedMark seeded={entry.seeded} />
+                  </span>
+                  <RankChevrons tier={entry.tier} size={9} />
+                  <span className={`display ${styles.podiumRank}`}>{entry.rank}</span>
+                  <span className={`mono ${styles.podiumXp}`}>
+                    {entry.xp.toLocaleString()} XP
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        )}
 
         {/* Scope tabs */}
         <div className={styles.tabs}>
@@ -120,7 +179,7 @@ export default async function LeaderboardPage({
               href={`/leaderboard?scope=mission&mission_id=${m.id}`}
               className={`${styles.tab} ${scope === "mission" && missionId === m.id ? styles.tabActive : ""}`}
             >
-              {m.title}
+              {m.title.replace(/^(Relay|Marathon): /, "")}
             </Link>
           ))}
         </div>
@@ -134,8 +193,8 @@ export default async function LeaderboardPage({
                   <th>#</th>
                   <th>Callsign</th>
                   <th>Rank</th>
-                  <th>XP</th>
-                  <th>Missions</th>
+                  <th className={styles.right}>XP</th>
+                  <th className={styles.right}>Missions</th>
                 </tr>
               </thead>
               <tbody>
@@ -146,16 +205,16 @@ export default async function LeaderboardPage({
                       <Link href={`/operators/${entry.callsign}`} className={`mono ${styles.callsign}`}>
                         {entry.callsign}
                       </Link>
-                      {entry.seeded && (
-                        <span className="tag tag-muted" style={{ fontSize: "9px", marginLeft: "8px" }}>demo seed</span>
-                      )}
+                      <SeedMark seeded={entry.seeded} />
                     </td>
                     <td>
-                      <span className={styles.glyph}>{entry.glyph}</span>{" "}
-                      <span className={`display ${styles.rankName}`}>{entry.rank}</span>
+                      <span className={styles.rankCell}>
+                        <RankChevrons tier={entry.tier} size={8} />
+                        <span className={`display ${styles.rankName}`}>{entry.rank}</span>
+                      </span>
                     </td>
-                    <td className={`mono ${styles.xp}`}>{entry.xp.toLocaleString()}</td>
-                    <td className={`mono ${styles.missions}`}>{entry.missions}</td>
+                    <td className={`mono ${styles.xp} ${styles.right}`}>{entry.xp.toLocaleString()}</td>
+                    <td className={`mono ${styles.missions} ${styles.right}`}>{entry.missions}</td>
                   </tr>
                 ))}
               </tbody>
@@ -167,11 +226,9 @@ export default async function LeaderboardPage({
         {scope === "mission" && (
           <>
             <div className={styles.missionHeader}>
-              <span className="display" style={{ fontSize: "20px", color: "var(--text)" }}>
-                {activeMission.title}
-              </span>
-              <span className="muted" style={{ fontSize: "13px" }}>
-                {activeMission.timebox_minutes}m · +{activeMission.xp_base} XP base
+              <span className={`display ${styles.missionTitle}`}>{activeMission.title}</span>
+              <span className="muted">
+                {activeMission.timebox_minutes}m timebox · +{activeMission.xp_base} XP base
               </span>
             </div>
             <div className={`panel ${styles.tableWrap}`}>
@@ -181,21 +238,26 @@ export default async function LeaderboardPage({
                     <th>#</th>
                     <th>Callsign</th>
                     <th>Rank</th>
-                    <th>Score</th>
-                    <th>Time</th>
+                    <th className={styles.right}>Score</th>
+                    <th className={styles.right}>Time</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {missionEntries.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className={styles.empty}>No submissions yet.</td>
+                      <td colSpan={6} className={styles.empty}>
+                        No runs posted yet. Be first on the board.
+                      </td>
                     </tr>
                   ) : (
                     missionEntries.map((entry) => (
-                      <tr key={entry.runId} className={entry.flags.suspicious_fast ? styles.suspiciousRow : ""}>
-                        <td className={`mono ${styles.pos}`} style={{ color: "var(--muted)" }}>
-                          {entry.pos ?? "—"}
+                      <tr
+                        key={entry.runId}
+                        className={entry.flags.suspicious_fast ? styles.suspiciousRow : ""}
+                      >
+                        <td className={`mono ${styles.pos}`}>
+                          {entry.pos ?? <IconSuspicious size={13} />}
                         </td>
                         <td>
                           <Link
@@ -205,33 +267,32 @@ export default async function LeaderboardPage({
                           >
                             {entry.callsign}
                           </Link>
-                          {entry.seeded && (
-                            <span className="tag tag-muted" style={{ fontSize: "9px", marginLeft: "8px" }}>demo seed</span>
-                          )}
+                          <SeedMark seeded={entry.seeded} />
                         </td>
                         <td>
-                          <span className={styles.glyph}>{entry.glyph}</span>{" "}
-                          <span className={`display ${styles.rankName}`}>{entry.rank}</span>
+                          <span className={styles.rankCell}>
+                            <RankChevrons tier={entry.tier} size={8} />
+                            <span className={`display ${styles.rankName}`}>{entry.rank}</span>
+                          </span>
                         </td>
-                        <td className="mono" style={{ color: entry.flags.suspicious_fast ? "var(--muted)" : "var(--signal)" }}>
+                        <td
+                          className={`mono ${styles.right}`}
+                          style={{ color: entry.flags.suspicious_fast ? "var(--muted)" : "var(--signal)" }}
+                        >
                           {entry.score}/{entry.maxScore}
                         </td>
-                        <td className="mono muted">
+                        <td className={`mono muted ${styles.right}`}>
                           {formatElapsed(entry.elapsed ?? 0)}
                         </td>
                         <td>
                           {entry.flags.suspicious_fast ? (
-                            <span className="tag tag-alert" style={{ fontSize: "10px" }}>
-                              UNVERIFIED · SUSPICIOUS TIME
+                            <span className="tag tag-amber">
+                              <IconSuspicious size={11} /> Suspicious time
                             </span>
                           ) : entry.flags.missing_telemetry ? (
-                            <span className="tag tag-amber" style={{ fontSize: "10px" }}>
-                              NO TELEMETRY
-                            </span>
+                            <span className="tag tag-muted">No telemetry</span>
                           ) : (
-                            <span className="tag tag-signal" style={{ fontSize: "10px" }}>
-                              VERIFIED
-                            </span>
+                            <span className="tag tag-signal">Verified</span>
                           )}
                         </td>
                       </tr>
@@ -243,9 +304,37 @@ export default async function LeaderboardPage({
           </>
         )}
 
-        <p className={styles.disclaimer}>
-          Suspicious runs are excluded from podium positions. Speed contributes ≤10% of score; impossible times are flagged, not rewarded.
-        </p>
+        {/* Legend */}
+        <div className={`panel-2 ${styles.legend}`}>
+          <div className={styles.legendItem}>
+            <span className={`display ${styles.legendKey}`}>XP</span>
+            <span>Mission score × difficulty. XP sets your rank tier.</span>
+          </div>
+          <div className={styles.legendItem}>
+            <span className={`display ${styles.legendKey}`}>Rank</span>
+            <span>{RANKS.map((r) => r.name).join(" → ")}.</span>
+          </div>
+          <div className={styles.legendItem}>
+            <span className={styles.legendIcon}><IconSuspicious size={13} /></span>
+            <span>
+              Impossibly fast run — flagged, zero XP, excluded from podium. Speed is
+              worth at most 10% of score.
+            </span>
+          </div>
+          <div className={styles.legendItem}>
+            <span className={styles.legendIcon} style={{ color: "var(--ice)" }}>
+              <IconOffline size={13} />
+            </span>
+            <span>
+              All scored runs used local Gemma4 offline — verified by the engine before
+              every mission.
+            </span>
+          </div>
+          <div className={styles.legendItem}>
+            <span className={`mono ${styles.legendSeed}`}>s</span>
+            <span>Demo seed row — sample data shown for the hackathon demo.</span>
+          </div>
+        </div>
       </div>
     </div>
   );

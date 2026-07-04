@@ -5,6 +5,7 @@ import { getRankForXP } from "./ranks";
 export interface Operator {
   callsign: string;
   github_url?: string;
+  x_url?: string;
   xp: number;
   rank: string;
   created_at: string;
@@ -48,8 +49,8 @@ export interface StoreData {
 
 function buildSeedData(): StoreData {
   const operators: Operator[] = [
-    { callsign: "HELIX-9", xp: 4210, rank: "Commander", created_at: "2026-06-01T09:00:00Z", seeded: true },
-    { callsign: "KESTREL", xp: 2850, rank: "Warden", created_at: "2026-06-02T10:00:00Z", seeded: true },
+    { callsign: "HELIX-9", github_url: "https://github.com/example", x_url: "https://x.com/example", xp: 4210, rank: "Commander", created_at: "2026-06-01T09:00:00Z", seeded: true },
+    { callsign: "KESTREL", github_url: "https://github.com/example", xp: 2850, rank: "Warden", created_at: "2026-06-02T10:00:00Z", seeded: true },
     { callsign: "RIDGELINE", xp: 1650, rank: "Sentinel", created_at: "2026-06-03T11:00:00Z", seeded: true },
     { callsign: "VECTOR-6", xp: 920, rank: "Specialist", created_at: "2026-06-04T12:00:00Z", seeded: true },
     { callsign: "LOWLIGHT", xp: 410, rank: "Operator", created_at: "2026-06-05T13:00:00Z", seeded: true },
@@ -321,15 +322,21 @@ export async function getOperator(callsign: string): Promise<Operator | null> {
   return store.operators.find((o) => o.callsign === callsign.toUpperCase()) ?? null;
 }
 
-export async function upsertOperator(callsign: string, github_url?: string): Promise<Operator> {
+export async function upsertOperator(callsign: string, github_url?: string, x_url?: string): Promise<Operator> {
   const store = await readStore();
   const upper = callsign.toUpperCase();
   const existing = store.operators.find((o) => o.callsign === upper);
-  if (existing) return existing;
+  if (existing) {
+    if (github_url) existing.github_url = github_url;
+    if (x_url) existing.x_url = x_url;
+    await writeStore(store);
+    return existing;
+  }
 
   const op: Operator = {
     callsign: upper,
     github_url,
+    x_url,
     xp: 0,
     rank: getRankForXP(0).name,
     created_at: new Date().toISOString(),

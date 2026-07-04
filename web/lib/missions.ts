@@ -9,6 +9,10 @@ export interface Mission {
   summary: string;
   skills: string[];
   season: "season-zero";
+  /** Workspace evidence files the operator is expected to consult. */
+  evidence: string[];
+  /** Scoring dimensions this mission emphasizes (mirrors mission.json checks). */
+  dimensions: string[];
 }
 
 export const MISSIONS: Mission[] = [
@@ -21,9 +25,11 @@ export const MISSIONS: Mission[] = [
     expected_seconds: { min: 180, max: 2700 },
     xp_base: 200,
     summary:
-      "Enlist, verify your local Gemma4 field AI, catch one bad model claim, and file your first mission artifact.",
+      "Verify your local Gemma4 field AI, catch one bad model claim, and file your first mission artifact.",
     skills: ["Cursor cockpit basics", "local model verification", "submission workflow"],
     season: "season-zero",
+    evidence: ["relay_roster.txt", "field_ai_advisory.txt"],
+    dimensions: ["mission completion", "evidence discipline", "prompt discipline"],
   },
   {
     id: "sprint_signal_lost",
@@ -37,6 +43,13 @@ export const MISSIONS: Mission[] = [
       "An edge sensor grid is dropping packets after a config push. Find the real root cause before you trust the model's first guess.",
     skills: ["log triage", "evidence discipline", "model verification"],
     season: "season-zero",
+    evidence: ["gateway.log", "node_17.log", "uplink.conf", "maintenance_note.md"],
+    dimensions: [
+      "mission completion",
+      "evidence discipline",
+      "recovery from bad AI guidance",
+      "communication quality",
+    ],
   },
   {
     id: "field_prompt_under_fire",
@@ -50,6 +63,8 @@ export const MISSIONS: Mission[] = [
       "Three AI-drafted action plans. Two contain subtle operational errors. Approve only what you can verify.",
     skills: ["plan critique", "hallucination resistance", "prompt discipline"],
     season: "season-zero",
+    evidence: ["proposed_plans.md", "ops_policy.md", "toolkit_manifest.txt"],
+    dimensions: ["hallucination resistance", "evidence discipline", "prompt discipline"],
   },
   {
     id: "field_patch_edge_agent",
@@ -63,6 +78,8 @@ export const MISSIONS: Mission[] = [
       "A field agent misclassifies event severity. Ship the minimal patch that makes the tests pass.",
     skills: ["debugging under constraint", "minimal patching", "test-driven recovery"],
     season: "season-zero",
+    evidence: ["edge_agent.py", "severity_spec.md", "test_edge_agent.py"],
+    dimensions: ["mission completion", "evidence discipline", "communication quality"],
   },
   {
     id: "relay_gemma_handoff",
@@ -76,6 +93,8 @@ export const MISSIONS: Mission[] = [
       "Write a handoff brief good enough that your local Gemma4 can finish the job. Then grade its continuation.",
     skills: ["handoff clarity", "constrained AI collaboration", "operational communication"],
     season: "season-zero",
+    evidence: ["incident_context.md"],
+    dimensions: ["communication quality", "prompt discipline", "mission completion"],
   },
   {
     id: "marathon_degraded_comms",
@@ -93,6 +112,18 @@ export const MISSIONS: Mission[] = [
       "decision quality",
     ],
     season: "season-zero",
+    evidence: [
+      "telemetry_snapshot.csv",
+      "delayed_logs.log",
+      "situation_reports.md",
+      "model_recommendation.md",
+    ],
+    dimensions: [
+      "mission completion",
+      "evidence discipline",
+      "hallucination resistance",
+      "communication quality",
+    ],
   },
 ];
 

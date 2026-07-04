@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { callsign, github_url } = body as Record<string, string>;
+  const { callsign, github_url, x_url } = body as Record<string, string>;
 
   if (!callsign || typeof callsign !== "string") {
     return NextResponse.json({ error: "callsign is required" }, { status: 400 });
@@ -25,6 +25,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const operator = await upsertOperator(upper, github_url);
+  const operator = await upsertOperator(upper, github_url, x_url);
   return NextResponse.json({ operator });
 }
