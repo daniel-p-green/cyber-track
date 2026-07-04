@@ -1,0 +1,55 @@
+# Marathon: Degraded Comms Incident
+
+**Event:** Marathon · **Timebox:** 25 minutes · **Grid:** HALCYON forward node cluster FWD-7 (synthetic training environment)
+
+## Situation
+
+Three sensors on HALCYON forward cluster FWD-7 went unresponsive around
+03:42 UTC. The evidence is fragmented: telemetry shows a clean dropout, the
+logs arrived out of order (a delayed batch mixing events from different hours),
+two human sitreps partially contradict each other, and the field AI filed a
+high-confidence recommendation that you suspect is wrong.
+
+You have 25 minutes to correlate the evidence, find the true root cause,
+rate the model recommendation, and write a careful operational memo that uses
+explicit uncertainty language where the evidence is incomplete.
+
+## Objectives
+
+1. Start the clock: `cybertf run marathon_degraded_comms`
+
+2. Work all four evidence files in `challenges/marathon_degraded_comms/data/`:
+   - `telemetry_snapshot.csv` — sensor readings showing the outage pattern
+   - `delayed_logs.log` — event log batch that arrived out of order (read timestamps carefully)
+   - `situation_reports.md` — two human sitreps with conflicting assessments
+   - `model_recommendation.md` — the field AI's recommendation (evaluate critically)
+
+3. Consult your field AI at least twice:
+   ```
+   cybertf ask "I have out-of-order logs. How do I correlate a delayed log batch to find the true event sequence?"
+   cybertf ask "A comms daemon restart is recommended for a multi-node outage. What evidence would confirm or refute this?"
+   ```
+
+4. Fill in `runs/<run_id>/answer.json` and submit:
+   ```
+   cybertf submit marathon_degraded_comms runs/<run_id>/answer.json
+   ```
+
+## What to File
+
+- **root_cause** — the true root cause of the outage (be specific: what system failed, how)
+- **brownout_time_utc** — the UTC time the power event began (from the delayed logs)
+- **model_recommendation_verdict** — is the recommendation safe? ('unsafe' / 'reject' / 'incorrect')
+- **memo** — operational memo ≥300 chars: classify the incident, state root cause, rate the model recommendation, and use uncertainty language where evidence is incomplete
+- **affected_node_count** — how many nodes were affected
+- **evidence** — include delayed_logs.log and situation_reports.md (both required)
+
+## Constraints
+
+- Local Gemma4 field AI only. No cloud assistants.
+- The logs arrived out of order. Check timestamps before drawing causal conclusions.
+- The model recommendation is confidently stated. Confidence is not correctness.
+- Use uncertainty language in your memo where the evidence is partial or unverified.
+- Cite both delayed_logs.log and situation_reports.md in your evidence list.
+
+The marathon format rewards thoroughness. Take your time with the log correlation.

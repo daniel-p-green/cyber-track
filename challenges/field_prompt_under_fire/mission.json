@@ -1,0 +1,128 @@
+{
+  "id": "field_prompt_under_fire",
+  "season": "season-zero",
+  "title": "Prompt Under Fire",
+  "event_type": "field",
+  "difficulty": 2,
+  "timebox_minutes": 10,
+  "expected_seconds": { "min": 120, "max": 2400 },
+  "par_seconds": 300,
+  "time_points": 5,
+  "xp_base": 300,
+  "summary": "Three AI-drafted relay restoration plans, one safe — find which, why the others fail, and file a corrected brief.",
+  "skills": ["hallucination resistance", "policy compliance", "evidence discipline", "prompt discipline"],
+  "answer_fields": [
+    { "key": "safe_plan",          "type": "string", "prompt": "Which plan is safe and policy-compliant? (A, B, or C)" },
+    { "key": "unsafe_plan",        "type": "string", "prompt": "Which plan violates ops policy? (A, B, or C)" },
+    { "key": "unsafe_reason",      "type": "string", "prompt": "In 1–3 sentences: what specific policy does that plan violate and why?" },
+    { "key": "hallucinated_plan",  "type": "string", "prompt": "Which plan references a tool not in the toolkit manifest? (A, B, or C)" },
+    { "key": "hallucinated_tool",  "type": "string", "prompt": "What is the name of the hallucinated tool referenced in that plan?" },
+    { "key": "corrected_plan",     "type": "string", "prompt": "Write a corrected version of Plan A that removes the policy violation (≥150 chars)." },
+    { "key": "evidence",           "type": "list",   "prompt": "Workspace file paths you consulted to reach your answers." }
+  ],
+  "checks": [
+    {
+      "id": "safe_plan",
+      "type": "hash_match_any",
+      "field": "safe_plan",
+      "normalize": "loose",
+      "sha256_any": [
+        "5c955de087abacea172ad2a7d726f7e487d9862521b022c20486f8f65b61d548",
+        "3ed634115f7d7ec445e293fa0ab8ddd25865b7c379ea4aee8b9cabde427c384c",
+        "33b54d80170ca28e2dabc190230ec7da734fd77755d24a1c87524e98c54cf791",
+        "7aeaee5292131f94f62203e29bc3a7881a589c9bdba19d414816e2f452c53490",
+        "b8f4b56bfca98ca48bffff75bbbb491af1d9114c315dfa57674f8a11e1795fb7"
+      ],
+      "points": 20,
+      "dimension": "mission_completion",
+      "label": "Safe, policy-compliant plan identified"
+    },
+    {
+      "id": "unsafe_plan",
+      "type": "hash_match_any",
+      "field": "unsafe_plan",
+      "normalize": "loose",
+      "sha256_any": [
+        "05c69f712f880674ac8c7a01deb911e6aa66702069a7c5ab5187e0029d59e760",
+        "d373468299660e8d972d27a909514e84ed11175482a167cb16bf16695a20332f",
+        "207f309138d44dd66b711be9e08485a732ca1bea605bc5be2eef994782f7d14f",
+        "99ea8c4e5957ab3ab56206a7ed80956c115744ab528a7e5d9d2b2b3903ad43a4",
+        "4f2accabe78fc4da261f1ea6e9952026d8dde35a8cfcec4f9d8abae9a3a60d48"
+      ],
+      "points": 15,
+      "dimension": "hallucination_resistance",
+      "label": "Policy-violating plan correctly identified"
+    },
+    {
+      "id": "unsafe_reason",
+      "type": "field_min_length",
+      "field": "unsafe_reason",
+      "min_length": 80,
+      "points": 10,
+      "dimension": "hallucination_resistance",
+      "label": "Specific policy violation explained (≥80 chars)"
+    },
+    {
+      "id": "hallucinated_plan",
+      "type": "hash_match_any",
+      "field": "hallucinated_plan",
+      "normalize": "loose",
+      "sha256_any": [
+        "ca9642b34f7004378dba39ba47bbba6fdc02a39ed43799efdfddc1cad40fdf84",
+        "e84eb037635f286585088aba950e3406cf6dfeb3b7e31fe6d7c1fdcdd7b3c75e",
+        "b4fe8b46824f0881027034d0c0410b10b94e19932351a61b671812f8d7c84a8a",
+        "4769bebbcac043b12897784d1836485a9c0c03e9d381f5f1e31c6f5fe0c65f54",
+        "7f12d3cd5c9aa413e574f21e70fbfe0b8267021acd94218fc1d376a5a31c06e9"
+      ],
+      "points": 15,
+      "dimension": "hallucination_resistance",
+      "label": "Plan containing hallucinated tool correctly identified"
+    },
+    {
+      "id": "hallucinated_tool",
+      "type": "hash_match_any",
+      "field": "hallucinated_tool",
+      "normalize": "loose",
+      "sha256_any": [
+        "bcb059148297ec7e2bdb76d468f296c59a20de6eb05896f2fa2ac36be4ce73fb",
+        "da8c89691d5f045c4880a1930d9afb1c40722ea8fa0ec90fc0daaf7af27e7a18"
+      ],
+      "points": 10,
+      "dimension": "hallucination_resistance",
+      "label": "Hallucinated tool name correctly named"
+    },
+    {
+      "id": "corrected_plan",
+      "type": "field_min_length",
+      "field": "corrected_plan",
+      "min_length": 150,
+      "points": 5,
+      "dimension": "communication_quality",
+      "label": "Corrected plan filed (≥150 chars)"
+    },
+    {
+      "id": "evidence_ops_policy",
+      "type": "evidence_includes",
+      "path": "ops_policy",
+      "points": 5,
+      "dimension": "evidence_discipline",
+      "label": "Ops policy cited as evidence"
+    },
+    {
+      "id": "evidence_toolkit",
+      "type": "evidence_includes",
+      "path": "toolkit_manifest",
+      "points": 5,
+      "dimension": "evidence_discipline",
+      "label": "Toolkit manifest cited as evidence"
+    },
+    {
+      "id": "ask_used",
+      "type": "ask_used",
+      "min_asks": 1,
+      "points": 5,
+      "dimension": "prompt_discipline",
+      "label": "Local field AI consulted at least once"
+    }
+  ]
+}

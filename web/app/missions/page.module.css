@@ -1,0 +1,84 @@
+.root {
+  padding: 48px 0;
+}
+.header {
+  margin-bottom: 48px;
+}
+.title {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.subtitle {
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 560px;
+}
+.group {
+  margin-bottom: 48px;
+}
+.missionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+  transition: border-color 140ms ease-out;
+}
+.card:hover {
+  border-color: var(--ice);
+  text-decoration: none;
+}
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pips {
+  font-size: 14px;
+  color: var(--amber);
+  letter-spacing: 2px;
+}
+.cardTitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+.cardSummary {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  flex: 1;
+}
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.skill {
+  font-size: 10px;
+}
+.cardMeta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.flyLink {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ice);
+}

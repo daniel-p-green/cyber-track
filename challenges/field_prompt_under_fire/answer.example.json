@@ -1,0 +1,9 @@
+{
+  "safe_plan": "",
+  "unsafe_plan": "",
+  "unsafe_reason": "",
+  "hallucinated_plan": "",
+  "hallucinated_tool": "",
+  "corrected_plan": "",
+  "evidence": []
+}

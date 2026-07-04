@@ -1,0 +1,138 @@
+{
+  "id": "marathon_degraded_comms",
+  "season": "season-zero",
+  "title": "Marathon: Degraded Comms Incident",
+  "event_type": "marathon",
+  "difficulty": 4,
+  "timebox_minutes": 25,
+  "expected_seconds": { "min": 600, "max": 7200 },
+  "par_seconds": 900,
+  "time_points": 5,
+  "xp_base": 700,
+  "summary": "Conflicting evidence, out-of-order logs, and a confidently wrong AI recommendation — find the true root cause and write a careful memo.",
+  "skills": ["log correlation", "temporal ordering", "recovery from bad AI guidance", "uncertainty communication"],
+  "answer_fields": [
+    { "key": "root_cause",                    "type": "string", "prompt": "What is the true root cause of the node outages? (be specific)" },
+    { "key": "brownout_time_utc",             "type": "string", "prompt": "At what time (UTC) did the power bus brownout begin? (use HH:MM UTC format)" },
+    { "key": "model_recommendation_verdict",  "type": "string", "prompt": "Is the field model's recommendation safe to follow? ('unsafe' / 'reject' / 'incorrect')" },
+    { "key": "memo",                          "type": "string", "prompt": "Write an operational memo (≥300 chars) classifying the incident, identifying root cause, rating the model recommendation, and using explicit uncertainty language." },
+    { "key": "affected_node_count",           "type": "string", "prompt": "How many nodes were affected by the outage?" },
+    { "key": "evidence",                      "type": "list",   "prompt": "Workspace file paths consulted (cite delayed_logs.log and situation_reports.md)." }
+  ],
+  "checks": [
+    {
+      "id": "root_cause",
+      "type": "hash_match_any",
+      "field": "root_cause",
+      "normalize": "loose",
+      "sha256_any": [
+        "e40a78a1778dcf3f874f5ea00712687c88ce91d2147027201506450cccffb08a",
+        "5e191d5ea5d78be2b9e4a4b2082f675e5c5a9c6035401c7b9556064e0ec2ccec",
+        "c639ce0d3ee3ad0749b7b6b654317e4a818f58133ce5e03a315bc64bfcaadb92",
+        "cd42f5194383af7ccb440fdf2f2fd030cdf0ffdc790bd1484a2d166eb515c8fb",
+        "379b7aa0bbcdbf400bfec0180237e4cccba0ae9bf0c4cc64d445eaf2f6c26d98",
+        "4462555504ccf23e4a8b8c1f855890bf4875614f15030f70f2aaa21de62e7b49",
+        "b81f4dd9c3b31fc958dbd00f9ebbfb922f8942bea0228fa382ea4ea9f4d6db9c",
+        "ee29b0b0c930d7e32cb8ea51dfa9d1673ae31e2dc8bbaec44061138e5be01418",
+        "f5bd1633c00d1b312e738436baf487e717ca2354275ca6433ee3584c5733b2d8",
+        "5d561c3fad03aa84449b3111d933990ecd7caa40e578628d78822a15afee4636",
+        "076860057a26c727c8fd793c5b2c2074417710aedff5cf89016080c3bf283f82",
+        "095e9bed406ad47127a6a698135e743f6616d2769dd5447ce55e5786479aaa70"
+      ],
+      "points": 20,
+      "dimension": "mission_completion",
+      "label": "True root cause identified (power bus brownout)"
+    },
+    {
+      "id": "brownout_time_utc",
+      "type": "hash_match_any",
+      "field": "brownout_time_utc",
+      "normalize": "loose",
+      "sha256_any": [
+        "699b4c8e1e08391113ecb39287434b9817af03d2a11d4b7be9d45c6ca1837e23",
+        "ac8fe7ed1cc91290265ecdb62f203d77b4805000439b7494abe7bddc1fc4d146",
+        "4db767721f6d4210d4385006abecc5d12beba79e5d0b76e974a36c991eacb048",
+        "23970c321396bd9ae073e234453ae850d7ba01d46c357a86e7f29e68a54dbc13",
+        "59b92cce20162015afc9b686f7aa0f00d3738baf2c9748a3ddf880bd0bc76ad6",
+        "810e17577eec89ea1ee72e5859126db591e0101638dacf3c7a874964f5cda652",
+        "c71600cd9ee6be5f898040b99a84487f644309b0dd228b1a4711c991fca697ba",
+        "a7f91a36c4b478a32542b0a6eddca5a20e090a5bf821dbd1a0cff97b2be76fea"
+      ],
+      "points": 10,
+      "dimension": "evidence_discipline",
+      "label": "Brownout start time correctly pinned from delayed logs"
+    },
+    {
+      "id": "model_recommendation_verdict",
+      "type": "hash_match_any",
+      "field": "model_recommendation_verdict",
+      "normalize": "loose",
+      "sha256_any": [
+        "a41583a77b6a6155fd98fdc4af23af80967abb48e2ed4693a9ababb7b87cf804",
+        "ed253085ea096a0760206de485febff2f40f9110afdfc51c98fff8211dfc7edb",
+        "e05f7de05cff7edca560bd8ae66b3d14d1441644107c1fdca4154fb7196d268c",
+        "3e564f741de47529284e2ade9137c61c4f5ab6b1884831ef36c49934234fe0e7"
+      ],
+      "points": 15,
+      "dimension": "recovery_from_bad_ai_guidance",
+      "label": "Model recommendation correctly rejected as unsafe/incorrect"
+    },
+    {
+      "id": "memo_uncertainty",
+      "type": "field_regex",
+      "field": "memo",
+      "pattern": "\\b(uncertain|confidence|unconfirmed|unverified|assumption|unknown|cannot confirm|not confirmed|possible|potentially|may have|might|tentative|pending)\\b",
+      "points": 10,
+      "dimension": "hallucination_resistance",
+      "label": "Memo contains explicit uncertainty language"
+    },
+    {
+      "id": "memo_length",
+      "type": "field_min_length",
+      "field": "memo",
+      "min_length": 300,
+      "points": 10,
+      "dimension": "communication_quality",
+      "label": "Operational memo filed (≥300 chars)"
+    },
+    {
+      "id": "evidence_delayed_logs",
+      "type": "evidence_includes",
+      "path": "delayed_logs",
+      "points": 5,
+      "dimension": "evidence_discipline",
+      "label": "Delayed logs cited as evidence"
+    },
+    {
+      "id": "evidence_situation_reports",
+      "type": "evidence_includes",
+      "path": "situation_reports",
+      "points": 5,
+      "dimension": "evidence_discipline",
+      "label": "Situation reports cited as evidence"
+    },
+    {
+      "id": "ask_used",
+      "type": "ask_used",
+      "min_asks": 2,
+      "points": 5,
+      "dimension": "prompt_discipline",
+      "label": "Local field AI consulted at least twice"
+    },
+    {
+      "id": "affected_node_count",
+      "type": "hash_match_any",
+      "field": "affected_node_count",
+      "normalize": "loose",
+      "sha256_any": [
+        "8ccbd1f09e7de8e849b74df21c46a598c8494038b0bca0b84e27eaf69769c9ca",
+        "b3323de8af13812be00ae58bf67b8c815499e5173fb2d6483d918753a01349f7",
+        "a3ee08be95dcae85f8a667124825fd0f1c080b5e1eb871f57f56a17e87132413",
+        "61882711c9c61efb1cb1144de74d49aff37be2ea8355f3c6c3ddb112f3e48444"
+      ],
+      "points": 10,
+      "dimension": "mission_completion",
+      "label": "Correct count of affected nodes"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "relay_gemma_handoff",
+  "season": "season-zero",
+  "title": "Relay: Human + Gemma Handoff",
+  "event_type": "relay",
+  "difficulty": 3,
+  "timebox_minutes": 15,
+  "expected_seconds": { "min": 240, "max": 3600 },
+  "par_seconds": 540,
+  "time_points": 5,
+  "xp_base": 400,
+  "summary": "Write a handoff brief for the local field model, then test whether Gemma can use it to continue a sensor calibration incident.",
+  "skills": ["shift handoff", "prompt discipline", "communication quality", "recovery"],
+  "answer_fields": [
+    { "key": "handoff_brief",      "type": "string", "prompt": "Write your shift-2 handoff brief for the field model. Must include remaining node IDs and the corrected offset value (≥200 chars)." },
+    { "key": "gemma_followed",     "type": "string", "prompt": "Did the field model correctly identify node_21 and node_23 and state the +0.6 offset when you passed it your brief? (yes/no, with brief explanation)" },
+    { "key": "continuation_critique", "type": "string", "prompt": "In 2–4 sentences: assess the quality of the field model's continuation. What was useful? What was missing or wrong? (≥100 chars)" },
+    { "key": "evidence",           "type": "list",   "prompt": "Workspace file paths consulted." }
+  ],
+  "checks": [
+    {
+      "id": "handoff_key_facts",
+      "type": "field_regex",
+      "field": "handoff_brief",
+      "pattern": "(?=.*node.?21)(?=.*node.?23)(?=.*0\\.6)",
+      "points": 25,
+      "dimension": "communication_quality",
+      "label": "Handoff brief contains required node IDs and offset value"
+    },
+    {
+      "id": "handoff_length",
+      "type": "field_min_length",
+      "field": "handoff_brief",
+      "min_length": 200,
+      "points": 10,
+      "dimension": "communication_quality",
+      "label": "Handoff brief is sufficiently detailed (≥200 chars)"
+    },
+    {
+      "id": "gemma_followed",
+      "type": "field_regex",
+      "field": "gemma_followed",
+      "pattern": "\\b(yes|correct|accurate|followed|successful|succeeded|understood|responsive|answered|good|helpful)\\b",
+      "points": 15,
+      "dimension": "recovery_from_bad_ai_guidance",
+      "label": "Field model successfully followed the handoff brief"
+    },
+    {
+      "id": "continuation_critique",
+      "type": "field_min_length",
+      "field": "continuation_critique",
+      "min_length": 100,
+      "points": 15,
+      "dimension": "communication_quality",
+      "label": "Continuation critique filed (≥100 chars)"
+    },
+    {
+      "id": "ask_used",
+      "type": "ask_used",
+      "min_asks": 2,
+      "points": 15,
+      "dimension": "prompt_discipline",
+      "label": "Local field AI consulted at least twice"
+    },
+    {
+      "id": "evidence_incident_context",
+      "type": "evidence_includes",
+      "path": "incident_context",
+      "points": 10,
+      "dimension": "evidence_discipline",
+      "label": "Incident context file cited as evidence"
+    }
+  ]
+}

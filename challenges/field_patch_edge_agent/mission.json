@@ -1,0 +1,77 @@
+{
+  "id": "field_patch_edge_agent",
+  "season": "season-zero",
+  "title": "Patch the Edge Agent",
+  "event_type": "field",
+  "difficulty": 3,
+  "timebox_minutes": 15,
+  "expected_seconds": { "min": 180, "max": 3600 },
+  "par_seconds": 480,
+  "time_points": 5,
+  "xp_base": 400,
+  "summary": "A deployed sensor severity classifier has a subtle boundary bug. Locate it, apply the minimal fix, and make the tests green.",
+  "skills": ["code review", "specification reading", "defensive patching", "evidence discipline"],
+  "answer_fields": [
+    { "key": "bug_location",             "type": "string", "prompt": "Which function contains the bug? (function name)" },
+    { "key": "explanation",              "type": "string", "prompt": "In 2–4 sentences: what is the bug, how does it manifest, and what is the minimal correct fix?" },
+    { "key": "minimal_change_description", "type": "string", "prompt": "Describe the single-line change you made to fix the bug (e.g. 'Changed X to Y on line N')." },
+    { "key": "evidence",                 "type": "list",   "prompt": "Workspace file paths consulted (include severity_spec.md and edge_agent.py)." }
+  ],
+  "checks": [
+    {
+      "id": "tests_pass",
+      "type": "tests_pass",
+      "test_file": "test_edge_agent.py",
+      "points": 25,
+      "dimension": "mission_completion",
+      "label": "All unit tests pass after fix"
+    },
+    {
+      "id": "bug_location",
+      "type": "hash_match_any",
+      "field": "bug_location",
+      "normalize": "loose",
+      "sha256_any": [
+        "349b8de0f8f379373adcd12299b740f627abe100b1dbf477a6681bf07bcb486e",
+        "b79976bd766a534507230da9ba21388849f148b4cbf8a70e732a80787e35b2f6"
+      ],
+      "points": 20,
+      "dimension": "mission_completion",
+      "label": "Bug-containing function correctly named"
+    },
+    {
+      "id": "explanation",
+      "type": "field_min_length",
+      "field": "explanation",
+      "min_length": 100,
+      "points": 15,
+      "dimension": "communication_quality",
+      "label": "Bug explanation filed (≥100 chars)"
+    },
+    {
+      "id": "minimal_change_description",
+      "type": "field_min_length",
+      "field": "minimal_change_description",
+      "min_length": 30,
+      "points": 10,
+      "dimension": "communication_quality",
+      "label": "Minimal change described (≥30 chars)"
+    },
+    {
+      "id": "ask_used",
+      "type": "ask_used",
+      "min_asks": 1,
+      "points": 10,
+      "dimension": "prompt_discipline",
+      "label": "Local field AI consulted at least once"
+    },
+    {
+      "id": "evidence_severity_spec",
+      "type": "evidence_includes",
+      "path": "severity_spec",
+      "points": 10,
+      "dimension": "evidence_discipline",
+      "label": "Severity spec cited as evidence"
+    }
+  ]
+}

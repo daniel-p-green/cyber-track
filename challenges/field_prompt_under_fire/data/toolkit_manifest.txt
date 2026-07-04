@@ -1,0 +1,20 @@
+# HALCYON Relay Maintenance Toolkit — Approved Tools
+# Version: 2.4.1   Last updated: 2026-06-01
+# Maintained by: HALCYON Grid Operations, Sector 4
+
+relay_check        -- Run diagnostics on relay hardware (read-only)
+relay_reset        -- Soft-reset a relay module (requires auth token)
+signal_test        -- Test signal path continuity end-to-end
+beam_align         -- Adjust beam alignment within approved tolerances
+power_verify       -- Verify relay power bus voltage and margins
+watchdog_status    -- Check watchdog service status (read-only)
+config_apply       -- Apply a configuration change from approved template
+config_rollback    -- Roll back last configuration change
+log_capture        -- Capture relay event log snapshot to shift record
+status_report      -- Generate status report for shift handoff
+
+# ---------------------------------------------------------------------
+# Tools NOT in this manifest are NOT approved for use in field operations.
+# Field model advisories referencing unlisted tools indicate a hallucination.
+# Report any such advisory to the shift supervisor before acting.
+# ---------------------------------------------------------------------
