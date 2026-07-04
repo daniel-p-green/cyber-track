@@ -64,6 +64,8 @@ python3 -m cybertf.cli season
 
 # 4. Optional: publish to the web arena leaderboard
 cd web && npm install && npm run dev &     # http://localhost:3000
+# Production arena (ephemeral demo store — see web/README.md):
+# export CYBERTF_ARENA_URL=https://cybertrack-arena.vercel.app
 python3 -m cybertf.cli publish <run_id>
 ```
 
