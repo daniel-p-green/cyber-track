@@ -104,14 +104,6 @@ export default function EnlistForm() {
         >
           {status === "loading" ? "Locking…" : "Claim Callsign →"}
         </button>
-        <a
-          href="https://cursor.com/origin?ref=CyberTrack"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.originLink}
-        >
-          Cursor Origin · Coming Soon
-        </a>
       </div>
 
       {message && (

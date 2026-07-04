@@ -1,0 +1,138 @@
+.protocol {
+  display: flex;
+  flex-direction: column;
+}
+
+.progressHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.progressLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.progressCount {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.segments {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+.segment {
+  height: 5px;
+  background: var(--line);
+  border-radius: 1px;
+  transition: background 200ms ease-out;
+}
+.segmentDone {
+  background: var(--signal);
+}
+
+.steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.step + .step {
+  border-top: 1px solid var(--line);
+}
+.stepDone {
+  background: color-mix(in srgb, var(--signal) 3%, var(--panel));
+}
+
+.stepHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 15px 18px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+.stepHead:hover .stepTitle { color: var(--ice); }
+
+.marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--signal);
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: var(--panel-2);
+}
+.markerDone {
+  border-color: var(--signal);
+  background: color-mix(in srgb, var(--signal) 12%, transparent);
+}
+
+.stepTitle {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  transition: color 120ms ease-out;
+}
+.chevron {
+  color: var(--muted);
+  flex-shrink: 0;
+  transition: transform 160ms ease-out;
+}
+
+.stepBody {
+  padding: 2px 18px 20px 62px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.stepBody p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 62ch;
+}
+.stepActions {
+  padding-top: 4px;
+}
+.undoBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+}
+.undoBtn:hover { color: var(--alert); }
+
+.launch {
+  margin-top: 18px;
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .stepBody { padding-left: 18px; }
+  .stepTitle { font-size: 14px; }
+}

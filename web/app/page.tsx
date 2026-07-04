@@ -2,17 +2,17 @@ import Link from "next/link";
 import { MISSIONS } from "@/lib/missions";
 import { getAllOperators, getAllSubmissions } from "@/lib/store";
 import { getRankForXP } from "@/lib/ranks";
-import { formatElapsed } from "@/lib/utils";
+import { formatElapsed, slopeForDifficulty } from "@/lib/utils";
 import {
   MissionGlyph,
   RailNode,
-  GemmaStatus,
+  SlopeBadge,
   IconTerminal,
   IconOffline,
-  IconTimer,
   IconExternal,
   type NodeState,
 } from "./components/svg";
+import ZuluClock from "./components/ZuluClock";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -20,29 +20,32 @@ export const dynamic = "force-dynamic";
 async function getCommandState() {
   const [ops, subs] = await Promise.all([getAllOperators(), getAllSubmissions()]);
   const cleanSubs = subs.filter((s) => !s.flags.suspicious_fast);
-  const fastest = [...cleanSubs].sort((a, b) => a.elapsed_seconds - b.elapsed_seconds)[0];
   const topOperators = ops
     .sort((a, b) => b.xp - a.xp)
     .slice(0, 5)
-    .map((op) => ({
-      ...op,
-      rankInfo: getRankForXP(op.xp),
-    }));
+    .map((op) => ({ ...op, rankInfo: getRankForXP(op.xp) }));
 
   return {
     topOperators,
+    operatorCount: ops.length,
     cleanCount: cleanSubs.length,
-    suspiciousCount: subs.length - cleanSubs.length,
-    fastest,
+    flaggedCount: subs.length - cleanSubs.length,
+    fastest: [...cleanSubs].sort((a, b) => a.elapsed_seconds - b.elapsed_seconds)[0],
   };
 }
 
-const FLOW = [
-  { num: "01", title: "Set up Cursor", desc: "The workspace is the cockpit" },
-  { num: "02", title: "Run local Gemma", desc: "Ollama · offline · verified" },
-  { num: "03", title: "Start a mission", desc: "Timer armed, evidence live" },
-  { num: "04", title: "Submit evidence", desc: "Deterministic scoring" },
-  { num: "05", title: "Read your AAR", desc: "Climb the arena board" },
+const COCKPIT_DUTIES = [
+  "Inspect the evidence",
+  "Ask local Gemma4 — your only AI",
+  "Patch configs and code",
+  "Write answer.json",
+];
+
+const ARENA_DUTIES = [
+  "Claim a callsign",
+  "Start missions — timer arms instantly",
+  "Submit your run for scoring",
+  "Get your AAR, XP, and rank",
 ];
 
 const SETUP_LINKS = [
@@ -52,33 +55,49 @@ const SETUP_LINKS = [
 ];
 
 function nodeState(index: number): NodeState {
-  if (index === 0) return "active";
-  return "available";
+  return index === 0 ? "active" : "available";
 }
 
 export default async function Home() {
-  const { topOperators, cleanCount, suspiciousCount, fastest } = await getCommandState();
+  const { topOperators, operatorCount, cleanCount, flaggedCount, fastest } =
+    await getCommandState();
 
   return (
     <div className={`${styles.root} ops-grid-bg`}>
+      {/* ── Ops status strip ─────────────────────────────────────────── */}
+      <div className={styles.statusStrip}>
+        <div className={`container ${styles.statusInner}`}>
+          <span className={styles.statusItem}>
+            <span className="pulse-dot" /> SEASON ZERO — ACTIVE
+          </span>
+          <span className={`${styles.statusItem} ${styles.statusHideSm}`}>
+            OPERATORS <strong className="mono">{operatorCount}</strong>
+          </span>
+          <span className={`${styles.statusItem} ${styles.statusHideSm}`}>
+            VERIFIED RUNS <strong className="mono">{cleanCount}</strong>
+          </span>
+          <span className={`${styles.statusItem} ${styles.statusHideMd}`}>
+            FLAGGED <strong className="mono amber">{flaggedCount}</strong>
+          </span>
+          <span className={`${styles.statusItem} ${styles.statusClock}`}>
+            <ZuluClock />
+          </span>
+        </div>
+      </div>
+
       {/* ── Command hero ─────────────────────────────────────────────── */}
       <section className={styles.hero}>
         <div className="container">
           <div className={styles.heroGrid}>
-            <div className={styles.heroCopy}>
-              <div className={styles.kicker}>
-                <span className="pulse-dot" />
-                Season Zero · Operational
-              </div>
+            <div className={`boot boot-1 ${styles.heroCopy}`}>
               <h1 className={`display ${styles.heroTitle}`}>
                 Train decision quality when the{" "}
                 <span className={styles.heroCloud}>cloud</span> goes dark.
               </h1>
               <p className={styles.heroText}>
-                CyberTrack is a mission arena for AI operators. Timed missions run
-                inside Cursor with a local Gemma4 model as your only AI. You are
-                scored on evidence discipline, model skepticism, and recovery —
-                not on how big a model you can rent.
+                An arena for AI operators. Fly timed missions in Cursor with
+                local Gemma4 as your only AI. Get scored on judgment — evidence,
+                skepticism, recovery.
               </p>
               <div className={styles.heroActions}>
                 <Link href="/qualification" className="btn btn-primary">
@@ -88,56 +107,103 @@ export default async function Home() {
                   Mission Board
                 </Link>
               </div>
-              <div className={styles.heroMeta}>
-                <span><IconTerminal size={13} /> Cursor is the cockpit</span>
-                <span><IconOffline size={13} /> No cloud AI in missions</span>
-              </div>
             </div>
 
-            {/* Cockpit preview panel */}
-            <div className={`panel hud-corners ${styles.cockpit}`}>
+            {/* Cockpit live feed */}
+            <div className={`panel hud-corners boot boot-2 ${styles.cockpit}`}>
               <div className={styles.cockpitHead}>
-                <span className="display">Operator Cockpit</span>
-                <GemmaStatus compact />
+                <span className="display">Cockpit Feed</span>
+                <span className={`mono ${styles.cockpitTag}`}>cursor · terminal</span>
               </div>
               <div className={`mono ${styles.terminal}`}>
                 <div className={styles.termLine}>
                   <span className={styles.prompt}>$</span> cybertf verify-model
                 </div>
-                <div className={styles.termOk}>
+                <div className={`${styles.termLine} ${styles.termOk}`}>
                   ● gemma4:latest · localhost:11434 · FIELD AI ONLINE
                 </div>
                 <div className={styles.termLine}>
                   <span className={styles.prompt}>$</span> cybertf run sprint_signal_lost
                 </div>
-                <div className={styles.termWarn}>
-                  ▲ Timer armed · 10:00 · evidence required
+                <div className={`${styles.termLine} ${styles.termWarn}`}>
+                  ▲ timer armed · 10:00 · evidence required
                 </div>
                 <div className={styles.termLine}>
                   <span className={styles.prompt}>$</span> cybertf ask --file gateway.log
                 </div>
-              </div>
-              <div className={styles.gemmaBlocks}>
-                <div className={styles.gemmaHypothesis}>
-                  <span className="display">Hypothesis needs verification</span>
-                  <p>Model suggests packet loss due to storm cell — logs disagree.</p>
+                <div className={`${styles.termLine} ${styles.termDim}`}>
+                  model hypothesis: storm cell — <span className="amber">unverified</span>
                 </div>
-                <div className={styles.gemmaCorrected}>
-                  <span className="display">Operator corrected</span>
-                  <p>Root cause: MTU mismatch after config push. Patched.</p>
+                <div className={styles.termLine}>
+                  <span className={styles.prompt}>$</span> cybertf submit … answer.json
                 </div>
-              </div>
-              <div className={styles.scoreStrip}>
-                <div><span className="display">Evidence</span><strong className="mono">92</strong></div>
-                <div><span className="display">Skepticism</span><strong className="mono">88</strong></div>
-                <div><span className="display">Recovery</span><strong className="mono">94</strong></div>
+                <div className={`${styles.termLine} ${styles.termOk}`}>
+                  ✓ scored 100/100 · AAR written · +375 XP
+                </div>
+                <div className={`${styles.termLine} ${styles.termCursor}`} aria-hidden>
+                  <span className={styles.prompt}>$</span> <span className={styles.block} />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Season Zero progression rail ─────────────────────────────── */}
+      {/* ── Cockpit ⇄ Arena split — the architecture in one glance ───── */}
+      <section className={styles.splitSection}>
+        <div className="container">
+          <div className={`panel boot boot-3 ${styles.split}`}>
+            <div className={styles.splitCol}>
+              <div className={styles.splitHead}>
+                <IconTerminal size={16} />
+                <div>
+                  <span className={`display ${styles.splitName}`}>Cursor — the cockpit</span>
+                  <span className={styles.splitSub}>where the mission work happens</span>
+                </div>
+              </div>
+              <ul className={styles.splitList}>
+                {COCKPIT_DUTIES.map((d, i) => (
+                  <li key={d}>
+                    <span className={`mono ${styles.splitNum}`}>{String(i + 1).padStart(2, "0")}</span>
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className={styles.splitSpine} aria-hidden>
+              <span className={`mono ${styles.spineCmd}`}>cybertf publish</span>
+              <svg width="34" height="12" viewBox="0 0 34 12" fill="none" stroke="var(--signal)" strokeWidth="1.6">
+                <path d="M0 6h28M23 1.5 30 6l-7 4.5" />
+              </svg>
+            </div>
+
+            <div className={styles.splitCol}>
+              <div className={styles.splitHead}>
+                <IconOffline size={16} />
+                <div>
+                  <span className={`display ${styles.splitName}`}>CyberTrack — the arena</span>
+                  <span className={styles.splitSub}>where the run gets scored</span>
+                </div>
+              </div>
+              <ul className={styles.splitList}>
+                {ARENA_DUTIES.map((d, i) => (
+                  <li key={d}>
+                    <span className={`mono ${styles.splitNum}`}>{String(i + 1).padStart(2, "0")}</span>
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <p className={styles.splitNote}>
+            CyberTrack doesn&apos;t replace Cursor — it keeps score around it.
+            No cloud AI anywhere in the loop.
+          </p>
+        </div>
+      </section>
+
+      {/* ── Season Zero campaign rail ────────────────────────────────── */}
       <section className={styles.railSection}>
         <div className="container">
           <div className="section-label">
@@ -145,109 +211,41 @@ export default async function Home() {
           </div>
           <div className={styles.rail}>
             {MISSIONS.map((m, i) => {
-              const state = nodeState(i);
+              const slope = slopeForDifficulty(m.difficulty);
               return (
                 <Link key={m.id} href={`/missions/${m.id}`} className={styles.railStop}>
                   {i > 0 && <span className={styles.railLine} aria-hidden />}
-                  <RailNode state={state} size={44}>
+                  <RailNode state={nodeState(i)} size={44}>
                     <MissionGlyph eventType={m.event_type} missionId={m.id} size={22} />
                   </RailNode>
                   <span className={`mono ${styles.railIndex}`}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className={`display ${styles.railTitle}`}>{m.title.replace(/^(Relay|Marathon): /, "")}</span>
+                  <span className={`display ${styles.railTitle}`}>
+                    {m.title.replace(/^(Relay|Marathon): /, "")}
+                  </span>
                   <span className={styles.railChips}>
+                    <SlopeBadge slope={slope.id} label={slope.label} withLabel={false} size={12} />
                     <span className="mono">{m.timebox_minutes}m</span>
-                    <span className="mono signal">+{m.xp_base} XP</span>
+                    <span className="mono signal">+{m.xp_base}</span>
                   </span>
                 </Link>
               );
             })}
           </div>
-        </div>
-      </section>
-
-      {/* ── The loop ─────────────────────────────────────────────────── */}
-      <section className={styles.flowSection}>
-        <div className="container">
-          <div className={styles.flowHead}>
-            <div>
-              <div className="section-label">
-                <span className="idx">02</span> The Mission Loop
-              </div>
-              <h2 className={`display ${styles.sectionTitle}`}>
-                One complete decision cycle, every mission.
-              </h2>
-            </div>
-            <p className={styles.flowNote}>
-              The arena rewards verified action. The field AI helps — but it only
-              knows what you show it, and it is sometimes wrong on purpose.
-            </p>
-          </div>
-          <div className={styles.flow}>
-            {FLOW.map((step) => (
-              <div key={step.num} className={styles.flowStep}>
-                <span className={`mono ${styles.flowNum}`}>{step.num}</span>
-                <strong className="display">{step.title}</strong>
-                <span>{step.desc}</span>
-              </div>
-            ))}
+          <div className={styles.slopeKey}>
+            <SlopeBadge slope="green" label="Green — qualification" size={12} />
+            <SlopeBadge slope="blue" label="Blue — sprint" size={12} />
+            <SlopeBadge slope="black" label="Black — advanced field" size={12} />
+            <SlopeBadge slope="double-black" label="Double black — marathon" size={12} />
           </div>
         </div>
       </section>
 
-      {/* ── Arena status + setup + top operators ─────────────────────── */}
+      {/* ── Arena board + setup ──────────────────────────────────────── */}
       <section className={styles.bottomSection}>
         <div className="container">
           <div className={styles.bottomGrid}>
-            <div className={`panel ${styles.setupPanel}`}>
-              <div className="section-label">
-                <span className="idx">03</span> Bring Your Own Cockpit
-              </div>
-              <p>
-                CyberTrack runs in tools operators already use: Cursor for the
-                workspace, Ollama for local Gemma4, this arena for the scoreboard.
-              </p>
-              <div className={styles.setupLinks}>
-                {SETUP_LINKS.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {link.label} <IconExternal size={11} />
-                  </a>
-                ))}
-              </div>
-              <div className={styles.statRow}>
-                <div>
-                  <strong className="mono">{MISSIONS.length}</strong>
-                  <span className="display">Missions</span>
-                </div>
-                <div>
-                  <strong className="mono">{cleanCount}</strong>
-                  <span className="display">Verified Runs</span>
-                </div>
-                <div>
-                  <strong className="mono amber">{suspiciousCount}</strong>
-                  <span className="display">Flagged Times</span>
-                </div>
-                <div>
-                  <strong className="mono">
-                    {fastest ? (
-                      <>
-                        <IconTimer size={12} /> {formatElapsed(fastest.elapsed_seconds)}
-                      </>
-                    ) : (
-                      "--"
-                    )}
-                  </strong>
-                  <span className="display">Fastest Clean</span>
-                </div>
-              </div>
-            </div>
-
             <div className={`panel ${styles.leaderPanel}`}>
               <div className={styles.leaderHead}>
                 <span className="display">Top Operators</span>
@@ -275,6 +273,34 @@ export default async function Home() {
                   ))}
                 </tbody>
               </table>
+              <div className={styles.leaderFoot}>
+                {fastest && (
+                  <span className="mono">
+                    fastest clean run {formatElapsed(fastest.elapsed_seconds)}
+                  </span>
+                )}
+                <span className="mono amber">{flaggedCount} flagged times</span>
+              </div>
+            </div>
+
+            <div className={`panel ${styles.setupPanel}`}>
+              <div className="section-label">
+                <span className="idx">02</span> Bring Your Own Cockpit
+              </div>
+              <p>
+                Cursor for the missions. Ollama for local Gemma4. This arena for
+                the score. Setup takes about five minutes.
+              </p>
+              <div className={styles.setupLinks}>
+                {SETUP_LINKS.map((link) => (
+                  <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">
+                    {link.label} <IconExternal size={11} />
+                  </a>
+                ))}
+              </div>
+              <Link href="/qualification" className={`btn btn-primary ${styles.setupCta}`}>
+                Run the Deployment Protocol →
+              </Link>
             </div>
           </div>
         </div>

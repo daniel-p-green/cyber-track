@@ -11,24 +11,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  height: 56px;
+  gap: 12px;
+  min-height: 54px;
+  flex-wrap: nowrap;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   text-decoration: none;
+  min-width: 0;
 }
 .brand:hover { text-decoration: none; }
 
-.badge { display: inline-flex; }
+.badge { display: inline-flex; flex-shrink: 0; }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .navLink {
@@ -38,10 +41,11 @@
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--muted);
-  padding: 6px 10px;
+  padding: 6px 9px;
   border-radius: 2px;
   text-decoration: none;
   transition: color 140ms ease-out, background 140ms ease-out;
+  white-space: nowrap;
 }
 .navLink:hover {
   color: var(--text);
@@ -53,8 +57,12 @@
   background: var(--paper);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .badge { display: none; }
-  .nav { gap: 3px; }
-  .navLink { padding: 6px 5px; font-size: 10px; }
+}
+
+@media (max-width: 430px) {
+  .inner { gap: 6px; }
+  .nav { gap: 0; }
+  .navLink { padding: 6px 5px; font-size: 10px; letter-spacing: 0.04em; }
 }

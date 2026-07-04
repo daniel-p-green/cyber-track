@@ -3,11 +3,12 @@ import Link from "next/link";
 import { getOperator, getSubmissionsByCallsign, Submission } from "@/lib/store";
 import { getRankForXP, getNextRank, RANKS } from "@/lib/ranks";
 import { MISSIONS } from "@/lib/missions";
-import { formatElapsed } from "@/lib/utils";
+import { formatElapsed, slopeForDifficulty } from "@/lib/utils";
 import {
   MissionGlyph,
   RankPlate,
   RankChevrons,
+  SlopeBadge,
   IconGitHub,
   IconX,
   IconSuspicious,
@@ -27,8 +28,7 @@ function xpProgressPct(xp: number): number {
   const next = getNextRank(xp);
   if (!next) return 100;
   const range = next.xp_min - current.xp_min;
-  const progress = xp - current.xp_min;
-  return Math.min(100, Math.round((progress / range) * 100));
+  return Math.min(100, Math.round(((xp - current.xp_min) / range) * 100));
 }
 
 function getBestDimensions(subs: Submission[]): Record<string, { points: number; max: number }> {
@@ -79,6 +79,10 @@ export default async function OperatorRecordPage({ params }: Props) {
   const localRuns = cleanSubs.filter((s) => s.local_model && !s.local_model.simulated).length;
   const compliancePct =
     cleanSubs.length > 0 ? Math.round((localRuns / cleanSubs.length) * 100) : null;
+  const avgScore =
+    cleanSubs.length > 0
+      ? Math.round(cleanSubs.reduce((a, b) => a + (b.total / b.max_total) * 100, 0) / cleanSubs.length)
+      : null;
 
   const sortedSubs = [...subs].sort(
     (a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime()
@@ -91,31 +95,66 @@ export default async function OperatorRecordPage({ params }: Props) {
           <Link href="/leaderboard">← Arena</Link>
         </div>
 
-        <div className={styles.layout}>
-          {/* ── Aside: operator plate ─────────────────────────────────── */}
-          <aside className={styles.aside}>
-            <div className={`panel hud-corners ${styles.profileCard}`}>
-              <div className={styles.plateRow}>
-                <RankPlate letter={operator.callsign[0]} size={52} />
-                <div>
-                  <div className={`mono ${styles.callsign}`}>{operator.callsign}</div>
-                  <div className={styles.rankRow}>
-                    <RankChevrons tier={rankTier} size={9} />
-                    <span className={`display ${styles.rankName}`}>{rankInfo.name}</span>
-                  </div>
+        {/* ── Operator banner ─────────────────────────────────────────── */}
+        <header className={`panel hud-corners ${styles.banner}`}>
+          <div className={styles.bannerMain}>
+            <RankPlate letter={operator.callsign[0]} size={58} />
+            <div className={styles.bannerId}>
+              <div className={styles.callsignRow}>
+                <span className={`mono ${styles.callsign}`}>{operator.callsign}</span>
+                {operator.seeded && (
+                  <span className={`display ${styles.seedTag}`} title="Sample data for the demo">
+                    demo
+                  </span>
+                )}
+              </div>
+              <div className={styles.rankRow}>
+                <RankChevrons tier={rankTier} size={10} />
+                <span className={`display ${styles.rankName}`}>{rankInfo.name}</span>
+              </div>
+              <div className={styles.sinceRow}>
+                In the arena since{" "}
+                {new Date(operator.created_at).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </div>
+            </div>
+
+            <div className={styles.bannerRight}>
+              {(operator.github_url || operator.x_url) && (
+                <div className={styles.socialRow}>
+                  {operator.github_url && (
+                    <a
+                      href={operator.github_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.socialBtn}
+                      aria-label={`${operator.callsign} on GitHub (opens in new tab)`}
+                      title="GitHub profile"
+                    >
+                      <IconGitHub size={15} />
+                    </a>
+                  )}
+                  {operator.x_url && (
+                    <a
+                      href={operator.x_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.socialBtn}
+                      aria-label={`${operator.callsign} on X (opens in new tab)`}
+                      title="X profile"
+                    >
+                      <IconX size={15} />
+                    </a>
+                  )}
                 </div>
-              </div>
-              {operator.seeded && (
-                <span className={`mono ${styles.seedNote}`} title="Demo seed profile">
-                  demo seed profile
-                </span>
               )}
-
-              <div className={styles.xpRow}>
+              <div className={styles.xpBlock}>
                 <span className={`mono ${styles.xpVal}`}>{operator.xp.toLocaleString()}</span>
-                <span className="muted" style={{ fontSize: "12px" }}>XP</span>
+                <span className={`display ${styles.xpLabel}`}>XP</span>
               </div>
-
               <div className={styles.progressWrap}>
                 <div
                   className={styles.progressBar}
@@ -126,103 +165,147 @@ export default async function OperatorRecordPage({ params }: Props) {
                 >
                   <div className={styles.progressFill} style={{ width: `${progressPct}%` }} />
                 </div>
-                {nextRank ? (
-                  <div className={styles.progressLabel}>
-                    <span className="muted">{operator.xp.toLocaleString()} XP</span>
-                    <span className={`display ${styles.nextRank}`}>
-                      Next: {nextRank.name} at {nextRank.xp_min.toLocaleString()}
-                    </span>
-                  </div>
-                ) : (
-                  <div className={styles.progressLabel}>
-                    <span className={`display ${styles.nextRank}`}>MAX RANK · FIELD MARSHAL</span>
-                  </div>
-                )}
-              </div>
-
-              <hr className="divider" style={{ margin: "14px 0" }} />
-
-              <div className={styles.statGrid}>
-                <div className={styles.stat}>
-                  <span className={`mono ${styles.statVal}`}>{cleanSubs.length}</span>
-                  <span className={`display ${styles.statLabel}`}>Missions</span>
-                </div>
-                <div className={styles.stat}>
-                  <span className={`mono ${styles.statVal}`}>
-                    {cleanSubs.length > 0
-                      ? `${Math.round(cleanSubs.reduce((a, b) => a + (b.total / b.max_total) * 100, 0) / cleanSubs.length)}%`
-                      : "—"}
-                  </span>
-                  <span className={`display ${styles.statLabel}`}>Avg Score</span>
-                </div>
-                <div className={styles.stat}>
-                  <span className={`mono ${styles.statVal}`}>
-                    {bestClean ? (
-                      <>
-                        <IconTimer size={13} /> {formatElapsed(bestClean.elapsed_seconds)}
-                      </>
-                    ) : (
-                      "—"
-                    )}
-                  </span>
-                  <span className={`display ${styles.statLabel}`}>Best Time</span>
-                </div>
-                <div className={styles.stat}>
-                  <span className={`mono ${styles.statVal}`} style={{ color: compliancePct === 100 ? "var(--signal)" : undefined }}>
-                    {compliancePct !== null ? (
-                      <>
-                        <IconOffline size={13} /> {compliancePct}%
-                      </>
-                    ) : (
-                      "—"
-                    )}
-                  </span>
-                  <span className={`display ${styles.statLabel}`}>Local Compliance</span>
-                </div>
-              </div>
-
-              {(operator.github_url || operator.x_url) && (
-                <div className={styles.socialRow}>
-                  {operator.github_url && (
-                    <a
-                      href={operator.github_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.socialLink}
-                      aria-label={`${operator.callsign} GitHub profile`}
-                    >
-                      <IconGitHub size={14} />
-                      GitHub
-                    </a>
-                  )}
-                  {operator.x_url && (
-                    <a
-                      href={operator.x_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={styles.socialLink}
-                      aria-label={`${operator.callsign} X profile`}
-                    >
-                      <IconX size={14} />
-                      X
-                    </a>
-                  )}
-                </div>
-              )}
-
-              <div className={styles.sinceDate}>
-                In the arena since{" "}
-                {new Date(operator.created_at).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
+                <span className={`display ${styles.nextRank}`}>
+                  {nextRank
+                    ? `Next: ${nextRank.name} at ${nextRank.xp_min.toLocaleString()}`
+                    : "Max rank"}
+                </span>
               </div>
             </div>
+          </div>
 
-            {/* Mission badges */}
-            <div className={`panel ${styles.badgesCard}`}>
-              <div className="section-label">Mission Badges · Season Zero</div>
+          <div className={styles.statStrip}>
+            <div className={styles.stat}>
+              <span className={`mono ${styles.statVal}`}>{cleanSubs.length}</span>
+              <span className={`display ${styles.statLabel}`}>Missions</span>
+            </div>
+            <div className={styles.stat}>
+              <span className={`mono ${styles.statVal}`}>
+                {avgScore !== null ? `${avgScore}%` : "—"}
+              </span>
+              <span className={`display ${styles.statLabel}`}>Avg Score</span>
+            </div>
+            <div className={styles.stat}>
+              <span className={`mono ${styles.statVal}`}>
+                {bestClean ? (
+                  <>
+                    <IconTimer size={13} /> {formatElapsed(bestClean.elapsed_seconds)}
+                  </>
+                ) : (
+                  "—"
+                )}
+              </span>
+              <span className={`display ${styles.statLabel}`}>Best Time</span>
+            </div>
+            <div className={styles.stat}>
+              <span
+                className={`mono ${styles.statVal}`}
+                style={{ color: compliancePct === 100 ? "var(--signal)" : undefined }}
+              >
+                {compliancePct !== null ? (
+                  <>
+                    <IconOffline size={13} /> {compliancePct}%
+                  </>
+                ) : (
+                  "—"
+                )}
+              </span>
+              <span className={`display ${styles.statLabel}`}>Local Gemma</span>
+            </div>
+          </div>
+        </header>
+
+        {/* ── Record + intel ──────────────────────────────────────────── */}
+        <div className={styles.layout}>
+          <div className={styles.main}>
+            <h1 className={`display ${styles.title}`}>Mission Record</h1>
+            <p className={styles.subline}>Flagged runs earn no XP.</p>
+
+            {sortedSubs.length === 0 ? (
+              <div className={`panel ${styles.empty}`}>
+                <p>No missions on record yet.</p>
+                <Link href="/missions" className="btn btn-primary" style={{ marginTop: "16px" }}>
+                  Start a Mission →
+                </Link>
+              </div>
+            ) : (
+              <div className={`panel ${styles.tableWrap}`}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Mission</th>
+                      <th className={styles.right}>Score</th>
+                      <th className={styles.right}>Time</th>
+                      <th className={styles.right}>XP</th>
+                      <th>Status</th>
+                      <th className={styles.hideSm}>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedSubs.map((sub) => {
+                      const mission = MISSIONS.find((m) => m.id === sub.mission_id);
+                      const isSuspicious = sub.flags.suspicious_fast;
+                      const slope = mission ? slopeForDifficulty(mission.difficulty) : null;
+                      return (
+                        <tr key={sub.run_id} className={isSuspicious ? styles.suspicious : ""}>
+                          <td>
+                            <span className={styles.missionCell}>
+                              {slope && (
+                                <SlopeBadge slope={slope.id} label={slope.label} withLabel={false} size={12} />
+                              )}
+                              <Link
+                                href={`/missions/${sub.mission_id}`}
+                                className={`display ${styles.missionLink}`}
+                                style={{ color: isSuspicious ? "var(--muted)" : "var(--ice)" }}
+                              >
+                                {mission?.title.replace(/^(Relay|Marathon): /, "") ?? sub.mission_id}
+                              </Link>
+                            </span>
+                          </td>
+                          <td
+                            className={`mono ${styles.right}`}
+                            style={{ color: isSuspicious ? "var(--muted)" : "var(--signal)" }}
+                          >
+                            {sub.total}/{sub.max_total}
+                          </td>
+                          <td className={`mono muted ${styles.right}`}>
+                            {formatElapsed(sub.elapsed_seconds)}
+                          </td>
+                          <td
+                            className={`mono ${styles.right}`}
+                            style={{ color: isSuspicious ? "var(--muted)" : "var(--amber)" }}
+                          >
+                            {isSuspicious ? "—" : `+${sub.xp_awarded}`}
+                          </td>
+                          <td>
+                            {isSuspicious ? (
+                              <span className="tag tag-amber">
+                                <IconSuspicious size={11} /> Flagged
+                              </span>
+                            ) : sub.flags.missing_telemetry ? (
+                              <span className="tag tag-muted">No telemetry</span>
+                            ) : (
+                              <span className="tag tag-signal">Verified</span>
+                            )}
+                          </td>
+                          <td className={`mono muted ${styles.hideSm}`} style={{ fontSize: "12px" }}>
+                            {new Date(sub.submitted_at).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          <aside className={styles.aside}>
+            <div className={`panel ${styles.sideCard}`}>
+              <div className="section-label">Season Zero Badges</div>
               <div className={styles.badgeGrid}>
                 {MISSIONS.map((m, i) => {
                   const earned = completedMissionIds.has(m.id);
@@ -231,7 +314,7 @@ export default async function OperatorRecordPage({ params }: Props) {
                       key={m.id}
                       href={`/missions/${m.id}`}
                       className={`${styles.badge} ${earned ? styles.badgeEarned : ""}`}
-                      title={`${m.title}${earned ? " — completed" : " — not yet completed"}`}
+                      title={`${m.title}${earned ? " — completed" : ""}`}
                     >
                       <MissionGlyph eventType={m.event_type} missionId={m.id} size={18} />
                       <span className="mono">{String(i + 1).padStart(2, "0")}</span>
@@ -241,9 +324,8 @@ export default async function OperatorRecordPage({ params }: Props) {
               </div>
             </div>
 
-            {/* AAR highlights */}
             {Object.keys(bestDims).length > 0 && (
-              <div className={`panel ${styles.dimsCard}`}>
+              <div className={`panel ${styles.sideCard}`}>
                 <div className="section-label">AAR Highlights</div>
                 {Object.entries(bestDims)
                   .filter(([, v]) => v.max > 0)
@@ -261,7 +343,8 @@ export default async function OperatorRecordPage({ params }: Props) {
                             className={styles.dimFill}
                             style={{
                               width: `${pct}%`,
-                              background: pct >= 80 ? "var(--signal)" : pct >= 50 ? "var(--amber)" : "var(--alert)",
+                              background:
+                                pct >= 80 ? "var(--signal)" : pct >= 50 ? "var(--amber)" : "var(--alert)",
                             }}
                           />
                         </div>
@@ -272,82 +355,6 @@ export default async function OperatorRecordPage({ params }: Props) {
               </div>
             )}
           </aside>
-
-          {/* ── Main: mission record ──────────────────────────────────── */}
-          <div className={styles.main}>
-            <h1 className={`display ${styles.title}`}>Mission Record</h1>
-            <p className="muted" style={{ fontSize: "13px", marginBottom: "24px" }}>
-              Training history for {operator.callsign}. Flagged runs earn no XP and
-              are excluded from podium positions.
-            </p>
-
-            {sortedSubs.length === 0 ? (
-              <div className={`panel ${styles.empty}`}>
-                <p>No missions on record yet.</p>
-                <Link href="/missions" className="btn btn-primary" style={{ marginTop: "16px" }}>
-                  Start a Mission →
-                </Link>
-              </div>
-            ) : (
-              <div className={`panel ${styles.tableWrap}`}>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Mission</th>
-                      <th>Score</th>
-                      <th>Time</th>
-                      <th>XP</th>
-                      <th>Status</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {sortedSubs.map((sub) => {
-                      const mission = MISSIONS.find((m) => m.id === sub.mission_id);
-                      const isSuspicious = sub.flags.suspicious_fast;
-                      return (
-                        <tr key={sub.run_id} className={isSuspicious ? styles.suspicious : ""}>
-                          <td>
-                            <Link
-                              href={`/missions/${sub.mission_id}`}
-                              className={`display ${styles.missionLink}`}
-                              style={{ color: isSuspicious ? "var(--muted)" : "var(--ice)" }}
-                            >
-                              {mission?.title ?? sub.mission_id}
-                            </Link>
-                          </td>
-                          <td className="mono" style={{ color: isSuspicious ? "var(--muted)" : "var(--signal)" }}>
-                            {sub.total}/{sub.max_total}
-                          </td>
-                          <td className="mono muted">{formatElapsed(sub.elapsed_seconds)}</td>
-                          <td className="mono" style={{ color: isSuspicious ? "var(--muted)" : "var(--amber)" }}>
-                            {isSuspicious ? "—" : `+${sub.xp_awarded}`}
-                          </td>
-                          <td>
-                            {isSuspicious ? (
-                              <span className="tag tag-amber">
-                                <IconSuspicious size={11} /> Suspicious time
-                              </span>
-                            ) : sub.flags.missing_telemetry ? (
-                              <span className="tag tag-muted">No telemetry</span>
-                            ) : (
-                              <span className="tag tag-signal">Verified</span>
-                            )}
-                          </td>
-                          <td className="mono muted" style={{ fontSize: "12px" }}>
-                            {new Date(sub.submitted_at).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                            })}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </div>

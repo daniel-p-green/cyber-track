@@ -152,17 +152,15 @@
 }
 
 .seedMark {
-  margin-left: 6px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 13px;
-  height: 13px;
-  border: 1px solid var(--line-strong);
+  margin-left: 8px;
+  display: inline-block;
+  border: 1px solid var(--line);
   border-radius: 2px;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 9px;
+  padding: 1px 5px;
+  color: var(--line-strong);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   vertical-align: 1px;
   cursor: help;
 }
@@ -211,8 +209,16 @@
 }
 .legendSeed {
   min-width: 44px;
-  font-size: 10px;
-  color: var(--text);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.legendSlopes {
+  min-width: 44px;
+  display: inline-flex;
+  gap: 5px;
+  align-self: center;
 }
 
 @media (max-width: 720px) {

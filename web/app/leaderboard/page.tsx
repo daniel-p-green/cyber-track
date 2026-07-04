@@ -2,11 +2,12 @@ import Link from "next/link";
 import { getAllOperators, getAllSubmissions, Submission, Operator } from "@/lib/store";
 import { getRankForXP, RANKS } from "@/lib/ranks";
 import { MISSIONS } from "@/lib/missions";
-import { formatElapsed } from "@/lib/utils";
+import { formatElapsed, slopeForDifficulty } from "@/lib/utils";
 import {
   GemmaStatus,
   RankChevrons,
   RankPlate,
+  SlopeBadge,
   IconSuspicious,
   IconOffline,
 } from "../components/svg";
@@ -89,8 +90,12 @@ function buildMissionEntries(missionId: string, ops: Operator[], subs: Submissio
 function SeedMark({ seeded }: { seeded?: boolean }) {
   if (!seeded) return null;
   return (
-    <span className={styles.seedMark} title="Demo seed row — sample data, not a real run">
-      s
+    <span
+      className={`display ${styles.seedMark}`}
+      title="Demo seed row — sample data, not a real run"
+      aria-label="demo seed data"
+    >
+      demo
     </span>
   );
 }
@@ -227,6 +232,11 @@ export default async function ArenaPage({
           <>
             <div className={styles.missionHeader}>
               <span className={`display ${styles.missionTitle}`}>{activeMission.title}</span>
+              <SlopeBadge
+                slope={slopeForDifficulty(activeMission.difficulty).id}
+                label={slopeForDifficulty(activeMission.difficulty).label}
+                size={13}
+              />
               <span className="muted">
                 {activeMission.timebox_minutes}m timebox · +{activeMission.xp_base} XP base
               </span>
@@ -316,23 +326,29 @@ export default async function ArenaPage({
           </div>
           <div className={styles.legendItem}>
             <span className={styles.legendIcon}><IconSuspicious size={13} /></span>
-            <span>
-              Impossibly fast run — flagged, zero XP, excluded from podium. Speed is
-              worth at most 10% of score.
-            </span>
+            <span>Impossibly fast run — flagged, zero XP, no podium.</span>
           </div>
           <div className={styles.legendItem}>
             <span className={styles.legendIcon} style={{ color: "var(--ice)" }}>
               <IconOffline size={13} />
             </span>
-            <span>
-              All scored runs used local Gemma4 offline — verified by the engine before
-              every mission.
-            </span>
+            <span>Every scored run used local Gemma4, verified before the mission.</span>
           </div>
           <div className={styles.legendItem}>
-            <span className={`mono ${styles.legendSeed}`}>s</span>
-            <span>Demo seed row — sample data shown for the hackathon demo.</span>
+            <span className={`display ${styles.legendSeed}`}>demo</span>
+            <span>Sample data for the demo.</span>
+          </div>
+          <div className={styles.legendItem}>
+            <span className={styles.legendSlopes}>
+              <SlopeBadge slope="green" withLabel={false} size={11} />
+              <SlopeBadge slope="blue" withLabel={false} size={11} />
+              <SlopeBadge slope="black" withLabel={false} size={11} />
+              <SlopeBadge slope="double-black" withLabel={false} size={11} />
+            </span>
+            <span>
+              Difficulty: green qualification, blue sprint, black advanced,
+              double-black marathon.
+            </span>
           </div>
         </div>
       </div>

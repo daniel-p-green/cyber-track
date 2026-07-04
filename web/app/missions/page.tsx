@@ -1,28 +1,22 @@
 import Link from "next/link";
 import { MISSIONS } from "@/lib/missions";
-import { difficultyPips, eventTypeLabel, eventTypeColor } from "@/lib/utils";
+import { eventTypeLabel, eventTypeColor, slopeForDifficulty } from "@/lib/utils";
 import {
   MissionGlyph,
   RailNode,
   GemmaStatus,
+  SlopeBadge,
   IconFile,
   IconTimer,
   type NodeState,
 } from "../components/svg";
 import styles from "./page.module.css";
 
-const EVENT_ORDER = ["qualification", "sprint", "field", "relay", "marathon"] as const;
-
 function nodeState(index: number): NodeState {
   return index === 0 ? "active" : "available";
 }
 
 export default function MissionsPage() {
-  const groups = EVENT_ORDER.map((type) => ({
-    type,
-    missions: MISSIONS.filter((m) => m.event_type === type),
-  })).filter((g) => g.missions.length > 0);
-
   return (
     <div className={`${styles.root} ops-grid-bg`}>
       <div className="container">
@@ -35,8 +29,8 @@ export default function MissionsPage() {
             </div>
             <h1 className={`display ${styles.title}`}>Mission Board</h1>
             <p className={styles.subtitle}>
-              Every mission runs inside a Cursor workspace with local Gemma4 as
-              your only AI. Correctness first — speed is worth at most 10%.
+              Fly missions in Cursor with local Gemma4. Submit here for score,
+              AAR, and rank.
             </p>
           </div>
           <div className={styles.edgeStatus}>
@@ -48,103 +42,112 @@ export default function MissionsPage() {
         {/* Progression rail */}
         <div className={`panel ${styles.railPanel}`}>
           <div className={styles.rail}>
-            {MISSIONS.map((m, i) => (
-              <Link key={m.id} href={`/missions/${m.id}`} className={styles.railStop}>
-                {i > 0 && <span className={styles.railLine} aria-hidden />}
-                <RailNode state={nodeState(i)} size={38}>
-                  <MissionGlyph eventType={m.event_type} missionId={m.id} size={19} />
-                </RailNode>
-                <span className={`display ${styles.railLabel}`}>
-                  {m.title.replace(/^(Relay|Marathon): /, "")}
-                </span>
-              </Link>
-            ))}
+            {MISSIONS.map((m, i) => {
+              const slope = slopeForDifficulty(m.difficulty);
+              return (
+                <Link key={m.id} href={`/missions/${m.id}`} className={styles.railStop}>
+                  {i > 0 && <span className={styles.railLine} aria-hidden />}
+                  <RailNode state={nodeState(i)} size={38}>
+                    <MissionGlyph eventType={m.event_type} missionId={m.id} size={19} />
+                  </RailNode>
+                  <span className={`display ${styles.railLabel}`}>
+                    {m.title.replace(/^(Relay|Marathon): /, "")}
+                  </span>
+                  <SlopeBadge slope={slope.id} label={slope.label} withLabel={false} size={11} />
+                </Link>
+              );
+            })}
           </div>
         </div>
 
-        {/* Dossier groups */}
-        {groups.map(({ type, missions }) => (
-          <section key={type} className={styles.group}>
-            <div className="section-label">{eventTypeLabel(type)}</div>
-            <div className={styles.missionGrid}>
-              {missions.map((m) => {
-                return (
-                  <article key={m.id} className={`panel hud-corners ${styles.dossier}`}>
-                    <header className={styles.dossierHead}>
-                      <span className={styles.dossierIcon}>
-                        <MissionGlyph eventType={m.event_type} missionId={m.id} size={22} />
-                      </span>
-                      <div className={styles.dossierId}>
-                        <span className={`tag ${eventTypeColor(m.event_type)}`}>
-                          {eventTypeLabel(m.event_type)}
-                        </span>
-                        <span className={`mono ${styles.pips}`}>
-                          {difficultyPips(m.difficulty)}
-                        </span>
-                      </div>
-                    </header>
+        {/* Slope key */}
+        <div className={styles.slopeKey}>
+          <SlopeBadge slope="green" label="Green — qualification" size={12} />
+          <SlopeBadge slope="blue" label="Blue — sprint" size={12} />
+          <SlopeBadge slope="black" label="Black — advanced field" size={12} />
+          <SlopeBadge slope="double-black" label="Double black — marathon" size={12} />
+        </div>
 
-                    <h2 className={`display ${styles.dossierTitle}`}>{m.title}</h2>
+        {/* Campaign grid — one continuous board, campaign order */}
+        <div className={styles.missionGrid}>
+          {MISSIONS.map((m, i) => {
+            const slope = slopeForDifficulty(m.difficulty);
+            return (
+              <article key={m.id} className={`panel hud-corners ${styles.dossier}`}>
+                <header className={styles.dossierHead}>
+                  <span className={styles.dossierIcon}>
+                    <MissionGlyph eventType={m.event_type} missionId={m.id} size={22} />
+                  </span>
+                  <div className={styles.dossierId}>
+                    <span className={`mono ${styles.dossierNum}`}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className={`tag ${eventTypeColor(m.event_type)}`}>
+                      {eventTypeLabel(m.event_type)}
+                    </span>
+                  </div>
+                  <SlopeBadge
+                    slope={slope.id}
+                    label={slope.shortLabel}
+                    size={14}
+                    className={styles.dossierSlope}
+                  />
+                </header>
 
-                    <div className={styles.objective}>
-                      <span className={`display ${styles.fieldLabel}`}>Objective</span>
-                      <p>{m.summary}</p>
-                    </div>
+                <h2 className={`display ${styles.dossierTitle}`}>{m.title}</h2>
 
-                    <div className={styles.metaGrid}>
-                      <div>
-                        <span className={`display ${styles.fieldLabel}`}>Timebox</span>
-                        <span className="mono amber">
-                          <IconTimer size={11} /> {m.timebox_minutes}m
-                        </span>
-                      </div>
-                      <div>
-                        <span className={`display ${styles.fieldLabel}`}>Reward</span>
-                        <span className="mono signal">+{m.xp_base} XP</span>
-                      </div>
-                      <div>
-                        <span className={`display ${styles.fieldLabel}`}>Constraint</span>
-                        <span className={`mono ${styles.constraintVal}`}>local Gemma4</span>
-                      </div>
-                    </div>
+                <p className={styles.objective}>{m.summary}</p>
 
-                    <div className={styles.evidence}>
-                      <span className={`display ${styles.fieldLabel}`}>Evidence Required</span>
-                      <ul>
-                        {m.evidence.map((f) => (
-                          <li key={f} className="mono">
-                            <IconFile size={11} /> {f}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                <div className={styles.metaGrid}>
+                  <div>
+                    <span className={`display ${styles.fieldLabel}`}>Timebox</span>
+                    <span className="mono amber">
+                      <IconTimer size={11} /> {m.timebox_minutes}m
+                    </span>
+                  </div>
+                  <div>
+                    <span className={`display ${styles.fieldLabel}`}>Reward</span>
+                    <span className="mono signal">+{m.xp_base} XP</span>
+                  </div>
+                  <div>
+                    <span className={`display ${styles.fieldLabel}`}>Field AI</span>
+                    <span className={`mono ${styles.constraintVal}`}>local Gemma4</span>
+                  </div>
+                </div>
 
-                    <div className={styles.dims}>
-                      <span className={`display ${styles.fieldLabel}`}>Scored On</span>
-                      <div className={styles.dimChips}>
-                        {m.dimensions.map((d) => (
-                          <span key={d} className="tag tag-muted">{d}</span>
-                        ))}
-                      </div>
-                    </div>
+                <div className={styles.evidence}>
+                  <span className={`display ${styles.fieldLabel}`}>
+                    Evidence · {m.evidence.length} file{m.evidence.length > 1 ? "s" : ""}
+                  </span>
+                  <ul>
+                    {m.evidence.slice(0, 3).map((f) => (
+                      <li key={f} className="mono">
+                        <IconFile size={11} /> {f}
+                      </li>
+                    ))}
+                    {m.evidence.length > 3 && (
+                      <li className={`mono ${styles.evidenceMore}`}>
+                        +{m.evidence.length - 3} more
+                      </li>
+                    )}
+                  </ul>
+                </div>
 
-                    <footer className={styles.dossierFoot}>
-                      <Link href={`/missions/${m.id}`} className="btn btn-primary">
-                        Start Mission →
-                      </Link>
-                      <Link
-                        href={`/leaderboard?scope=mission&mission_id=${m.id}`}
-                        className={styles.boardLink}
-                      >
-                        Mission board
-                      </Link>
-                    </footer>
-                  </article>
-                );
-              })}
-            </div>
-          </section>
-        ))}
+                <footer className={styles.dossierFoot}>
+                  <Link href={`/missions/${m.id}`} className="btn btn-primary">
+                    Start Mission →
+                  </Link>
+                  <Link
+                    href={`/leaderboard?scope=mission&mission_id=${m.id}`}
+                    className={styles.boardLink}
+                  >
+                    Top runs
+                  </Link>
+                </footer>
+              </article>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

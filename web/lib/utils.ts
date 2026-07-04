@@ -6,10 +6,21 @@ export function formatElapsed(seconds: number): string {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-export function difficultyPips(level: number, max = 5): string {
-  const filled = "▮".repeat(Math.min(level, max));
-  const empty  = "▯".repeat(Math.max(0, max - level));
-  return filled + empty;
+export type SlopeId = "green" | "blue" | "black" | "double-black";
+
+export interface Slope {
+  id: SlopeId;
+  label: string;
+  shortLabel: string;
+}
+
+/** Skiing-style difficulty language: instantly readable, sport-progression
+ *  feel. Mapped from the mission's numeric difficulty. */
+export function slopeForDifficulty(difficulty: number): Slope {
+  if (difficulty <= 1) return { id: "green", label: "Green Circle", shortLabel: "Green" };
+  if (difficulty === 2) return { id: "blue", label: "Blue Square", shortLabel: "Blue" };
+  if (difficulty === 3) return { id: "black", label: "Black Diamond", shortLabel: "Black" };
+  return { id: "double-black", label: "Double Black Diamond", shortLabel: "Dbl Black" };
 }
 
 export function computeXP(

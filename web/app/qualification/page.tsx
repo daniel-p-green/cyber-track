@@ -1,39 +1,29 @@
 import Link from "next/link";
 import EnlistForm from "../components/EnlistForm";
+import DeploymentProtocol, { ProtocolStep } from "../components/DeploymentProtocol";
 import { RANKS } from "@/lib/ranks";
 import {
   IconOffline,
   IconTerminal,
   IconExternal,
   RankChevrons,
+  SlopeBadge,
 } from "../components/svg";
 import styles from "./page.module.css";
 
-interface WizardStep {
-  id: string;
-  title: string;
-  body: React.ReactNode;
-  action?: "callsign";
-}
-
 function Code({ children }: { children: React.ReactNode }) {
-  return (
-    <div className={`panel-2 mono ${styles.code}`}>
-      {children}
-    </div>
-  );
+  return <div className={`panel-2 mono ${styles.code}`}>{children}</div>;
 }
 
-const STEPS: WizardStep[] = [
+const STEPS: ProtocolStep[] = [
   {
-    id: "01",
-    title: "Install Cursor — the cockpit",
+    id: "cursor",
+    title: "Install Cursor — your cockpit",
     body: (
       <>
         <p>
-          Every CyberTrack mission is completed inside a Cursor workspace: reading
-          evidence, patching configs, talking to your field AI from the integrated
-          terminal. If you already use Cursor, you already have the cockpit.
+          Missions are flown inside a Cursor workspace. Already use Cursor?
+          This step is done.
         </p>
         <div className={styles.linkRow}>
           <a href="https://cursor.com?ref=CyberTrack" target="_blank" rel="noopener noreferrer">
@@ -47,14 +37,11 @@ const STEPS: WizardStep[] = [
     ),
   },
   {
-    id: "02",
+    id: "ollama",
     title: "Install Ollama — the local model runtime",
     body: (
       <>
-        <p>
-          Ollama runs Gemma4 entirely on your machine. No API key, no account,
-          no cloud dependency — which is the point.
-        </p>
+        <p>Ollama runs Gemma4 on your machine. No API key, no account, no cloud.</p>
         <div className={styles.linkRow}>
           <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer">
             Install Ollama <IconExternal size={11} />
@@ -64,7 +51,7 @@ const STEPS: WizardStep[] = [
     ),
   },
   {
-    id: "03",
+    id: "gemma",
     title: "Pull and verify local Gemma4",
     body: (
       <>
@@ -74,24 +61,20 @@ const STEPS: WizardStep[] = [
           <div><span className={styles.prompt}>$</span> <span className="signal">cybertf verify-model</span></div>
         </Code>
         <p>
-          You should see your model listed, a latency reading, and{" "}
-          <code className={`mono ${styles.inline}`}>FIELD AI ONLINE</code> at{" "}
-          <code className={`mono ${styles.inline}`}>localhost:11434</code>. If that
-          badge is green, you are mission-capable offline.
+          Green <code className={`mono ${styles.inline}`}>FIELD AI ONLINE</code>{" "}
+          means you&apos;re mission-capable offline.
         </p>
       </>
     ),
   },
   {
-    id: "04",
-    title: "Open the CyberTrack workspace in Cursor",
+    id: "workspace",
+    title: "Open the mission workspace in Cursor",
     body: (
       <>
         <p>
-          Clone the mission workspace and open the folder in Cursor. Every Season
-          Zero mission — briefs, synthetic evidence, the{" "}
-          <code className={`mono ${styles.inline}`}>cybertf</code> CLI — ships in
-          the repo.
+          Every mission ships in the repo — briefs, evidence, the{" "}
+          <code className={`mono ${styles.inline}`}>cybertf</code> CLI.
         </p>
         <Code>
           <div><span className={styles.prompt}>$</span> <span className="signal">git clone</span> https://github.com/daniel-p-green/cyber-track.git</div>
@@ -101,26 +84,26 @@ const STEPS: WizardStep[] = [
     ),
   },
   {
-    id: "05",
-    title: "Claim your callsign",
-    body: (
-      <p>
-        Your callsign is your arena identity — 3 to 20 characters, no email, no
-        password. GitHub and X links are optional and appear on your operator
-        record.
-      </p>
-    ),
-    action: "callsign",
-  },
-  {
-    id: "06",
-    title: "Fly Basic Qualification and submit evidence",
+    id: "callsign",
+    title: "Claim your callsign — join the arena",
     body: (
       <>
         <p>
-          Start the first mission. The timer arms immediately — 15 minutes. The
-          brief includes one deliberately bad model claim; your job is to catch it
-          with evidence, not to copy the model&apos;s answer.
+          Your arena identity. No email, no password. GitHub and X links
+          optional.
+        </p>
+        <EnlistForm />
+      </>
+    ),
+  },
+  {
+    id: "first-mission",
+    title: "Fly Basic Qualification — submit for scoring",
+    body: (
+      <>
+        <p>
+          The brief hides one bad model claim. Catch it with evidence.
+          15 minutes on the clock.
         </p>
         <Code>
           <div><span className={styles.prompt}>$</span> <span className="signal">cybertf run</span> basic_qualification</div>
@@ -129,10 +112,9 @@ const STEPS: WizardStep[] = [
           <div><span className={styles.prompt}>$</span> <span className="signal">cybertf publish</span> &lt;run_id&gt;</div>
         </Code>
         <p>
-          <code className={`mono ${styles.inline}`}>submit</code> scores your run
-          deterministically and writes your after-action report.{" "}
-          <code className={`mono ${styles.inline}`}>publish</code> posts the score
-          to this arena. Read the AAR — that is how you improve.
+          <code className={`mono ${styles.inline}`}>submit</code> scores the run
+          and writes your AAR.{" "}
+          <code className={`mono ${styles.inline}`}>publish</code> posts it here.
         </p>
       </>
     ),
@@ -156,16 +138,20 @@ export default function QualificationPage() {
         <div className={styles.header}>
           <div className={styles.kicker}>
             <span className="pulse-dot" />
-            Season Zero · Start Here
+            Season Zero · Deployment Protocol
           </div>
-          <h1 className={`display ${styles.title}`}>Basic Qualification</h1>
+          <h1 className={`display ${styles.title}`}>Get Mission-Capable</h1>
           <p className={styles.subtitle}>
-            Six steps from zero to your first scored mission. Fifteen minutes on
-            the clock once you start.
+            Six steps from zero to your first scored run. Do the work in Cursor;
+            the arena keeps score.
           </p>
+          <div className={styles.slopeRow}>
+            <SlopeBadge slope="green" label="Green Circle — Basic Qualification" size={13} />
+            <span className="mono muted">15:00 timebox · +200 XP</span>
+          </div>
         </div>
 
-        {/* Constraint banner — impossible to miss */}
+        {/* Constraint banner */}
         <div className={`hud-corners hud-corners-signal ${styles.constraint}`}>
           <IconOffline size={26} className={styles.constraintIcon} />
           <div>
@@ -173,39 +159,20 @@ export default function QualificationPage() {
               Mission constraint: local Gemma4 only
             </div>
             <p>
-              Every mission runs offline. Cloud AI is out of bounds inside the
-              workspace — your only field AI is the Gemma4 model running on your own
-              machine. That constraint is the training.
+              Missions run offline. Your only AI is Gemma4 on your own machine.
+              That constraint is the training.
             </p>
           </div>
         </div>
 
-        {/* Wizard + aside */}
+        {/* Protocol + aside */}
         <div className={styles.layout}>
-          <ol className={styles.steps}>
-            {STEPS.map((step, i) => (
-              <li key={step.id} className={`panel ${styles.step}`}>
-                <div className={styles.stepMarker} aria-hidden>
-                  <span className={`mono ${styles.stepNum}`}>{step.id}</span>
-                  {i < STEPS.length - 1 && <span className={styles.stepLine} />}
-                </div>
-                <div className={styles.stepBody}>
-                  <h2 className={`display ${styles.stepTitle}`}>{step.title}</h2>
-                  <div className={styles.stepContent}>{step.body}</div>
-                  {step.action === "callsign" && (
-                    <div className={styles.stepAction}>
-                      <EnlistForm />
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ol>
+          <DeploymentProtocol steps={STEPS} />
 
           <aside className={styles.aside}>
             <div className={`panel ${styles.refCard}`}>
               <div className="section-label">
-                <IconTerminal size={13} /> Command Reference
+                <IconTerminal size={13} /> Cockpit Commands
               </div>
               <div className={styles.refList}>
                 {QUICK_REF.map((item) => (
@@ -234,8 +201,8 @@ export default function QualificationPage() {
               <div className="section-label">Roadmap</div>
               <div className={`display ${styles.originTitle}`}>Cursor Origin</div>
               <p>
-                One-tap operator identity through Cursor is on the Season One
-                roadmap. Callsigns are all you need today.
+                One-tap Cursor identity, coming in Season One. Callsigns are all
+                you need today.
               </p>
               <a
                 href="https://cursor.com/origin?ref=CyberTrack"
@@ -248,8 +215,8 @@ export default function QualificationPage() {
             </div>
 
             <div className={styles.ruleNote}>
-              Scores are <strong>training and readiness feedback only</strong> —
-              never hiring criteria or job-suitability signals.
+              Scores are <strong>training feedback</strong> — never hiring
+              signals.
             </div>
 
             <Link
@@ -257,7 +224,7 @@ export default function QualificationPage() {
               className="btn btn-outline"
               style={{ width: "100%", justifyContent: "center" }}
             >
-              Full Mission Brief →
+              Open the Mission Cockpit →
             </Link>
           </aside>
         </div>

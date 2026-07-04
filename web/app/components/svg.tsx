@@ -143,6 +143,75 @@ export function MissionGlyph({
   }
 }
 
+/* ── Slope rating — skiing-style mission difficulty marks ──────────────── */
+
+function SlopeShape({ slope, size }: { slope: string; size: number }) {
+  // Black diamonds carry a light outline so they stay iconic on dark panels.
+  const s = size;
+  if (slope === "green") {
+    return (
+      <svg width={s} height={s} viewBox="0 0 20 20" aria-hidden>
+        <circle cx="10" cy="10" r="7.5" fill="var(--signal)" />
+      </svg>
+    );
+  }
+  if (slope === "blue") {
+    return (
+      <svg width={s} height={s} viewBox="0 0 20 20" aria-hidden>
+        <rect x="3.5" y="3.5" width="13" height="13" fill="var(--ice)" />
+      </svg>
+    );
+  }
+  if (slope === "black") {
+    return (
+      <svg width={s} height={s} viewBox="0 0 20 20" aria-hidden>
+        <path d="M10 1.5 18 10l-8 8.5L2 10Z" fill="#0B0F14" stroke="var(--text)" strokeWidth="1.4" />
+      </svg>
+    );
+  }
+  // double-black
+  return (
+    <svg width={s * 1.7} height={s} viewBox="0 0 34 20" aria-hidden>
+      <path d="M9 1.5 16.5 10 9 18.5 1.5 10Z" fill="#0B0F14" stroke="var(--text)" strokeWidth="1.4" />
+      <path d="M25 1.5 32.5 10 25 18.5 17.5 10Z" fill="#0B0F14" stroke="var(--text)" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+export function SlopeBadge({
+  slope,
+  label,
+  size = 14,
+  withLabel = true,
+  className,
+}: {
+  slope: string;
+  label?: string;
+  size?: number;
+  withLabel?: boolean;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`display ${className ?? ""}`}
+      title={label}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        fontSize: Math.max(10, size * 0.78),
+        fontWeight: 700,
+        letterSpacing: "0.07em",
+        color: "var(--muted)",
+        whiteSpace: "nowrap",
+      }}
+    >
+      <SlopeShape slope={slope} size={size} />
+      {withLabel && label}
+    </span>
+  );
+}
+
 /* ── Rank plate — hexagonal callsign/rank mark ─────────────────────────── */
 
 export function RankPlate({

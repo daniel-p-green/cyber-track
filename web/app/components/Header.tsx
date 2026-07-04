@@ -10,7 +10,7 @@ const NAV = [
   { href: "/", label: "Command" },
   { href: "/missions", label: "Missions" },
   { href: "/leaderboard", label: "Arena" },
-  { href: "/qualification", label: "Start Here" },
+  { href: "/qualification", label: "Deploy" },
 ];
 
 export default function Header() {
@@ -20,7 +20,7 @@ export default function Header() {
     <header className={styles.header}>
       <div className={`container ${styles.inner}`}>
         <Link href="/" className={styles.brand} aria-label="CyberTrack home">
-          <Wordmark height={20} />
+          <Wordmark height={18} />
           <span className={styles.badge}>
             <GemmaStatus compact />
           </span>
