@@ -40,11 +40,12 @@ def normalize(value: str, mode: str = "loose") -> str:
     if mode == "exact":
         return text
     # loose: underscores count as spaces, collapse whitespace,
-    # drop punctuation except word-internal chars
+    # drop punctuation except word-internal chars (paths, times, decimals),
+    # and trim stray punctuation at the edges ("false." == "false")
     text = text.replace("_", " ")
     text = re.sub(r"[^\w\s./:-]", "", text)
     text = re.sub(r"\s+", " ", text)
-    return text.strip()
+    return text.strip().strip(".:,;-/").strip()
 
 
 def answer_hash(mission_id: str, check_id: str, value: str, mode: str = "loose") -> str:
