@@ -132,9 +132,8 @@ export default async function OperatorRecordPage({ params }: Props) {
                       rel="noopener noreferrer"
                       className={styles.socialBtn}
                       aria-label={`${operator.callsign} on GitHub (opens in new tab)`}
-                      title="GitHub profile"
                     >
-                      <IconGitHub size={15} />
+                      <IconGitHub size={13} /> GitHub
                     </a>
                   )}
                   {operator.x_url && (
@@ -144,9 +143,8 @@ export default async function OperatorRecordPage({ params }: Props) {
                       rel="noopener noreferrer"
                       className={styles.socialBtn}
                       aria-label={`${operator.callsign} on X (opens in new tab)`}
-                      title="X profile"
                     >
-                      <IconX size={15} />
+                      <IconX size={13} /> X
                     </a>
                   )}
                 </div>

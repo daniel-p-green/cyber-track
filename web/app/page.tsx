@@ -7,7 +7,7 @@ import {
   MissionGlyph,
   RailNode,
   SlopeBadge,
-  IconTerminal,
+  IconChat,
   IconOffline,
   IconExternal,
   type NodeState,
@@ -35,16 +35,16 @@ async function getCommandState() {
 }
 
 const COCKPIT_DUTIES = [
-  "Inspect the evidence",
-  "Ask local Gemma4 — your only AI",
-  "Patch configs and code",
-  "Write answer.json",
+  "Open the mission workspace",
+  "Read the evidence files in the editor",
+  "Ask Cursor Chat — local Gemma, no cloud",
+  "Verify the model, then edit answer.json",
 ];
 
 const ARENA_DUTIES = [
   "Claim a callsign",
-  "Start missions — timer arms instantly",
-  "Submit your run for scoring",
+  "Start the mission — timer arms instantly",
+  "Submit your answer and evidence",
   "Get your AAR, XP, and rank",
 ];
 
@@ -91,14 +91,20 @@ export default async function Home() {
         <div className="container">
           <div className={styles.heroGrid}>
             <div className={`boot boot-1 ${styles.heroCopy}`}>
+              <p className={`display ${styles.heroKicker}`}>
+                Timed missions for AI operators
+              </p>
               <h1 className={`display ${styles.heroTitle}`}>
-                Train decision quality when the{" "}
-                <span className={styles.heroCloud}>cloud</span> goes dark.
+                Fly the mission in Cursor.
+                <br />
+                <span className={styles.heroCloud}>Local Gemma</span> is your
+                only AI. Scored here.
               </h1>
               <p className={styles.heroText}>
-                An arena for AI operators. Fly timed missions in Cursor with
-                local Gemma4 as your only AI. Get scored on judgment — evidence,
-                skepticism, recovery.
+                Open the workspace in Cursor, read the evidence, and work the
+                problem with Cursor Chat running Gemma on your own machine — no
+                cloud, no internet. Submit your answer to this arena for score,
+                AAR, and rank.
               </p>
               <div className={styles.heroActions}>
                 <Link href="/qualification" className="btn btn-primary">
@@ -110,40 +116,67 @@ export default async function Home() {
               </div>
             </div>
 
-            {/* Cockpit live feed */}
-            <div className={`panel hud-corners boot boot-2 ${styles.cockpit}`}>
-              <div className={styles.cockpitHead}>
-                <span className="display">Cockpit Feed</span>
-                <span className={`mono ${styles.cockpitTag}`}>cursor · terminal</span>
+            {/* Cursor cockpit preview — editor + chat + arena in-app browser */}
+            <div
+              className={`panel hud-corners boot boot-2 ${styles.cockpit}`}
+              role="img"
+              aria-label="Preview of the Cursor cockpit: evidence files in the workspace, answer.json in the editor, Cursor Chat with local Gemma, and the CyberTrack arena in the in-app browser"
+            >
+              <div className={styles.cockpitHead} aria-hidden>
+                <span className={styles.winDots}>
+                  <i /> <i /> <i />
+                </span>
+                <span className={`mono ${styles.cockpitTitle}`}>
+                  Cursor — cyber-track
+                </span>
+                <span className={`mono ${styles.cockpitTag}`}>the cockpit</span>
               </div>
-              <div className={`mono ${styles.terminal}`}>
-                <div className={styles.termLine}>
-                  <span className={styles.prompt}>$</span> cybertf verify-model
+              <div className={`mono ${styles.cockpitBody}`} aria-hidden>
+                <div className={styles.paneFiles}>
+                  <span className={styles.paneLabel}>Evidence</span>
+                  <div className={styles.fileRow}>relay_roster.txt</div>
+                  <div className={styles.fileRow}>advisory.txt</div>
+                  <div className={`${styles.fileRow} ${styles.fileActive}`}>
+                    answer.json
+                  </div>
                 </div>
-                <div className={`${styles.termLine} ${styles.termOk}`}>
-                  ● gemma4:latest · localhost:11434 · FIELD AI ONLINE
+                <div className={styles.paneEditor}>
+                  <span className={styles.paneLabel}>answer.json</span>
+                  <pre className={styles.editorCode}>{`{
+  "finding":
+    "R-7 not in roster",
+  "evidence": [
+    "relay_roster.txt"
+  ]
+}`}</pre>
                 </div>
-                <div className={styles.termLine}>
-                  <span className={styles.prompt}>$</span> cybertf run sprint_signal_lost
+                <div className={styles.paneChat}>
+                  <span className={styles.paneLabel}>
+                    Cursor Chat · Gemma (local)
+                  </span>
+                  <div className={`${styles.msg} ${styles.msgYou}`}>
+                    Which relay does the advisory blame?
+                  </div>
+                  <div className={`${styles.msg} ${styles.msgAi}`}>
+                    Relay R-7 caused the outage.
+                  </div>
+                  <div className={`${styles.msg} ${styles.msgYou}`}>
+                    R-7 isn&apos;t in the roster. <span className="amber">Verify.</span>
+                  </div>
+                  <div className={`${styles.msg} ${styles.msgAi}`}>
+                    Correct — the claim fails against relay_roster.txt.
+                  </div>
                 </div>
-                <div className={`${styles.termLine} ${styles.termWarn}`}>
-                  ▲ timer armed · 10:00 · evidence required
-                </div>
-                <div className={styles.termLine}>
-                  <span className={styles.prompt}>$</span> cybertf ask --file gateway.log
-                </div>
-                <div className={`${styles.termLine} ${styles.termDim}`}>
-                  model hypothesis: storm cell — <span className="amber">unverified</span>
-                </div>
-                <div className={styles.termLine}>
-                  <span className={styles.prompt}>$</span> cybertf submit … answer.json
-                </div>
-                <div className={`${styles.termLine} ${styles.termOk}`}>
-                  ✓ scored 100/100 · AAR written · +375 XP
-                </div>
-                <div className={`${styles.termLine} ${styles.termCursor}`} aria-hidden>
-                  <span className={styles.prompt}>$</span> <span className={styles.block} />
-                </div>
+              </div>
+              <div className={`mono ${styles.cockpitArena}`} aria-hidden>
+                <span className="pulse-dot" />
+                <span className={styles.arenaLabel}>
+                  arena · in-app browser
+                </span>
+                <span className={styles.arenaMission}>
+                  Basic Qualification · T-15:00
+                </span>
+                <span className={`signal ${styles.arenaSubmit}`}>Submit run →</span>
               </div>
             </div>
           </div>
@@ -156,10 +189,10 @@ export default async function Home() {
           <div className={`panel boot boot-3 ${styles.split}`}>
             <div className={styles.splitCol}>
               <div className={styles.splitHead}>
-                <IconTerminal size={16} />
+                <IconChat size={16} />
                 <div>
                   <span className={`display ${styles.splitName}`}>Cursor — the cockpit</span>
-                  <span className={styles.splitSub}>where the mission work happens</span>
+                  <span className={styles.splitSub}>editor + chat + evidence — the work happens here</span>
                 </div>
               </div>
               <ul className={styles.splitList}>
@@ -184,7 +217,7 @@ export default async function Home() {
                 <IconOffline size={16} />
                 <div>
                   <span className={`display ${styles.splitName}`}>CyberTrack — the arena</span>
-                  <span className={styles.splitSub}>where the run gets scored</span>
+                  <span className={styles.splitSub}>missions, submissions, scores — open it in Cursor&apos;s browser</span>
                 </div>
               </div>
               <ul className={styles.splitList}>
@@ -198,8 +231,11 @@ export default async function Home() {
             </div>
           </div>
           <p className={styles.splitNote}>
-            CyberTrack doesn&apos;t replace Cursor — it keeps score around it.
-            No cloud AI anywhere in the loop.
+            The skill being scored is how you work with the model — asking
+            sharp questions, feeding it the right evidence, catching it when
+            it&apos;s wrong. A small <code className="mono">cybertf</code> CLI
+            handles timing and scoring in the background. No cloud AI anywhere
+            in the loop.
           </p>
         </div>
       </section>
@@ -289,8 +325,9 @@ export default async function Home() {
                 <span className="idx">02</span> Bring Your Own Cockpit
               </div>
               <p>
-                Cursor for the missions. Ollama for local Gemma4. This arena for
-                the score. Setup takes about five minutes.
+                Cursor for the missions. Ollama for local Gemma. This arena for
+                the score — keep it open in Cursor&apos;s in-app browser. Setup
+                takes about five minutes.
               </p>
               <div className={styles.setupLinks}>
                 {SETUP_LINKS.map((link) => (
@@ -300,7 +337,7 @@ export default async function Home() {
                 ))}
               </div>
               <Link href="/qualification" className={`btn btn-primary ${styles.setupCta}`}>
-                Run the Deployment Protocol →
+                Start Setup →
               </Link>
             </div>
           </div>

@@ -33,11 +33,12 @@
 .seedTag {
   font-size: 8.5px;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--line-strong);
-  border: 1px solid var(--line);
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  background: var(--paper);
+  border: 1px solid var(--line-strong);
   border-radius: 2px;
-  padding: 2px 5px;
+  padding: 2px 6px;
   cursor: help;
 }
 .rankRow {
@@ -68,13 +69,17 @@
 .socialBtn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
+  gap: 6px;
+  padding: 5px 10px;
   border: 1px solid var(--line);
   border-radius: 2px;
   color: var(--muted);
   background: var(--panel-2);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
 }
 .socialBtn:hover {
   color: var(--signal);

@@ -8,7 +8,7 @@ import {
   GemmaStatus,
   SlopeBadge,
   IconTimer,
-  IconTerminal,
+  IconChat,
   IconSuspicious,
   IconOffline,
 } from "../../components/svg";
@@ -45,27 +45,46 @@ export default async function MissionCockpit({ params }: Props) {
 
   const slope = slopeForDifficulty(mission.difficulty);
 
-  const sequence = [
+  // The mission loop: Cursor is the cockpit, commands only bookend the run.
+  const loop: {
+    title: string;
+    note: string;
+    cmds?: string[];
+  }[] = [
     {
-      cmd: `cybertf run ${mission.id}`,
-      note: "Arms the mission timer and creates your run directory.",
+      title: "Start the run",
+      note: "Arms the timer and creates your run directory.",
+      cmds: [`cybertf run ${mission.id}`],
     },
     {
-      cmd: `cybertf brief ${mission.id}`,
-      note: "Prints the full brief; evidence lives in the challenges folder.",
+      title: "Read the evidence in Cursor",
+      note: `Open challenges/${mission.id}/data/ in the editor and work through each file.`,
     },
     {
-      cmd: `cybertf ask "your question" --file <evidence-file>`,
-      note: "Queries local Gemma4 — it only knows what you show it.",
+      title: "Ask Cursor Chat — local Gemma",
+      note: "Give it the right files and context. It only knows what you show it.",
     },
     {
-      cmd: `cybertf submit ${mission.id} runs/<run_id>/answer.json`,
-      note: "Stops the timer, scores deterministically, writes your AAR.",
+      title: "Verify or reject the model's claims",
+      note: "Check every hypothesis against the evidence. Catching a wrong one is scored.",
     },
     {
-      cmd: `cybertf publish <run_id>`,
-      note: "Posts the scored run to this arena.",
+      title: "Edit answer.json in the editor",
+      note: "Your finding, plus the evidence paths that prove it.",
     },
+    {
+      title: "Submit and publish",
+      note: "Stops the timer, scores deterministically, writes your AAR, posts it here.",
+      cmds: [
+        `cybertf submit ${mission.id} runs/<run_id>/answer.json`,
+        `cybertf publish <run_id>`,
+      ],
+    },
+  ];
+
+  const supportCmds = [
+    { cmd: `cybertf brief ${mission.id}`, note: "print the brief in the terminal" },
+    { cmd: `cybertf ask "your question" --file <evidence-file>`, note: "terminal fallback for model queries" },
   ];
 
   return (
@@ -116,9 +135,9 @@ export default async function MissionCockpit({ params }: Props) {
             <span className="mono signal">+{mission.xp_base} XP</span>
           </div>
           <div className={styles.hudCell}>
-            <span className={`display ${styles.hudLabel}`}>Field AI</span>
+            <span className={`display ${styles.hudLabel}`}>AI Allowed</span>
             <span className={`mono ${styles.hudOffline}`}>
-              <IconOffline size={12} /> local Gemma4
+              <IconOffline size={12} /> local Gemma only
             </span>
           </div>
           <div className={`${styles.hudCell} ${styles.hudHideSm}`}>
@@ -134,26 +153,29 @@ export default async function MissionCockpit({ params }: Props) {
           <div className={styles.main}>
             <section className={`panel ${styles.zone}`}>
               <div className={styles.zoneHead}>
-                <IconTerminal size={15} />
+                <IconChat size={15} />
                 <span className="display">In your cockpit — Cursor</span>
-                <span className={styles.zoneSub}>the mission work happens here</span>
+                <span className={styles.zoneSub}>editor + chat + evidence</span>
               </div>
 
               <ol className={styles.sequence}>
-                {sequence.map((step, i) => (
+                {loop.map((step, i) => (
                   <li key={i} className={styles.seqStep}>
                     <span className={`mono ${styles.seqNum}`}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className={styles.seqBody}>
-                      <div className={styles.seqCmdRow}>
-                        <code className={`mono ${styles.seqCmd}`}>
-                          <span className={styles.prompt}>$ </span>
-                          {step.cmd}
-                        </code>
-                        <CopyCmd text={step.cmd} />
-                      </div>
+                      <span className={`display ${styles.seqTitle}`}>{step.title}</span>
                       <span className={styles.seqNote}>{step.note}</span>
+                      {step.cmds?.map((cmd) => (
+                        <div key={cmd} className={styles.seqCmdRow}>
+                          <code className={`mono ${styles.seqCmd}`}>
+                            <span className={styles.prompt}>$ </span>
+                            {cmd}
+                          </code>
+                          <CopyCmd text={cmd} />
+                        </div>
+                      ))}
                     </div>
                   </li>
                 ))}
@@ -166,6 +188,22 @@ export default async function MissionCockpit({ params }: Props) {
                   Citing your evidence is scored — list the paths in{" "}
                   <code className={`mono ${styles.inline}`}>answer.json</code>.
                 </p>
+              </div>
+
+              <div className={styles.supportBlock}>
+                <span className={`display ${styles.supportLabel}`}>
+                  Support commands — optional scaffolding
+                </span>
+                {supportCmds.map((item) => (
+                  <div key={item.cmd} className={styles.seqCmdRow}>
+                    <code className={`mono ${styles.seqCmd} ${styles.supportCmd}`}>
+                      <span className={styles.prompt}>$ </span>
+                      {item.cmd}
+                    </code>
+                    <span className={styles.supportNote}>{item.note}</span>
+                    <CopyCmd text={item.cmd} />
+                  </div>
+                ))}
               </div>
             </section>
           </div>

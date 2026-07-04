@@ -167,6 +167,15 @@
 }
 .constraintVal { color: var(--ice); font-size: 12px; }
 
+.scoredOn { min-width: 0; }
+.dimChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+}
+.dimMore { font-size: 10px; color: var(--line-strong); }
+
 .evidence ul {
   list-style: none;
   display: flex;

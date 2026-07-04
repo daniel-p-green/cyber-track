@@ -33,13 +33,15 @@
 }
 .credit a {
   display: inline-flex;
-  width: 28px;
-  height: 28px;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  padding: 5px 10px;
   border: 1px solid var(--line);
   color: var(--muted);
   background: var(--panel);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  border-radius: 2px;
 }
 .credit a:hover {
   color: var(--signal);

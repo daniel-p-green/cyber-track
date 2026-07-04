@@ -354,6 +354,15 @@ export function IconTimer({ size = 15, className }: IconProps) {
   );
 }
 
+export function IconChat({ size = 15, className }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <path d="M4 5h16v11H9l-5 4z" />
+      <path d="M8 9.2h8M8 12.2h5" />
+    </svg>
+  );
+}
+
 export function IconTerminal({ size = 15, className }: IconProps) {
   return (
     <svg {...base(size)} className={className}>

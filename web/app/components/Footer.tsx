@@ -6,8 +6,8 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={`container ${styles.inner}`}>
         <div className={styles.copy}>
-          <span className="mono">CYBERTRACK · SEASON ZERO · OFFLINE AI OPERATOR READINESS</span>
-          <span>Demo build. Scores are training feedback — never hiring signals.</span>
+          <span className="mono">CYBERTRACK · RAISE SUMMIT HACKATHON 2026</span>
+          <span>Google DeepMind Remote · Edge / On-Device Track</span>
         </div>
         <div className={styles.credit}>
           <span>Created by Daniel Green</span>
@@ -16,20 +16,16 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Daniel Green on X (opens in new tab)"
-            title="Daniel Green on X"
           >
-            <IconX size={15} />
-            <span className={styles.srOnly}>Daniel Green on X</span>
+            <IconX size={13} /> X
           </a>
           <a
             href="https://www.linkedin.com/in/danielpgreen"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Daniel Green on LinkedIn (opens in new tab)"
-            title="Daniel Green on LinkedIn"
           >
-            <IconLinkedIn size={15} />
-            <span className={styles.srOnly}>Daniel Green on LinkedIn</span>
+            <IconLinkedIn size={13} /> LinkedIn
           </a>
         </div>
       </div>

@@ -68,13 +68,20 @@
   gap: clamp(28px, 5vw, 60px);
   align-items: center;
 }
+.heroKicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--signal);
+  margin-bottom: 12px;
+}
 .heroTitle {
-  font-size: clamp(34px, 5vw, 56px);
+  font-size: clamp(28px, 4vw, 44px);
   font-weight: 800;
-  line-height: 0.98;
+  line-height: 1.04;
   color: var(--text);
-  margin-bottom: 18px;
-  max-width: 16ch;
+  margin-bottom: 16px;
+  max-width: 24ch;
 }
 .heroCloud {
   color: var(--ice);
@@ -103,7 +110,11 @@
   flex-wrap: wrap;
 }
 
-/* Cockpit feed */
+/* ── Cursor cockpit preview ───────────────────────────────────────────────
+   A stylized concept sketch of the actual player loop: evidence files in the
+   workspace, the answer artifact in the editor, Cursor Chat running local
+   Gemma, and this arena open in the in-app browser. Not a pixel copy of
+   Cursor — just enough to make the architecture unmistakable. */
 .cockpit {
   padding: 0;
   overflow: hidden;
@@ -112,60 +123,151 @@
 .cockpitHead {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  padding: 11px 16px;
+  padding: 9px 14px;
   border-bottom: 1px solid var(--line);
-  font-size: 13px;
-  font-weight: 700;
+}
+.winDots {
+  display: inline-flex;
+  gap: 5px;
+}
+.winDots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line-strong);
+}
+.cockpitTitle {
+  font-size: 11px;
   color: var(--text);
+  font-weight: 500;
 }
-.cockpitTag { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
-.terminal {
-  padding: 14px 16px 12px;
-  font-size: 12px;
-  line-height: 1.95;
+.cockpitTag {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--signal);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cockpitBody {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   background: color-mix(in srgb, var(--bg) 55%, var(--panel));
+  font-size: 10.5px;
 }
+.paneLabel {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.paneFiles {
+  padding: 10px 12px;
+  border-right: 1px solid var(--line);
+}
+.fileRow {
+  padding: 3px 6px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fileActive {
+  color: var(--text);
+  background: var(--paper);
+  border-left: 2px solid var(--signal);
+}
+
+.paneEditor {
+  grid-column: 1;
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+}
+.editorCode {
+  margin: 0;
+  font-size: 9.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  white-space: pre;
+  overflow: hidden;
+}
+
+.paneChat {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 /* Keyframes must live in this module — CSS Modules scopes animation names,
    so referencing globals.css keyframes silently resolves to nothing. */
 @keyframes feed-line {
   from { opacity: 0; transform: translateX(-4px); }
   to   { opacity: 1; transform: translateX(0); }
 }
-@keyframes caret-blink {
-  0%, 55% { opacity: 1; }
-  56%, 100% { opacity: 0; }
-}
-
-.termLine {
-  color: var(--text);
+.msg {
+  padding: 5px 8px;
+  border-radius: 2px;
+  line-height: 1.5;
   opacity: 0;
   animation: feed-line 300ms ease-out forwards;
+}
+.msg:nth-child(2) { animation-delay: 300ms; }
+.msg:nth-child(3) { animation-delay: 900ms; }
+.msg:nth-child(4) { animation-delay: 1500ms; }
+.msg:nth-child(5) { animation-delay: 2100ms; }
+.msgYou {
+  align-self: flex-end;
+  max-width: 92%;
+  background: color-mix(in srgb, var(--ice) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ice) 22%, transparent);
+  color: var(--text);
+}
+.msgAi {
+  align-self: flex-start;
+  max-width: 92%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.cockpitArena {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 14px;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px;
+  color: var(--text);
   white-space: nowrap;
+  overflow: hidden;
+}
+.arenaLabel {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.arenaMission {
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.termLine:nth-child(1) { animation-delay: 120ms; }
-.termLine:nth-child(2) { animation-delay: 360ms; }
-.termLine:nth-child(3) { animation-delay: 600ms; }
-.termLine:nth-child(4) { animation-delay: 820ms; }
-.termLine:nth-child(5) { animation-delay: 1060ms; }
-.termLine:nth-child(6) { animation-delay: 1280ms; }
-.termLine:nth-child(7) { animation-delay: 1520ms; }
-.termLine:nth-child(8) { animation-delay: 1740ms; }
-.termLine:nth-child(9) { animation-delay: 1980ms; }
-.prompt { color: var(--muted); }
-.termOk { color: var(--signal); }
-.termWarn { color: var(--amber); }
-.termDim { color: var(--muted); }
-.termCursor .block {
-  display: inline-block;
-  width: 7px;
-  height: 13px;
-  background: var(--signal);
-  vertical-align: -2px;
-  animation: caret-blink 1.2s step-end infinite;
+.arenaSubmit {
+  flex-shrink: 0;
+  font-weight: 700;
 }
 
 /* ── Cockpit ⇄ Arena split ────────────────────────────────────────────── */

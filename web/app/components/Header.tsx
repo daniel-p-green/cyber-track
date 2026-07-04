@@ -10,7 +10,7 @@ const NAV = [
   { href: "/", label: "Command" },
   { href: "/missions", label: "Missions" },
   { href: "/leaderboard", label: "Arena" },
-  { href: "/qualification", label: "Deploy" },
+  { href: "/qualification", label: "Setup" },
 ];
 
 export default function Header() {

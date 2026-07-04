@@ -22,7 +22,8 @@ const STEPS: ProtocolStep[] = [
     body: (
       <>
         <p>
-          Missions are flown inside a Cursor workspace. Already use Cursor?
+          Missions are flown inside Cursor: evidence in the editor, Cursor Chat
+          as your AI, this arena in the in-app browser. Already use Cursor?
           This step is done.
         </p>
         <div className={styles.linkRow}>
@@ -37,11 +38,31 @@ const STEPS: ProtocolStep[] = [
     ),
   },
   {
+    id: "workspace",
+    title: "Open the CyberTrack workspace",
+    body: (
+      <>
+        <p>
+          Every mission ships in the repo — briefs, evidence files, and the{" "}
+          <code className={`mono ${styles.inline}`}>cybertf</code> support CLI.
+        </p>
+        <Code>
+          <div><span className={styles.prompt}>$</span> <span className="signal">git clone</span> https://github.com/daniel-p-green/cyber-track.git</div>
+          <div><span className={styles.prompt}>$</span> <span className="signal">cursor</span> cyber-track</div>
+        </Code>
+        <p>
+          Tip: open this arena in Cursor&apos;s in-app browser so missions,
+          timers, and scores live next to your editor.
+        </p>
+      </>
+    ),
+  },
+  {
     id: "ollama",
     title: "Install Ollama — the local model runtime",
     body: (
       <>
-        <p>Ollama runs Gemma4 on your machine. No API key, no account, no cloud.</p>
+        <p>Ollama runs Gemma on your machine. No API key, no account, no cloud.</p>
         <div className={styles.linkRow}>
           <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer">
             Install Ollama <IconExternal size={11} />
@@ -52,7 +73,7 @@ const STEPS: ProtocolStep[] = [
   },
   {
     id: "gemma",
-    title: "Pull and verify local Gemma4",
+    title: "Pull and verify local Gemma",
     body: (
       <>
         <p>Pull the model, then prove the local path works before any mission:</p>
@@ -62,24 +83,9 @@ const STEPS: ProtocolStep[] = [
         </Code>
         <p>
           Green <code className={`mono ${styles.inline}`}>FIELD AI ONLINE</code>{" "}
-          means you&apos;re mission-capable offline.
+          means you&apos;re ready to fly offline. Point Cursor Chat at the same
+          local model to keep the whole loop on-device.
         </p>
-      </>
-    ),
-  },
-  {
-    id: "workspace",
-    title: "Open the mission workspace in Cursor",
-    body: (
-      <>
-        <p>
-          Every mission ships in the repo — briefs, evidence, the{" "}
-          <code className={`mono ${styles.inline}`}>cybertf</code> CLI.
-        </p>
-        <Code>
-          <div><span className={styles.prompt}>$</span> <span className="signal">git clone</span> https://github.com/daniel-p-green/cyber-track.git</div>
-          <div><span className={styles.prompt}>$</span> <span className="signal">cursor</span> cyber-track</div>
-        </Code>
       </>
     ),
   },
@@ -98,23 +104,26 @@ const STEPS: ProtocolStep[] = [
   },
   {
     id: "first-mission",
-    title: "Fly Basic Qualification — submit for scoring",
+    title: "Fly Basic Qualification",
     body: (
       <>
         <p>
-          The brief hides one bad model claim. Catch it with evidence.
+          Start the run, then do the real work in Cursor: read the evidence,
+          ask Cursor Chat, catch the one bad model claim, and write{" "}
+          <code className={`mono ${styles.inline}`}>answer.json</code>.
           15 minutes on the clock.
         </p>
         <Code>
           <div><span className={styles.prompt}>$</span> <span className="signal">cybertf run</span> basic_qualification</div>
-          <div><span className={styles.prompt}>$</span> <span className="signal">cybertf ask</span> <span className="amber">&quot;What does the advisory claim?&quot;</span></div>
           <div><span className={styles.prompt}>$</span> <span className="signal">cybertf submit</span> basic_qualification answer.json</div>
           <div><span className={styles.prompt}>$</span> <span className="signal">cybertf publish</span> &lt;run_id&gt;</div>
         </Code>
         <p>
+          <code className={`mono ${styles.inline}`}>run</code> arms the timer,{" "}
           <code className={`mono ${styles.inline}`}>submit</code> scores the run
-          and writes your AAR.{" "}
-          <code className={`mono ${styles.inline}`}>publish</code> posts it here.
+          and writes your AAR,{" "}
+          <code className={`mono ${styles.inline}`}>publish</code> posts it
+          here. Everything between those commands happens in Cursor.
         </p>
       </>
     ),
@@ -122,9 +131,9 @@ const STEPS: ProtocolStep[] = [
 ];
 
 const QUICK_REF = [
-  { cmd: "cybertf verify-model", desc: "Prove local Gemma4 is online" },
+  { cmd: "cybertf verify-model", desc: "Prove local Gemma is online" },
   { cmd: "cybertf run <id>", desc: "Start a mission (arms timer)" },
-  { cmd: "cybertf ask \"...\"", desc: "Query the local field AI" },
+  { cmd: "cybertf ask \"...\"", desc: "Terminal fallback for model queries" },
   { cmd: "cybertf submit <id> answer.json", desc: "Score the run" },
   { cmd: "cybertf report <run_id>", desc: "Generate the AAR" },
   { cmd: "cybertf publish <run_id>", desc: "Post score to the arena" },
@@ -138,12 +147,13 @@ export default function QualificationPage() {
         <div className={styles.header}>
           <div className={styles.kicker}>
             <span className="pulse-dot" />
-            Season Zero · Deployment Protocol
+            Season Zero · Setup
           </div>
           <h1 className={`display ${styles.title}`}>Get Mission-Capable</h1>
           <p className={styles.subtitle}>
-            Six steps from zero to your first scored run. Do the work in Cursor;
-            the arena keeps score.
+            Six steps from zero to your first scored run. Cursor is the
+            cockpit; Cursor Chat with local Gemma flies the mission; this arena
+            keeps score.
           </p>
           <div className={styles.slopeRow}>
             <SlopeBadge slope="green" label="Green Circle — Basic Qualification" size={13} />
@@ -156,11 +166,12 @@ export default function QualificationPage() {
           <IconOffline size={26} className={styles.constraintIcon} />
           <div>
             <div className={`display ${styles.constraintTitle}`}>
-              Mission constraint: local Gemma4 only
+              Mission constraint: local Gemma only
             </div>
             <p>
-              Missions run offline. Your only AI is Gemma4 on your own machine.
-              That constraint is the training.
+              Missions run offline and private. Your only AI is Gemma on your
+              own machine — in Cursor Chat and the terminal fallback. That
+              constraint is the training.
             </p>
           </div>
         </div>
@@ -172,8 +183,12 @@ export default function QualificationPage() {
           <aside className={styles.aside}>
             <div className={`panel ${styles.refCard}`}>
               <div className="section-label">
-                <IconTerminal size={13} /> Cockpit Commands
+                <IconTerminal size={13} /> Support Commands
               </div>
+              <p className={styles.refNote}>
+                Scaffolding for timing, scoring, and publishing. The mission
+                itself is flown in Cursor Chat and the editor.
+              </p>
               <div className={styles.refList}>
                 {QUICK_REF.map((item) => (
                   <div key={item.cmd} className={styles.refItem}>

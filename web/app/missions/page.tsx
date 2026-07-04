@@ -29,8 +29,8 @@ export default function MissionsPage() {
             </div>
             <h1 className={`display ${styles.title}`}>Mission Board</h1>
             <p className={styles.subtitle}>
-              Fly missions in Cursor with local Gemma4. Submit here for score,
-              AAR, and rank.
+              Pick a mission here — fly it in Cursor with Cursor Chat and local
+              Gemma. Submit back here for score, AAR, and rank.
             </p>
           </div>
           <div className={styles.edgeStatus}>
@@ -110,8 +110,22 @@ export default function MissionsPage() {
                     <span className="mono signal">+{m.xp_base} XP</span>
                   </div>
                   <div>
-                    <span className={`display ${styles.fieldLabel}`}>Field AI</span>
-                    <span className={`mono ${styles.constraintVal}`}>local Gemma4</span>
+                    <span className={`display ${styles.fieldLabel}`}>AI Allowed</span>
+                    <span className={`mono ${styles.constraintVal}`}>local Gemma only</span>
+                  </div>
+                </div>
+
+                <div className={styles.scoredOn}>
+                  <span className={`display ${styles.fieldLabel}`}>Scored On</span>
+                  <div className={styles.dimChips}>
+                    {m.dimensions.slice(0, 3).map((d) => (
+                      <span key={d} className="tag tag-muted">{d}</span>
+                    ))}
+                    {m.dimensions.length > 3 && (
+                      <span className={`mono ${styles.dimMore}`}>
+                        +{m.dimensions.length - 3}
+                      </span>
+                    )}
                   </div>
                 </div>
 

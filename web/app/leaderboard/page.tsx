@@ -144,13 +144,21 @@ export default async function ArenaPage({
                   href={`/operators/${entry.callsign}`}
                   className={`panel ${styles.podiumCard} ${isFirst ? `hud-corners hud-corners-signal ${styles.podiumFirst}` : ""}`}
                 >
+                  {entry.seeded && (
+                    <span
+                      className={`display ${styles.podiumSeed}`}
+                      title="Demo seed row — sample data, not a real run"
+                      aria-label="demo seed data"
+                    >
+                      demo
+                    </span>
+                  )}
                   <span className={`mono ${styles.podiumPos}`}>
                     {String(entry.pos).padStart(2, "0")}
                   </span>
                   <RankPlate letter={entry.callsign[0]} size={isFirst ? 52 : 42} />
                   <span className={`mono ${styles.podiumCallsign}`}>
                     {entry.callsign}
-                    <SeedMark seeded={entry.seeded} />
                   </span>
                   <RankChevrons tier={entry.tier} size={9} />
                   <span className={`display ${styles.podiumRank}`}>{entry.rank}</span>
