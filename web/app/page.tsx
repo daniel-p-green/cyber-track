@@ -87,6 +87,7 @@ export default async function Home() {
 
       {/* ── Command hero ─────────────────────────────────────────────── */}
       <section className={styles.hero}>
+        <div className={styles.heroArt} aria-hidden />
         <div className="container">
           <div className={styles.heroGrid}>
             <div className={`boot boot-1 ${styles.heroCopy}`}>

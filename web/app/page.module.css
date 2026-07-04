@@ -35,8 +35,32 @@
 
 /* ── Command hero ─────────────────────────────────────────────────────── */
 .hero {
+  position: relative;
+  overflow: hidden;
   padding: clamp(36px, 6vw, 64px) 0 clamp(30px, 5vw, 52px);
   border-bottom: 1px solid var(--line);
+}
+/* Command-deck atmosphere art — decorative only, fades into --bg so the
+   hero copy keeps full contrast in both themes. */
+.heroArt {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(90deg, var(--bg) 4%, color-mix(in srgb, var(--bg) 74%, transparent) 46%, color-mix(in srgb, var(--bg) 30%, transparent) 100%),
+    linear-gradient(0deg, var(--bg) 0%, transparent 45%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 55%, transparent), transparent 30%),
+    url("/art/hero-command-deck.jpg");
+  background-size: auto, auto, auto, cover;
+  background-position: center, center, center, center right;
+  opacity: 0.55;
+}
+:global([data-theme="light"]) .heroArt {
+  opacity: 0.12;
+  filter: saturate(0.6);
+}
+.hero > :global(.container) {
+  position: relative;
 }
 .heroGrid {
   display: grid;
@@ -103,6 +127,17 @@
   line-height: 1.95;
   background: color-mix(in srgb, var(--bg) 55%, var(--panel));
 }
+/* Keyframes must live in this module — CSS Modules scopes animation names,
+   so referencing globals.css keyframes silently resolves to nothing. */
+@keyframes feed-line {
+  from { opacity: 0; transform: translateX(-4px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes caret-blink {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0; }
+}
+
 .termLine {
   color: var(--text);
   opacity: 0;
