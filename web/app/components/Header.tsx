@@ -10,7 +10,7 @@ import styles from "./Header.module.css";
 const NAV = [
   { href: "/", label: "Command" },
   { href: "/missions", label: "Missions" },
-  { href: "/leaderboard", label: "Arena" },
+  { href: "/leaderboard", label: "Leaderboard" },
   { href: "/qualification", label: "Setup" },
 ];
 

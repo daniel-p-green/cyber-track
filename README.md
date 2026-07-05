@@ -19,7 +19,7 @@ After each mission, CyberTrack generates an after-action report showing where
 the operator's reasoning held up and where it broke.
 
 The prototype includes Gemma4-powered missions running locally via Ollama,
-deterministic scoring, after-action reports, Season Zero progression,
+deterministic scoring, after-action reports, Season One progression,
 XP/ranks, a mission map, and a public arena leaderboard.
 
 **Cursor is the interface. Gemma4 is the local edge AI. CyberTrack scores
@@ -48,7 +48,7 @@ leaderboard.
    read the brief, inspect synthetic evidence, patch configs and code,
    interrogate the local field AI with `cybertf ask`.
 2. **The web arena is the scoreboard** (`web/`): callsigns, mission board,
-   live leaderboards, ranks, Season Zero framing. A wrapper around the
+   live leaderboards, ranks, Season One framing. A wrapper around the
    cockpit, never a replacement for it.
 
 ## Quickstart (the whole loop in ~5 minutes)
@@ -60,7 +60,7 @@ Requirements: Python 3.10+, [Ollama](https://ollama.com) with a Gemma model
 # 0. From the repo root. Everything runs as a module, no install needed
 python3 -m cybertf.cli verify-model        # prove local Gemma4 is serving
 python3 -m cybertf.cli enlist NIGHTOWL     # pick your callsign
-python3 -m cybertf.cli list                # Season Zero mission board
+python3 -m cybertf.cli list                # Season One mission board
 
 # 1. Fly Basic Qualification
 python3 -m cybertf.cli run basic_qualification
@@ -86,7 +86,7 @@ python3 -m cybertf.cli publish <run_id>
 Prefer an installed entry point? `pip install -e .` gives you the `cybertf`
 command; the commands above then drop the `python3 -m` prefix.
 
-## Season Zero events
+## Season One events
 
 | Mission | Type | What it trains |
 |---|---|---|
@@ -135,7 +135,7 @@ product.
 
 ```
 cybertf/       mission engine: CLI, Gemma4 client, scoring, AAR, telemetry
-challenges/    Season Zero mission packs (synthetic data)
+challenges/    Season One mission packs (synthetic data)
 web/           web arena: mission board + leaderboard (Next.js)
 runs/          your run artifacts (gitignored)
 docs/          architecture, telemetry, mission design, roadmap

@@ -11,7 +11,11 @@ import {
   type NodeState,
 } from "./components/svg";
 import ZuluClock from "./components/ZuluClock";
+import VoiceBriefing from "./components/VoiceBriefing";
 import styles from "./page.module.css";
+
+const HERO_BRIEFING =
+  "CyberTrack. A tactical mission arena inside Cursor. Timed incidents, incomplete evidence, and a local Gemma model as your only A I, confidently wrong at least once. Make the call, cite your proof, and read the after action report. Anyone can get an A I answer. Operators verify one under pressure.";
 
 const LOOP = [
   {
@@ -88,12 +92,12 @@ function lineClass(state: NodeState): string {
 
 export default function Home() {
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-demo-flow>
       {/* ── Ops status strip ─────────────────────────────────────────── */}
       <div className={styles.statusStrip}>
         <div className={`container ${styles.statusInner}`}>
           <span className={styles.statusItem}>
-            <span className="pulse-dot" /> SEASON ZERO ACTIVE
+            <span className="pulse-dot" /> SEASON ONE ACTIVE
           </span>
           <span className={`${styles.statusItem} ${styles.statusHideSm}`}>
             {MISSIONS.length} MISSIONS
@@ -109,6 +113,7 @@ export default function Home() {
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
+        <div className={styles.heroArt} aria-hidden />
         <div className="container">
           <div className={`boot boot-1 ${styles.heroCopy}`}>
             <p className={`display ${styles.heroKicker}`}>
@@ -132,6 +137,7 @@ export default function Home() {
               <Link href="/missions" className="btn btn-primary">
                 View Missions
               </Link>
+              <VoiceBriefing text={HERO_BRIEFING} label="Play briefing" />
               <Link href="/qualification" className={styles.heroQuiet}>
                 Set up in 5 minutes →
               </Link>
@@ -152,7 +158,7 @@ export default function Home() {
               <dd>Deterministic, no model grades you</dd>
             </div>
             <div className={styles.heroFact}>
-              <dt>Season Zero</dt>
+              <dt>Season One</dt>
               <dd>{MISSIONS.length} missions, XP, ranks</dd>
             </div>
           </dl>
@@ -274,11 +280,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Season Zero campaign rail ────────────────────────────────── */}
+      {/* ── Season One campaign rail ────────────────────────────────── */}
       <section className={styles.railSection}>
         <div className="container">
           <div className="section-label">
-            <span className="idx">03</span> Season Zero Campaign
+            <span className="idx">03</span> Season One Campaign
           </div>
           <div className={styles.rail}>
             {MISSIONS.map((m, i) => {

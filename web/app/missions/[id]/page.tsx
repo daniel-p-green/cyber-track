@@ -19,6 +19,7 @@ import {
 } from "../../components/svg";
 import CopyCmd from "../../components/CopyCmd";
 import EvidenceChecklist from "../../components/EvidenceChecklist";
+import VoiceBriefing from "../../components/VoiceBriefing";
 import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
@@ -47,10 +48,11 @@ export default async function MissionBriefing({ params }: Props) {
     if (!a.flags.suspicious_fast && b.flags.suspicious_fast) return -1;
     return b.total - a.total || a.elapsed_seconds - b.elapsed_seconds;
   });
-  const realSubs = sortedSubs.filter(
-    (s) => !s.seeded && !seededOps.has(s.callsign)
-  );
-  const bestReal = realSubs.find((s) => !s.flags.suspicious_fast);
+  const boardSubs = sortedSubs;
+  const bestReal =
+    boardSubs.find(
+      (s) => !s.flags.suspicious_fast && !s.seeded && !seededOps.has(s.callsign)
+    ) ?? boardSubs.find((s) => !s.flags.suspicious_fast);
 
   const slope = slopeForDifficulty(mission.difficulty);
 
@@ -82,6 +84,9 @@ export default async function MissionBriefing({ params }: Props) {
             </div>
             <h1 className={`display ${styles.title}`}>{mission.title}</h1>
             <p className={styles.summary}>{mission.hook}</p>
+            <div className={styles.headVoice}>
+              <VoiceBriefing text={mission.briefing} label="Play voice briefing" />
+            </div>
           </div>
         </header>
 
@@ -288,7 +293,7 @@ export default async function MissionBriefing({ params }: Props) {
                 <div className="section-label">
                   <IconTimer size={12} /> Top Runs
                 </div>
-                {realSubs.length === 0 ? (
+                {boardSubs.length === 0 ? (
                   <div className={styles.empty}>
                     No verified runs posted yet. The first clean run takes the
                     board.
@@ -320,8 +325,9 @@ export default async function MissionBriefing({ params }: Props) {
                         </tr>
                       </thead>
                       <tbody>
-                        {realSubs.slice(0, 8).map((sub, i) => {
+                        {boardSubs.slice(0, 8).map((sub, i) => {
                           const isSuspicious = sub.flags.suspicious_fast;
+                          const isSeed = sub.seeded || seededOps.has(sub.callsign);
                           return (
                             <tr key={sub.run_id} className={isSuspicious ? styles.suspicious : ""}>
                               <td className="mono muted">
@@ -335,6 +341,11 @@ export default async function MissionBriefing({ params }: Props) {
                                 >
                                   {sub.callsign}
                                 </Link>
+                                {isSeed && (
+                                  <span className={`display ${styles.seedTag}`} title="Demo reference data">
+                                    demo
+                                  </span>
+                                )}
                               </td>
                               <td
                                 className={`mono ${styles.right}`}

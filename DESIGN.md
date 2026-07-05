@@ -68,7 +68,7 @@ in-app browser. We teach people to fly the editor they already have. We never
 rebuild an IDE on the web.
 
 **The web arena is the mission map, scoreboard, and service record.** It shows
-Season Zero progression, mission briefings, published runs, web AAR pages,
+Season One progression, mission briefings, published runs, web AAR pages,
 ranks, and the operator record. Every arena page keeps the "solve it in
 Cursor" loop explicit. The arena wraps the mission engine; it is not where
 missions are solved.
@@ -77,7 +77,7 @@ missions are solved.
 
 - **Home:** the thesis, the five-step loop (brief, evidence, interrogate,
   decide, debrief), what gets scored, an AAR extract as the payoff preview,
-  the Season Zero rail, and the setup CTA. One idea per section, one hero.
+  the Season One rail, and the setup CTA. One idea per section, one hero.
 - **Setup (`/qualification`):** Cursor + Ollama + local Gemma + callsign +
   first mission, in six persisted steps. Commands live here because setup is
   the one place terminal work is the content.
@@ -375,7 +375,7 @@ Concrete patterns. Reuse these; do not invent parallel versions.
   walk through", "This guide explores", "Not only X but also Y", "From X to
   Y", "It is important to remember".
 - Preferred terms: Cursor, `cybertf ask`, local Gemma field AI, evidence, AAR,
-  leaderboard, timed mission, callsign, XP, rank, Season Zero. Use
+  leaderboard, timed mission, callsign, XP, rank, Season One. Use
   "operator", "mission", and "arena" where they earn their place; use
   simpler words elsewhere.
 - Banned framing: hiring/screening/selection language, real militaries or
@@ -392,7 +392,7 @@ Concrete patterns. Reuse these; do not invent parallel versions.
   AAR and leaderboard show it.
 - The 60-second video flow is: Cursor workspace, `cybertf verify-model`, one
   short voice briefing, mission run, `cybertf ask`, evidence correction,
-  submit/score, AAR, publish to arena, service record or Season Zero map.
+  submit/score, AAR, publish to arena, service record or Season One map.
 - Always show Cursor, local Gemma, evidence files, the correction, and the AAR
   as one connected loop. The website alone is not the product.
 - Show the arena as the progression wrapper after the scored run exists.

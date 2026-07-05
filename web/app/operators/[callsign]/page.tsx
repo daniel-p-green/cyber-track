@@ -329,7 +329,7 @@ export default async function OperatorRecordPage({ params }: Props) {
 
           <aside className={styles.aside}>
             <div className={`panel ${styles.sideCard}`}>
-              <div className="section-label">Season Zero Badges</div>
+              <div className="section-label">Season One Badges</div>
               <div className={styles.badgeGrid}>
                 {MISSIONS.map((m, i) => {
                   const earned = completedMissionIds.has(m.id);

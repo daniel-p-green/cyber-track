@@ -150,7 +150,7 @@ export default function QualificationPage() {
         <div className={styles.header}>
           <div className={styles.kicker}>
             <span className="pulse-dot" />
-            Season Zero · Setup
+            Season One · Setup
           </div>
           <h1 className={`display ${styles.title}`}>Get Mission-Capable</h1>
           <p className={styles.subtitle}>
@@ -221,7 +221,7 @@ export default function QualificationPage() {
               <div className="section-label">Roadmap</div>
               <div className={`display ${styles.originTitle}`}>Cursor Origin</div>
               <p>
-                One-tap Cursor identity, coming in Season One. Callsigns are all
+                One-tap Cursor identity, coming in Season Two. Callsigns are all
                 you need today.
               </p>
               <a

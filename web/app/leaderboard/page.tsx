@@ -112,7 +112,8 @@ export default async function ArenaPage({
   const sp = await searchParams;
   const scope = sp.scope ?? "global";
   const missionId = sp.mission_id ?? MISSIONS[0].id;
-  const showDemo = sp.demo === "1";
+  // A populated field by default; `demo=0` strips seed rows to real runs only.
+  const showDemo = sp.demo !== "0";
 
   const [ops, subs] = await Promise.all([getAllOperators(), getAllSubmissions()]);
 
@@ -135,13 +136,13 @@ export default async function ArenaPage({
       ? missionAll.filter((e) => e.seeded).length
       : (scope === "global" ? globalAll : seasonAll).filter((e) => e.seeded).length;
 
-  const podium = globalEntries.filter((e) => !e.seeded).slice(0, 3);
+  const podium = globalEntries.slice(0, 3);
 
   const demoToggleHref = (() => {
     const params = new URLSearchParams();
     params.set("scope", scope);
     if (scope === "mission") params.set("mission_id", missionId);
-    if (!showDemo) params.set("demo", "1");
+    if (showDemo) params.set("demo", "0");
     return `/leaderboard?${params.toString()}`;
   })();
 
@@ -153,9 +154,9 @@ export default async function ArenaPage({
           <div>
             <div className={styles.kicker}>
               <span className="pulse-dot" />
-              Season Zero Arena
+              Season One Arena
             </div>
-            <h1 className={`display ${styles.title}`}>Scoreboard</h1>
+            <h1 className={`display ${styles.title}`}>Leaderboard</h1>
           </div>
           <span className={styles.headerChips}>
             <GemmaStatus />
@@ -173,6 +174,15 @@ export default async function ArenaPage({
                   href={`/operators/${entry.callsign}`}
                   className={`panel ${styles.podiumCard} ${isFirst ? `hud-corners hud-corners-signal ${styles.podiumFirst}` : ""}`}
                 >
+                  {entry.seeded && (
+                    <span
+                      className={`display ${styles.podiumSeed}`}
+                      title="Demo reference row: sample data, not a real run"
+                      aria-label="demo reference data"
+                    >
+                      demo
+                    </span>
+                  )}
                   <span className={`mono ${styles.podiumPos}`}>
                     {String(entry.pos).padStart(2, "0")}
                   </span>
@@ -203,7 +213,7 @@ export default async function ArenaPage({
             href="/leaderboard?scope=season"
             className={`${styles.tab} ${scope === "season" ? styles.tabActive : ""}`}
           >
-            Season Zero
+            Season One
           </Link>
           <div className={styles.tabSep} />
           {MISSIONS.map((m) => (
@@ -367,10 +377,10 @@ export default async function ArenaPage({
           <div className={styles.demoNote}>
             <Link href={demoToggleHref} className={styles.demoToggle}>
               {showDemo
-                ? "Hide demo reference rows"
-                : `Show ${demoCount} demo reference row${demoCount === 1 ? "" : "s"}`}
+                ? "Show real runs only"
+                : `Show the full field (${demoCount} reference row${demoCount === 1 ? "" : "s"})`}
             </Link>
-            <span>Sample data illustrating a populated season. Never ranked above real runs.</span>
+            <span>Reference rows carry a demo tag and never outrank a verified run for podium credit.</span>
           </div>
         )}
 

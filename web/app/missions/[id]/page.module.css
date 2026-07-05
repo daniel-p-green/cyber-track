@@ -51,6 +51,7 @@
   line-height: 1.65;
   max-width: 62ch;
 }
+.headVoice { margin-top: 12px; }
 
 /* ── Mission HUD strip ─────────────────────────────────────────────────── */
 .hud {

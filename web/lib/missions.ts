@@ -16,6 +16,8 @@ export interface Mission {
   model_trap: string;
   /** The call the operator has to make and defend. */
   decision: string;
+  /** Radio-operator voice briefing, 8 to 15 seconds spoken. */
+  briefing: string;
   skills: string[];
   season: "season-zero";
   /** Workspace evidence files with a short role note. */
@@ -42,6 +44,8 @@ export const MISSIONS: Mission[] = [
       "The advisory contains at least one confident claim the roster disproves. The model will repeat it if you don't check.",
     decision:
       "Which claims in the advisory survive contact with the evidence, and which do not.",
+    briefing:
+      "Operator, HALCYON control. Welcome to the training annex. A prior shift archived a field A I advisory, and part of it does not match the relay roster. No cloud on this grid. Verify before you trust. Clock starts on your mark.",
     skills: ["evidence discipline", "model verification", "submission workflow"],
     season: "season-zero",
     evidence: [
@@ -67,6 +71,8 @@ export const MISSIONS: Mission[] = [
       "The model's first instinct tends to match the previous shift's: blame the storm or the noisy antenna. The config diff says otherwise.",
     decision:
       "The real root cause, and the config patch that brings the warning feed back before the next front.",
+    briefing:
+      "Operator, HALCYON control. A config push broke the coastal uplink. Sensors are dropping packets ahead of the storm front. No cloud on this link, just you and the local field A I. The last shift blamed the weather. Verify before you trust. Clock is running.",
     skills: ["log triage", "config diffing", "recovery from bad guidance"],
     season: "season-zero",
     evidence: [
@@ -100,6 +106,8 @@ export const MISSIONS: Mission[] = [
       "One plan calls for a tool the grid does not have, a detail the model invented. Ask it naively and it will repeat the plans' errors back to you.",
     decision:
       "Which plan an operator can act on, and why the other two cannot leave the queue.",
+    briefing:
+      "Operator, HALCYON control. Relay R seven is degraded and three A I drafted restoration plans are sitting in the queue, unreviewed. One is safe. One breaks policy. One cites a tool this grid has never carried. Approve only what you can verify.",
     skills: ["plan critique", "hallucination detection", "policy verification"],
     season: "season-zero",
     evidence: [
@@ -126,6 +134,8 @@ export const MISSIONS: Mission[] = [
       "The model will suggest plausible fixes from intuition. The severity spec is the ground truth, and only one minimal change satisfies it.",
     decision:
       "The minimal correct change, backed by the spec, that turns the test suite green without a rewrite.",
+    briefing:
+      "Operator, HALCYON control. The severity classifier on the forward line is mislabeling boundary events, and warnings are escalating late. The fix ships tonight. Minimal change only, and the spec is the ground truth, not the model's intuition.",
     skills: ["debugging under constraint", "minimal patching", "spec discipline"],
     season: "season-zero",
     evidence: [
@@ -152,6 +162,8 @@ export const MISSIONS: Mission[] = [
       "The field model only knows what you tell it. A vague handoff produces a confident but wrong continuation, and grading that continuation is part of the mission.",
     decision:
       "What the handoff brief must contain so the model can actually continue the work, then whether its continuation holds up.",
+    briefing:
+      "Operator, HALCYON control. Your shift ends mid incident. Two nodes still read drifted values and the next operator inherits only your brief and the local model. If the handoff is vague, the wrong nodes get recalibrated. Write it tight, then test it.",
     skills: ["handoff clarity", "context engineering", "output grading"],
     season: "season-zero",
     evidence: [
@@ -176,6 +188,8 @@ export const MISSIONS: Mission[] = [
       "The field AI has already filed a high-confidence recommendation. Acting on it could restart the wrong subsystem and extend the outage. Confidence is not correctness.",
     decision:
       "What actually failed, when the power event began, and whether the model's recommendation is safe to execute. Then the memo that holds up.",
+    briefing:
+      "Operator, HALCYON control. Forward cluster F W D seven went dark at oh three forty two. The logs arrived out of order, the sitreps disagree, and the field A I has already filed a confident recommendation. Confidence is not correctness. Take the time to be right.",
     skills: ["multi-source correlation", "uncertainty communication", "decision quality"],
     season: "season-zero",
     evidence: [

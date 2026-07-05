@@ -10,6 +10,7 @@ import {
   IconTimer,
   type NodeState,
 } from "../components/svg";
+import VoiceBriefing from "../components/VoiceBriefing";
 import styles from "./page.module.css";
 
 function nodeState(index: number): NodeState {
@@ -32,7 +33,7 @@ export default function MissionsPage() {
           <div>
             <div className={styles.kicker}>
               <span className="pulse-dot" />
-              Season Zero
+              Season One
             </div>
             <h1 className={`display ${styles.title}`}>Mission Board</h1>
             <p className={styles.subtitle}>
@@ -111,11 +112,6 @@ export default function MissionsPage() {
 
                 <p className={styles.hook}>{m.hook}</p>
 
-                <p className={styles.decision}>
-                  <span className={`display ${styles.fieldLabel}`}>Your call</span>
-                  {m.decision}
-                </p>
-
                 <div className={styles.metaGrid}>
                   <div>
                     <span className={`display ${styles.fieldLabel}`}>Timebox</span>
@@ -148,6 +144,7 @@ export default function MissionsPage() {
                   <Link href={`/missions/${m.id}`} className="btn btn-primary">
                     Open Briefing →
                   </Link>
+                  <VoiceBriefing text={m.briefing} label="Voice" compact />
                   <Link
                     href={`/leaderboard?scope=mission&mission_id=${m.id}`}
                     className={styles.boardLink}

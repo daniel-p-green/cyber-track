@@ -108,7 +108,7 @@ export default function WelcomeWizard() {
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Welcome to CyberTrack: Season Zero briefing"
+        aria-label="Welcome to CyberTrack: Season One briefing"
         tabIndex={-1}
         className={`panel hud-corners hud-corners-signal ${styles.panel}`}
         onClick={(e) => e.stopPropagation()}
@@ -117,7 +117,7 @@ export default function WelcomeWizard() {
         <div className={styles.head}>
           <div>
             <div className={`display ${styles.kicker}`}>
-              <span className="pulse-dot" /> Season Zero · Operator Briefing
+              <span className="pulse-dot" /> Season One · Operator Briefing
             </div>
             <div className={`display ${styles.title}`}>{STEPS[step]}</div>
           </div>
@@ -235,7 +235,7 @@ export default function WelcomeWizard() {
               </ul>
               <p className={styles.text}>
                 Every scored run earns XP toward your rank, an after-action
-                report, and a spot on the Season Zero leaderboard.
+                report, and a spot on the Season One leaderboard.
               </p>
             </>
           )}
