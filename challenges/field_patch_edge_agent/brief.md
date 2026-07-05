@@ -5,7 +5,7 @@
 ## Situation
 
 The edge severity classifier deployed on HALCYON forward nodes has a bug.
-Sensor events at a specific boundary score are being misclassified — operators
+Sensor events at a specific boundary score are being misclassified. Operators
 are receiving the wrong severity label, which affects escalation and response.
 
 The classifier is in `data/edge_agent.py`. The specification is in
@@ -21,9 +21,9 @@ find the boundary error, and make the minimal correct change.
    `cybertf run field_patch_edge_agent`
 
 2. Work the evidence in `challenges/field_patch_edge_agent/data/`:
-   - `severity_spec.md` — authoritative threshold specification
-   - `edge_agent.py` — the buggy classifier
-   - `test_edge_agent.py` — the failing test suite
+   - `severity_spec.md`: authoritative threshold specification
+   - `edge_agent.py`: the buggy classifier
+   - `test_edge_agent.py`: the failing test suite
 
 3. Run the tests to see which ones fail:
    ```
@@ -47,15 +47,15 @@ find the boundary error, and make the minimal correct change.
 
 ## What to File
 
-- **bug_location** — the function name that contains the bug
-- **explanation** — what the bug is, how it manifests, and the minimal fix (2–4 sentences)
-- **minimal_change_description** — describe the one-line change you made
-- **evidence** — include severity_spec.md and edge_agent.py
+- **bug_location**: the function name that contains the bug
+- **explanation**: what the bug is, how it manifests, and the minimal fix (2–4 sentences)
+- **minimal_change_description**: describe the one-line change you made
+- **evidence**: include severity_spec.md and edge_agent.py
 
 ## Constraints
 
 - Local Gemma4 field AI only. No cloud assistants.
 - Minimal fix only. Do not refactor or restructure the module.
-- The spec is the ground truth — not the model's intuition.
+- The spec is the ground truth, not the model's intuition.
 
 Tests passing is the primary objective. Explanation quality is rewarded separately.

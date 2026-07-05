@@ -312,7 +312,7 @@ export default async function OperatorRecordPage({ params }: Props) {
                       key={m.id}
                       href={`/missions/${m.id}`}
                       className={`${styles.badge} ${earned ? styles.badgeEarned : ""}`}
-                      title={`${m.title}${earned ? " — completed" : ""}`}
+                      title={`${m.title}${earned ? " (completed)" : ""}`}
                     >
                       <MissionGlyph eventType={m.event_type} missionId={m.id} size={18} />
                       <span className="mono">{String(i + 1).padStart(2, "0")}</span>

@@ -5,7 +5,7 @@ Last updated: 2026-07-04 ~19:00 CDT
 ## Current state: **demo-ready** (post product-truth correction pass)
 
 Final page-by-page UX/product-truth pass complete: the web arena now tells the
-true story — Cursor (editor + Cursor Chat + in-app browser) is the cockpit
+true story: Cursor (editor + Cursor Chat + in-app browser) is the cockpit
 where mission work happens; the web arena selects missions, tracks progress,
 takes submissions, and shows AAR/leaderboard; the `cybertf` CLI is presented
 as support scaffolding (timing/scoring/publishing), not the player skill.
@@ -25,12 +25,12 @@ CyberTrack Season Zero spine is working end-to-end on this machine.
 ### Engine (`cybertf/`)
 
 - CLI: enlist, list, brief, run, ask, submit, score, report, publish, season, verify-model, status
-- Local Gemma4 via Ollama (`gemma4:latest` 8B) — verified live, not simulated
+- Local Gemma4 via Ollama (`gemma4:latest` 8B): verified live, not simulated
 - Deterministic scorer (10 dimensions), suspicious-time flagging, XP/rank ladder
 - Opt-in workspace-scoped telemetry (`docs/TELEMETRY.md`)
 - AAR generator with Gemma-narrated debrief
 - Local season scorecard (`runs/season-zero-scorecard.md`)
-- `.cursor/rules/cybertrack-operator.mdc` — Cursor cockpit guidance
+- `.cursor/rules/cybertrack-operator.mdc`: Cursor cockpit guidance
 
 ### Missions (6/6)
 
@@ -46,10 +46,10 @@ CyberTrack Season Zero spine is working end-to-end on this machine.
 ### Web arena (`web/`)
 
 - Next.js app builds cleanly (`npm run build`)
-- Local dev: http://localhost:3000 — leaderboard, enlist, missions, qualification
+- Local dev: http://localhost:3000: leaderboard, enlist, missions, qualification
 - **Production:** https://cybertrack-arena.vercel.app
 - Publish pipeline verified locally and to Vercel (`cybertf publish` with `CYBERTF_ARENA_URL`)
-- Vercel store is **in-memory (ephemeral)** — real submissions may reset on cold start; local `cybertf season` is the durable offline scoreboard. Disclosed in `web/README.md` and `HACKATHON_BUILD.md`.
+- Vercel store is **in-memory (ephemeral)**: real submissions may reset on cold start; local `cybertf season` is the durable offline scoreboard. Disclosed in `web/README.md` and `HACKATHON_BUILD.md`.
 
 ### Tests
 
@@ -81,7 +81,7 @@ curl https://cybertrack-arena.vercel.app/api/missions
 - Vercel leaderboard is demo-tier ephemeral storage, not durable DB.
 - Arena trusts client-submitted scores (re-validation is roadmap).
 - Answer validation uses salted SHA-256 hashes in public repo (demo tier).
-- 3 missions not flown E2E this session — all load and have full fixture packs.
+- 3 missions not flown E2E this session: all load and have full fixture packs.
 
 ## Demo readiness: **GO**
 

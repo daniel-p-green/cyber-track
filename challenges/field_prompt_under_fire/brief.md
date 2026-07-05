@@ -4,7 +4,7 @@
 
 ## Situation
 
-A degraded HALCYON relay — R-7 — needs restoration. A prior shift queried the
+A degraded HALCYON relay (R-7) needs restoration. A prior shift queried the
 field model and received three draft plans archived in `data/proposed_plans.md`.
 The plans have not been reviewed. One is safe. The others contain problems that
 a careful operator must catch before anyone acts.
@@ -18,9 +18,9 @@ the HALCYON grid does not have.
 1. Start the clock: `cybertf run field_prompt_under_fire`
 
 2. Read the evidence in `challenges/field_prompt_under_fire/data/`:
-   - `proposed_plans.md` — the three AI-drafted plans to review
-   - `ops_policy.md` — the standing maintenance policy
-   - `toolkit_manifest.txt` — the approved tool list
+   - `proposed_plans.md`: the three AI-drafted plans to review
+   - `ops_policy.md`: the standing maintenance policy
+   - `toolkit_manifest.txt`: the approved tool list
 
 3. Consult your field AI to help reason through the plans:
    ```
@@ -34,13 +34,13 @@ the HALCYON grid does not have.
 
 ## What to File
 
-- **safe_plan** — letter of the safe, policy-compliant plan (A, B, or C)
-- **unsafe_plan** — letter of the plan that violates ops policy
-- **unsafe_reason** — the specific section it violates and why (1–3 sentences)
-- **hallucinated_plan** — letter of the plan that references a non-existent tool
-- **hallucinated_tool** — the exact name of the hallucinated tool
-- **corrected_plan** — a corrected version of Plan A with the violation removed
-- **evidence** — file paths you used to reach your conclusions
+- **safe_plan**: letter of the safe, policy-compliant plan (A, B, or C)
+- **unsafe_plan**: letter of the plan that violates ops policy
+- **unsafe_reason**: the specific section it violates and why (1–3 sentences)
+- **hallucinated_plan**: letter of the plan that references a non-existent tool
+- **hallucinated_tool**: the exact name of the hallucinated tool
+- **corrected_plan**: a corrected version of Plan A with the violation removed
+- **evidence**: file paths you used to reach your conclusions
 
 ## Constraints
 

@@ -5,14 +5,14 @@
 ## Situation
 
 You are the Shift 1 operator on an active sensor calibration incident
-(HALCYON-INC-0078). You have made progress — three of five affected nodes are
-corrected — but your shift is ending. Shift 2 takes over, and the local Gemma
+(HALCYON-INC-0078). You have made progress (three of five affected nodes are
+corrected) but your shift is ending. Shift 2 takes over, and the local Gemma
 field model will assist the incoming operator.
 
 Your task: write a handoff brief that gives the field model enough context to
 continue the incident. Then test whether the model can actually use it.
 
-The incident details are in `data/incident_context.md`. Read it carefully —
+The incident details are in `data/incident_context.md`. Read it carefully;
 the remaining node IDs and the exact offset value are facts that must appear
 in your handoff.
 
@@ -29,7 +29,7 @@ in your handoff.
    - The exact calibration offset value to apply
    - The validation deadline
 
-4. Use your field AI (at least twice — once to test the handoff, once to probe
+4. Use your field AI (at least twice: once to test the handoff, once to probe
    a detail):
    ```
    cybertf ask "Here is my handoff brief: [paste your brief here]. Based on this, which nodes need calibration and what offset should be applied?"
@@ -45,10 +45,10 @@ in your handoff.
 
 ## What to File
 
-- **handoff_brief** — your shift-2 handoff brief (≥200 chars, must mention node_21, node_23, and the offset)
-- **gemma_followed** — did the field model correctly answer the shift-2 question? (yes/no + brief reason)
-- **continuation_critique** — assess the model's response quality: what was useful, what was missing (≥100 chars)
-- **evidence** — include incident_context.md
+- **handoff_brief**: your shift-2 handoff brief (≥200 chars, must mention node_21, node_23, and the offset)
+- **gemma_followed**: did the field model correctly answer the shift-2 question? (yes/no + brief reason)
+- **continuation_critique**: assess the model's response quality: what was useful, what was missing (≥100 chars)
+- **evidence**: include incident_context.md
 
 ## Constraints
 

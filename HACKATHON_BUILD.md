@@ -1,42 +1,42 @@
 # Hackathon Build Disclosure
 
-Project: **CyberTrack** — RAISE Summit Hackathon 2026, Google DeepMind
+Project: **CyberTrack**: RAISE Summit Hackathon 2026, Google DeepMind
 Remote track (Edge / On-Device: app running Gemma locally for offline,
 privacy-first inference).
 
 Everything in this repository was designed and built during the hackathon on
-**July 4, 2026** (see git history — the repo began the same day as an empty
+**July 4, 2026** (see git history: the repo began the same day as an empty
 scaffold). This file draws the exact boundary between hackathon-built work,
 reused dependencies, and roadmap.
 
 ## Built during the hackathon
 
-- `cybertf/` — the entire mission league engine: CLI, mission loader, run
+- `cybertf/`: the entire mission league engine: CLI, mission loader, run
   lifecycle and timers, local Gemma4 client (Ollama + OpenAI-compatible
   endpoints), opt-in telemetry, deterministic scorer, after-action report
   generator, local season scorecard, arena publishing client, offline TTS
   helper.
-- `challenges/` — all six Season Zero missions and every byte of their
+- `challenges/`: all six Season Zero missions and every byte of their
   synthetic fixture data (logs, configs, rosters, notes, code, tests).
-- `web/` — the web arena: Next.js app, mission board, callsign/profile flow,
+- `web/`: the web arena: Next.js app, mission board, callsign/profile flow,
   submissions API, leaderboards, rank/promotion system, suspicious-time
   flagging, seeded demo data.
 - All documentation: `README.md`, `DESIGN.md`, `docs/`.
 
 ## Reused (declared dependencies and tools)
 
-- **Gemma4** (`gemma4:latest`, 8B QAT via Ollama) — the sponsor model,
+- **Gemma4** (`gemma4:latest`, 8B QAT via Ollama): the sponsor model,
   running locally. We built the integration, not the model.
-- **Ollama** — local model runtime.
-- **Python 3 standard library** — the engine has zero third-party Python
+- **Ollama**: local model runtime.
+- **Python 3 standard library**: the engine has zero third-party Python
   dependencies by design (edge machines can't `pip install`).
-- **Next.js / React / Node** — web arena framework, scaffolded with
+- **Next.js / React / Node**: web arena framework, scaffolded with
   `create-next-app` during the event.
-- **macOS `say` / `afplay`** — optional offline audio cues.
+- **macOS `say` / `afplay`**: optional offline audio cues.
 - AI coding assistants (Cursor with Claude-family models) were used as
   build accelerators for this codebase, the same way any team member would
   be. The **player-facing model in the product is exclusively local
-  Gemma4** — no cloud model appears anywhere in mission play.
+  Gemma4**: no cloud model appears anywhere in mission play.
 
 ## Synthetic data disclosure
 

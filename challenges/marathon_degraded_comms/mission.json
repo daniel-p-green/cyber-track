@@ -9,7 +9,7 @@
   "par_seconds": 900,
   "time_points": 5,
   "xp_base": 700,
-  "summary": "Conflicting evidence, out-of-order logs, and a confidently wrong AI recommendation — find the true root cause and write a careful memo.",
+  "summary": "Conflicting evidence, out-of-order logs, and a confidently wrong AI recommendation. Find the true root cause and write a careful memo.",
   "skills": ["log correlation", "temporal ordering", "recovery from bad AI guidance", "uncertainty communication"],
   "answer_fields": [
     { "key": "root_cause",                    "type": "string", "prompt": "What is the true root cause of the node outages? (be specific)" },

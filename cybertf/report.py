@@ -23,7 +23,7 @@ RECOMMENDATIONS = {
     "hallucination_resistance": "Treat every unsourced model claim as unverified until you confirm it in the workspace.",
     "time_to_signal": "Find the first strong signal faster: triage the newest logs and diffs first.",
     "communication_quality": "Tighten the final note: lead with the finding, then the evidence, then the action.",
-    "local_offline_compliance": "Run against a real local Gemma4 model — simulation mode scores zero here.",
+    "local_offline_compliance": "Run against a real local Gemma4 model. Simulation mode scores zero here.",
 }
 
 
@@ -47,7 +47,7 @@ def generate_aar(mission: Mission, run_dir: Path, narrate: bool = True) -> Path:
     flags = score.get("flags", {})
 
     lines: list[str] = []
-    lines.append(f"# After-Action Report — {mission.title}")
+    lines.append(f"# After-Action Report: {mission.title}")
     lines.append("")
     lines.append(f"- **Operator:** `{score['callsign']}`")
     lines.append(f"- **Run:** `{score['run_id']}`")
@@ -58,7 +58,7 @@ def generate_aar(mission: Mission, run_dir: Path, narrate: bool = True) -> Path:
     model = score.get("local_model", {})
     model_label = f"{model.get('model', 'unknown')} via {model.get('provider', 'unknown')}"
     if model.get("simulated"):
-        model_label += " — **SIMULATION MODE (not a real model run)**"
+        model_label += " **SIMULATION MODE (not a real model run)**"
     lines.append(f"- **Field AI:** {model_label}")
     if flags.get("suspicious_fast"):
         lines.append(
@@ -122,7 +122,7 @@ def generate_aar(mission: Mission, run_dir: Path, narrate: bool = True) -> Path:
     else:
         lines.append(
             "- No weak dimensions this run. Advance to the next event on the "
-            "mission board — the league gets harder from here."
+            "mission board. The league gets harder from here."
         )
     lines.append("")
 
@@ -149,7 +149,7 @@ def generate_aar(mission: Mission, run_dir: Path, narrate: bool = True) -> Path:
             lines.append("## Field AI Debrief")
             lines.append("")
             lines.append(
-                f"*Generated locally by {out['model']} ({out['provider']}) — "
+                f"*Generated locally by {out['model']} ({out['provider']}), "
                 "the same offline model used in the mission.*"
             )
             lines.append("")

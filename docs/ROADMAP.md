@@ -24,7 +24,7 @@ competitive arena wrapper. Here is where it goes next.
   Cursor collaboration, with role-separated constraints and a team AAR.
 - **Season progression**: placement events, divisions, end-of-season
   archives, promotion ceremonies.
-- Durable arena persistence (Postgres) and operator auth (GitHub OAuth) —
+- Durable arena persistence (Postgres) and operator auth (GitHub OAuth) :
   kept out of the hackathon build to stay lightweight and privacy-safe.
 
 ## Content: season & DLC mission packs
@@ -32,11 +32,11 @@ competitive arena wrapper. Here is where it goes next.
 The mission spec is data-driven; new packs drop into `challenges/` without
 engine changes. Planned packs:
 
-- **Degraded Comms II** — multi-node partition reconciliation.
-- **Drone Logistics** — routing under stale telemetry.
-- **Critical Infrastructure** — water/power SCADA-inspired synthetic drills.
-- **Disaster Response** — resource allocation with conflicting sitreps.
-- **Field Intel** — document reconciliation with unreliable-source scoring.
+- **Degraded Comms II**: multi-node partition reconciliation.
+- **Drone Logistics**: routing under stale telemetry.
+- **Critical Infrastructure**: water/power SCADA-inspired synthetic drills.
+- **Disaster Response**: resource allocation with conflicting sitreps.
+- **Field Intel**: document reconciliation with unreliable-source scoring.
 
 All packs stay synthetic and defensive.
 
@@ -53,5 +53,5 @@ All packs stay synthetic and defensive.
 
 - AAR replay timeline (step through the decision trace).
 - Mission-briefing audio as a first-class offline feature.
-- Instructor/coach view: compare two runs' decision traces side by side —
+- Instructor/coach view: compare two runs' decision traces side by side :
   as training feedback, never as hiring signal.

@@ -1,6 +1,6 @@
 # CyberTrack Design Bible
 
-**CyberTrack — Call of Duty for AI Operators.**
+**CyberTrack: Call of Duty for AI Operators.**
 Offline AI operator readiness in Cursor, powered by local Gemma4.
 
 This document is the design source of truth for the product, the web arena, mission copy, and the demo.
@@ -29,7 +29,7 @@ Non-negotiable framing rules:
 
 Primary: high school and college students, early-career technical professionals, cyber clubs, STEM/ROTC-adjacent learners who are comfortable opening an editor and a terminal.
 
-Broader: anyone who wants to prove they can work with AI under constraint — future high-stakes operators, critical infrastructure teams.
+Broader: anyone who wants to prove they can work with AI under constraint: future high-stakes operators, critical infrastructure teams.
 
 Design implication: copy must be readable by a smart 16-year-old and respectable to a working SOC engineer. Explain everything once, tersely, in-mission.
 
@@ -40,18 +40,18 @@ Design implication: copy must be readable by a smart 16-year-old and respectable
 
 ## Information Architecture (web arena)
 
-- `/` — Operations home: season banner, enlist (callsign entry), mission board, live leaderboard strip, Gemma4 LOCAL/OFFLINE badge.
-- `/missions` — Mission board: event cards grouped by type (Qualification, Sprint, Field, Relay, Marathon), difficulty pips, timebox, XP, skills tested.
-- `/missions/[id]` — Mission briefing: summary, skills, cockpit instructions (exact `cybertf` commands), submission panel.
-- `/leaderboard` — Scoreboard: global / per-mission / season scopes, elapsed-time column, suspicious-time flags, rank insignia.
-- `/operators/[callsign]` — Service record: rank, XP, mission history, dimension strengths.
-- `/qualification` — Basic Qualification onboarding page mirroring the tutorial mission.
+- `/`: Operations home: season banner, enlist (callsign entry), mission board, live leaderboard strip, Gemma4 LOCAL/OFFLINE badge.
+- `/missions`: Mission board: event cards grouped by type (Qualification, Sprint, Field, Relay, Marathon), difficulty pips, timebox, XP, skills tested.
+- `/missions/[id]`: Mission briefing: summary, skills, cockpit instructions (exact `cybertf` commands), submission panel.
+- `/leaderboard`: Scoreboard: global / per-mission / season scopes, elapsed-time column, suspicious-time flags, rank insignia.
+- `/operators/[callsign]`: Service record: rank, XP, mission history, dimension strengths.
+- `/qualification`: Basic Qualification onboarding page mirroring the tutorial mission.
 
 Every page keeps the "solve it in Cursor" loop explicit: the arena issues missions and receives artifacts; it never hosts the work.
 
 ## Visual Direction
 
-**Feel:** a dark, quiet, confident tactical operations center. MMORPG/esports command hub, not literal FPS. Cinematic restraint: the intensity comes from typography, spacing, and signal colors — not decoration.
+**Feel:** a dark, quiet, confident tactical operations center. MMORPG/esports command hub, not literal FPS. Cinematic restraint: the intensity comes from typography, spacing, and signal colors: not decoration.
 
 ### Color
 
@@ -68,7 +68,7 @@ Every page keeps the "solve it in Cursor" loop explicit: the arena issues missio
 | `--alert` | `#ff5d5d` | failures, suspicious flags |
 | `--ice` | `#5cc8ff` | links, interactive accents, rank accents |
 
-Rule: one signal color per component. Never gradient-soup. Backgrounds may carry a faint scanline or topographic texture at ≤4% opacity — atmosphere, never noise.
+Rule: one signal color per component. Never gradient-soup. Backgrounds may carry a faint scanline or topographic texture at ≤4% opacity: atmosphere, never noise.
 
 ### Type
 
@@ -87,7 +87,7 @@ Rule: one signal color per component. Never gradient-soup. Backgrounds may carry
 ### Components
 
 - **Mission card:** event-type tag (SPRINT/FIELD/RELAY/MARATHON), title, difficulty pips (▮▮▯), timebox, XP, 1-line summary, status.
-- **Leaderboard row:** position, rank insignia glyph, callsign (mono), score, elapsed time, mission, flags. Suspicious rows get an `--alert` "UNVERIFIED · SUSPICIOUS TIME" tag and muted styling — flagged, not celebrated.
+- **Leaderboard row:** position, rank insignia glyph, callsign (mono), score, elapsed time, mission, flags. Suspicious rows get an `--alert` "UNVERIFIED · SUSPICIOUS TIME" tag and muted styling: flagged, not celebrated.
 - **Gemma badge:** persistent header pill: `● GEMMA4 · LOCAL · OFFLINE` in `--signal`.
 - **Rank insignia:** original abstract chevron/delta glyphs built from unicode/SVG strokes. Nothing copied from real militaries or games.
 
@@ -95,7 +95,7 @@ Rule: one signal color per component. Never gradient-soup. Backgrounds may carry
 
 Briefs are written like calm field dispatches: second person, present tense, short paragraphs, no jargon walls, no hoo-ah theatrics, no real-world adversaries or nations. Missions name fictional systems (Relay Station K4, HALCYON sensor grid). Every mission includes: situation, objective, constraints (local Gemma4 only), deliverable, and the exact commands to start.
 
-Every mission teaches one honest lesson about operating with constrained AI — verify the model, catch the hallucination, recover from the bad hint, write the handoff. Red herrings are fair: discoverable from evidence in the workspace, never gotchas requiring outside knowledge.
+Every mission teaches one honest lesson about operating with constrained AI: verify the model, catch the hallucination, recover from the bad hint, write the handoff. Red herrings are fair: discoverable from evidence in the workspace, never gotchas requiring outside knowledge.
 
 ## Ranks & Progression
 
@@ -104,7 +104,7 @@ Original ladder (fictional, training-progression feedback only):
 Recruit → Operator → Specialist → Sentinel → Warden → Commander → Field Marshal
 
 - Promotion = XP thresholds. XP = score quality × mission difficulty.
-- Promotions are announced like unlocks ("PROMOTION CONFIRMED — SPECIALIST"), quick and satisfying, never gatekeeping.
+- Promotions are announced like unlocks ("PROMOTION CONFIRMED: SPECIALIST"), quick and satisfying, never gatekeeping.
 - Speed matters but never beats correctness: time contributes ≤10% of mission score, and impossible times get flagged, not rewarded.
 
 ## Season Framing

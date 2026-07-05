@@ -9,7 +9,7 @@
   "par_seconds": 300,
   "time_points": 5,
   "xp_base": 300,
-  "summary": "Three AI-drafted relay restoration plans, one safe — find which, why the others fail, and file a corrected brief.",
+  "summary": "Three AI-drafted relay restoration plans, one safe. Find which, why the others fail, and file a corrected brief.",
   "skills": ["hallucination resistance", "policy compliance", "evidence discipline", "prompt discipline"],
   "answer_fields": [
     { "key": "safe_plan",          "type": "string", "prompt": "Which plan is safe and policy-compliant? (A, B, or C)" },

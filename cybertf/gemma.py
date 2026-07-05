@@ -20,7 +20,7 @@ import urllib.request
 OLLAMA_BASE = os.environ.get("CYBERTF_OLLAMA_BASE", "http://localhost:11434")
 OPENAI_BASE = os.environ.get("CYBERTF_OPENAI_BASE", "")  # e.g. http://localhost:1234/v1
 
-SIM_LABEL = "[SIMULATION — NOT A REAL MODEL RESPONSE]"
+SIM_LABEL = "[SIMULATION: NOT A REAL MODEL RESPONSE]"
 
 FIELD_AI_SYSTEM = (
     "You are the field AI for a CyberTrack training mission: a Gemma4 model "
@@ -28,7 +28,7 @@ FIELD_AI_SYSTEM = (
     "Answer concisely and operationally. Ground your claims in the mission "
     "context you are given; when you are uncertain or lack evidence, say so "
     "plainly instead of guessing. This is a synthetic defensive training "
-    "exercise — never provide offensive or unsafe operational content."
+    "exercise. Never provide offensive or unsafe operational content."
 )
 
 
@@ -175,7 +175,7 @@ def verify() -> dict:
         return {
             "ok": True,
             "simulated": True,
-            "note": "SIMULATION MODE — no real model. Do not demo in this mode.",
+            "note": "SIMULATION MODE, no real model. Do not demo in this mode.",
         }
     models = detect_models()
     info = model_info()

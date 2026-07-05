@@ -2,8 +2,8 @@
 
 CyberTrack is a local-first mission league for AI operator readiness. It has two connected surfaces:
 
-1. **Cursor mission workspace** — where operators complete missions using the `cybertf` CLI and a local Gemma4 model. Works fully offline.
-2. **Web arena** — the competitive scoreboard wrapper: callsigns, mission board, submissions, leaderboards, ranks. Requires network only for leaderboard submission.
+1. **Cursor mission workspace**: where operators complete missions using the `cybertf` CLI and a local Gemma4 model. Works fully offline.
+2. **Web arena**: the competitive scoreboard wrapper: callsigns, mission board, submissions, leaderboards, ranks. Requires network only for leaderboard submission.
 
 ```
 ┌─────────────────────────────┐        ┌──────────────────────────┐
@@ -19,20 +19,20 @@ CyberTrack is a local-first mission league for AI operator readiness. It has two
 
 ## Components
 
-- `cybertf/` — Python package (stdlib only, no third-party dependencies).
-  - `cli.py` — command dispatcher.
-  - `missions.py` — mission loading and validation.
-  - `runner.py` — run lifecycle, timers, run directories.
-  - `gemma.py` — local Gemma4 client (Ollama HTTP API; optional OpenAI-compatible endpoint; clearly labeled simulation mode).
-  - `telemetry.py` — opt-in, workspace-scoped JSONL event log.
-  - `scoring.py` — deterministic check engine and dimension scoring.
-  - `report.py` — after-action report (AAR) generator.
-  - `season.py` — local season scorecard aggregation.
-  - `arena.py` — publish submissions to the web arena.
-  - `audio.py` — offline TTS briefings (macOS `say`), optional ElevenLabs.
-- `challenges/` — mission packs (data-driven; see Mission Spec).
-- `runs/` — run artifacts (gitignored).
-- `web/` — Next.js web arena.
+- `cybertf/`: Python package (stdlib only, no third-party dependencies).
+  - `cli.py`: command dispatcher.
+  - `missions.py`: mission loading and validation.
+  - `runner.py`: run lifecycle, timers, run directories.
+  - `gemma.py`: local Gemma4 client (Ollama HTTP API; optional OpenAI-compatible endpoint; clearly labeled simulation mode).
+  - `telemetry.py`: opt-in, workspace-scoped JSONL event log.
+  - `scoring.py`: deterministic check engine and dimension scoring.
+  - `report.py`: after-action report (AAR) generator.
+  - `season.py`: local season scorecard aggregation.
+  - `arena.py`: publish submissions to the web arena.
+  - `audio.py`: offline TTS briefings (macOS `say`), optional ElevenLabs.
+- `challenges/`: mission packs (data-driven; see Mission Spec).
+- `runs/`: run artifacts (gitignored).
+- `web/`: Next.js web arena.
 
 ## Mission Spec
 
@@ -110,11 +110,11 @@ cybertf publish <run_id>       # POSTs submission artifact to the arena
 
 `runs/<run_id>/` contains:
 
-- `run.json` — mission_id, callsign, started_at, status, model info.
-- `telemetry.jsonl` — opt-in event log (see docs/TELEMETRY.md).
-- `answer.json` — operator-submitted answers.
-- `score.json` — deterministic score (schema below).
-- `aar.md` — after-action report.
+- `run.json`: mission_id, callsign, started_at, status, model info.
+- `telemetry.jsonl`: opt-in event log (see docs/TELEMETRY.md).
+- `answer.json`: operator-submitted answers.
+- `score.json`: deterministic score (schema below).
+- `aar.md`: after-action report.
 
 ## Score schema (`score.json`)
 
@@ -147,7 +147,7 @@ cybertf publish <run_id>       # POSTs submission artifact to the arena
 ```
 
 - `xp_awarded = round(total / max_total * xp_base * difficulty_multiplier)` where multiplier = 1 + (difficulty - 1) * 0.25.
-- `suspicious_fast` is true when `elapsed_seconds < expected_seconds.min` — the leaderboard shows the run as **UNVERIFIED · SUSPICIOUS TIME** instead of celebrating it.
+- `suspicious_fast` is true when `elapsed_seconds < expected_seconds.min`: the leaderboard shows the run as **UNVERIFIED · SUSPICIOUS TIME** instead of celebrating it.
 
 ## Web arena API (Next.js route handlers)
 
@@ -155,13 +155,13 @@ Base URL: `ARENA_URL` (default `http://localhost:3000`).
 
 | Route | Method | Body / query | Returns |
 |---|---|---|---|
-| `/api/missions` | GET | — | mission board manifest |
+| `/api/missions` | GET |: | mission board manifest |
 | `/api/operators` | POST | `{callsign, github_url?}` | `{operator}` (creates or loads) |
-| `/api/operators/[callsign]` | GET | — | profile: xp, rank, history |
+| `/api/operators/[callsign]` | GET |: | profile: xp, rank, history |
 | `/api/submissions` | POST | submission artifact (below) | `{accepted, rank, promoted, new_rank?, leaderboard_position, flags}` |
 | `/api/leaderboard` | GET | `?scope=global\|mission\|season&mission_id=` | ordered entries |
 
-Submission artifact (what `cybertf publish` sends — exactly `score.json` plus):
+Submission artifact (what `cybertf publish` sends: exactly `score.json` plus):
 
 ```json
 {
@@ -209,4 +209,4 @@ Pluggable store module:
 - Provider auto-detect: query `GET http://localhost:11434/api/tags`, pick the first `gemma4*` model (override with `CYBERTF_MODEL`).
 - Chat via `POST /api/chat` (Ollama). Optional OpenAI-compatible endpoint via `CYBERTF_OPENAI_BASE` (e.g., LM Studio).
 - `cybertf verify-model` proves the local path: lists detected Gemma4 models, sends a canary prompt, reports latency, and confirms the endpoint is localhost.
-- **Simulation mode** (`CYBERTF_SIM=1`): canned responses for dev/tests only. Every simulated response is prefixed with `[SIMULATION — NOT A REAL MODEL RESPONSE]`, and `score.json.local_model.simulated` is set to `true`, which zeroes the `local_offline_compliance` dimension.
+- **Simulation mode** (`CYBERTF_SIM=1`): canned responses for dev/tests only. Every simulated response is prefixed with `[SIMULATION: NOT A REAL MODEL RESPONSE]`, and `score.json.local_model.simulated` is set to `true`, which zeroes the `local_offline_compliance` dimension.

@@ -4,13 +4,13 @@
 
 Welcome to CyberTrack, operator. This qualification teaches the full mission
 loop: cockpit, field AI, evidence, submission, after-action report. Everything
-here is synthetic training data — no live systems.
+here is synthetic training data. No live systems.
 
 ## Situation
 
 You are taking over monitoring duty for the HALCYON relay grid. A previous
 shift left an **archived field-AI advisory** in the workspace. Field AI models
-run locally and offline — they are useful and fast, but they only know what
+run locally and offline. They are useful and fast, but they only know what
 they were shown. Your first discipline as an operator: **verify before you
 trust.**
 

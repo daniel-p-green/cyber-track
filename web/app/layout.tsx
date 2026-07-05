@@ -20,9 +20,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CyberTrack — Call of Duty for AI operators",
+  title: "CyberTrack: Call of Duty for AI operators",
   description:
-    "Timed technical operations where the enemy is uncertainty, bad AI guidance, and incomplete evidence. Local Gemma only — edge deployments where cloud AI is unavailable, untrusted, or too slow. Work in Cursor, submit evidence, get scored on whether you verified, challenged, and recovered.",
+    "Solve timed incidents in Cursor with local Gemma as your only AI. Catch bad model guidance, submit evidence, and get scored on judgment. No cloud AI in the loop.",
 };
 
 const THEME_BOOT = `(function(){try{var t=localStorage.getItem("cybertrack-theme");if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t}}catch(e){}})();`;

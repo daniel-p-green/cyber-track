@@ -61,7 +61,7 @@ export default async function MissionCockpit({ params }: Props) {
       note: `Open challenges/${mission.id}/data/ in the editor and work through each file.`,
     },
     {
-      title: "Ask Cursor Chat — local Gemma",
+      title: "Ask Cursor Chat (local Gemma)",
       note: "Give it the right files and context. It only knows what you show it.",
     },
     {
@@ -154,7 +154,7 @@ export default async function MissionCockpit({ params }: Props) {
             <section className={`panel ${styles.zone}`}>
               <div className={styles.zoneHead}>
                 <IconChat size={15} />
-                <span className="display">In your cockpit — Cursor</span>
+                <span className="display">In your cockpit: Cursor</span>
                 <span className={styles.zoneSub}>editor + chat + evidence</span>
               </div>
 
@@ -185,14 +185,14 @@ export default async function MissionCockpit({ params }: Props) {
                 <div className="section-label">Evidence Checklist</div>
                 <EvidenceChecklist missionId={mission.id} files={mission.evidence} />
                 <p className={styles.evidenceNote}>
-                  Citing your evidence is scored — list the paths in{" "}
+                  Citing your evidence is scored. List the paths in{" "}
                   <code className={`mono ${styles.inline}`}>answer.json</code>.
                 </p>
               </div>
 
               <div className={styles.supportBlock}>
                 <span className={`display ${styles.supportLabel}`}>
-                  Support commands — optional scaffolding
+                  Support commands (optional scaffolding)
                 </span>
                 {supportCmds.map((item) => (
                   <div key={item.cmd} className={styles.seqCmdRow}>
@@ -213,7 +213,7 @@ export default async function MissionCockpit({ params }: Props) {
             <section className={`panel ${styles.zone}`}>
               <div className={styles.zoneHead}>
                 <IconOffline size={15} />
-                <span className="display">In the arena — scored here</span>
+                <span className="display">In the arena: scored here</span>
               </div>
 
               <div className={styles.arenaBody}>
@@ -226,7 +226,7 @@ export default async function MissionCockpit({ params }: Props) {
                   </div>
                 </div>
                 <p className={styles.scoringNote}>
-                  Deterministic scoring — no model grades you. Speed is worth at
+                  Deterministic scoring. No model grades you. Speed is worth at
                   most 10%. Under{" "}
                   <span className="mono amber">
                     {formatElapsed(mission.expected_seconds.min)}

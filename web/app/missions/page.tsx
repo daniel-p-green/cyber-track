@@ -29,7 +29,7 @@ export default function MissionsPage() {
             </div>
             <h1 className={`display ${styles.title}`}>Mission Board</h1>
             <p className={styles.subtitle}>
-              Pick a mission here — fly it in Cursor with Cursor Chat and local
+              Pick a mission here. Fly it in Cursor with Cursor Chat and local
               Gemma. Submit back here for score, AAR, and rank.
             </p>
           </div>
@@ -62,10 +62,10 @@ export default function MissionsPage() {
 
         {/* Slope key */}
         <div className={styles.slopeKey}>
-          <SlopeBadge slope="green" label="Green — qualification" size={12} />
-          <SlopeBadge slope="blue" label="Blue — sprint" size={12} />
-          <SlopeBadge slope="black" label="Black — advanced field" size={12} />
-          <SlopeBadge slope="double-black" label="Double black — marathon" size={12} />
+          <SlopeBadge slope="green" label="Green: qualification" size={12} />
+          <SlopeBadge slope="blue" label="Blue: sprint" size={12} />
+          <SlopeBadge slope="black" label="Black: advanced field" size={12} />
+          <SlopeBadge slope="double-black" label="Double black: marathon" size={12} />
         </div>
 
         {/* Campaign grid — one continuous board, campaign order */}

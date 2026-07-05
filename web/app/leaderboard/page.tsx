@@ -92,7 +92,7 @@ function SeedMark({ seeded }: { seeded?: boolean }) {
   return (
     <span
       className={`display ${styles.seedMark}`}
-      title="Demo seed row — sample data, not a real run"
+      title="Demo seed row: sample data, not a real run"
       aria-label="demo seed data"
     >
       demo
@@ -147,7 +147,7 @@ export default async function ArenaPage({
                   {entry.seeded && (
                     <span
                       className={`display ${styles.podiumSeed}`}
-                      title="Demo seed row — sample data, not a real run"
+                      title="Demo seed row: sample data, not a real run"
                       aria-label="demo seed data"
                     >
                       demo
@@ -334,7 +334,7 @@ export default async function ArenaPage({
           </div>
           <div className={styles.legendItem}>
             <span className={styles.legendIcon}><IconSuspicious size={13} /></span>
-            <span>Impossibly fast run — flagged, zero XP, no podium.</span>
+            <span>Impossibly fast run: flagged, zero XP, no podium.</span>
           </div>
           <div className={styles.legendItem}>
             <span className={styles.legendIcon} style={{ color: "var(--ice)" }}>

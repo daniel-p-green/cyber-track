@@ -18,7 +18,7 @@ function Code({ children }: { children: React.ReactNode }) {
 const STEPS: ProtocolStep[] = [
   {
     id: "cursor",
-    title: "Install Cursor — your cockpit",
+    title: "Install Cursor, your cockpit",
     body: (
       <>
         <p>
@@ -43,7 +43,7 @@ const STEPS: ProtocolStep[] = [
     body: (
       <>
         <p>
-          Every mission ships in the repo — briefs, evidence files, and the{" "}
+          Every mission ships in the repo: briefs, evidence files, and the{" "}
           <code className={`mono ${styles.inline}`}>cybertf</code> support CLI.
         </p>
         <Code>
@@ -59,7 +59,7 @@ const STEPS: ProtocolStep[] = [
   },
   {
     id: "ollama",
-    title: "Install Ollama — the local model runtime",
+    title: "Install Ollama, the local model runtime",
     body: (
       <>
         <p>Ollama runs Gemma on your machine. No API key, no account, no cloud.</p>
@@ -91,7 +91,7 @@ const STEPS: ProtocolStep[] = [
   },
   {
     id: "callsign",
-    title: "Claim your callsign — join the arena",
+    title: "Claim your callsign",
     body: (
       <>
         <p>
@@ -156,7 +156,7 @@ export default function QualificationPage() {
             keeps score.
           </p>
           <div className={styles.slopeRow}>
-            <SlopeBadge slope="green" label="Green Circle — Basic Qualification" size={13} />
+            <SlopeBadge slope="green" label="Green Circle: Basic Qualification" size={13} />
             <span className="mono muted">15:00 timebox · +200 XP</span>
           </div>
         </div>
@@ -170,7 +170,7 @@ export default function QualificationPage() {
             </div>
             <p>
               Missions run offline and private. Your only AI is Gemma on your
-              own machine — in Cursor Chat and the terminal fallback. That
+              own machine, in Cursor Chat and the terminal fallback. That
               constraint is the training.
             </p>
           </div>
@@ -230,7 +230,7 @@ export default function QualificationPage() {
             </div>
 
             <div className={styles.ruleNote}>
-              Scores are <strong>training feedback</strong> — never hiring
+              Scores are <strong>training feedback</strong>, never hiring
               signals.
             </div>
 

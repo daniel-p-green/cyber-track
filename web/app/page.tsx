@@ -37,13 +37,13 @@ async function getCommandState() {
 const COCKPIT_DUTIES = [
   "Open the mission workspace",
   "Read the evidence files in the editor",
-  "Ask Cursor Chat — local Gemma, no cloud",
+  "Ask Cursor Chat (local Gemma, no cloud)",
   "Verify the model, then edit answer.json",
 ];
 
 const ARENA_DUTIES = [
   "Claim a callsign",
-  "Start the mission — timer arms instantly",
+  "Start the mission. The timer arms instantly",
   "Submit your answer and evidence",
   "Get your AAR, XP, and rank",
 ];
@@ -68,7 +68,7 @@ export default async function Home() {
       <div className={styles.statusStrip}>
         <div className={`container ${styles.statusInner}`}>
           <span className={styles.statusItem}>
-            <span className="pulse-dot" /> SEASON ZERO — ACTIVE
+            <span className="pulse-dot" /> SEASON ZERO ACTIVE
           </span>
           <span className={`${styles.statusItem} ${styles.statusHideSm}`}>
             OPERATORS <strong className="mono">{operatorCount}</strong>
@@ -101,11 +101,10 @@ export default async function Home() {
                 only AI. Scored here.
               </h1>
               <p className={styles.heroText}>
-                Timed technical operations where the enemy is uncertainty, bad
-                AI guidance, and incomplete evidence. Gemma runs on your own
-                machine — for edge deployments where cloud AI is unavailable,
-                untrusted, or too slow. Submit your evidence here and get
-                scored on whether you verified, challenged, and recovered.
+                Solve timed incidents in Cursor: read the logs, ask Gemma
+                running on your own machine, catch its bad guidance, and fix
+                the problem. Submit your evidence here. You get a score, an
+                AAR, and a spot on the leaderboard.
               </p>
               <div className={styles.heroActions}>
                 <Link href="/qualification" className="btn btn-primary">
@@ -128,7 +127,7 @@ export default async function Home() {
                   <i /> <i /> <i />
                 </span>
                 <span className={`mono ${styles.cockpitTitle}`}>
-                  Cursor — cyber-track
+                  Cursor · cyber-track
                 </span>
                 <span className={`mono ${styles.cockpitTag}`}>the cockpit</span>
               </div>
@@ -165,7 +164,7 @@ export default async function Home() {
                     R-7 isn&apos;t in the roster. <span className="amber">Verify.</span>
                   </div>
                   <div className={`${styles.msg} ${styles.msgAi}`}>
-                    Correct — the claim fails against relay_roster.txt.
+                    Correct. The claim fails against relay_roster.txt.
                   </div>
                 </div>
               </div>
@@ -192,8 +191,8 @@ export default async function Home() {
               <div className={styles.splitHead}>
                 <IconChat size={16} />
                 <div>
-                  <span className={`display ${styles.splitName}`}>Cursor — the cockpit</span>
-                  <span className={styles.splitSub}>editor + chat + evidence — the work happens here</span>
+                  <span className={`display ${styles.splitName}`}>Cursor: the cockpit</span>
+                  <span className={styles.splitSub}>editor, chat, evidence. The work happens here</span>
                 </div>
               </div>
               <ul className={styles.splitList}>
@@ -217,8 +216,8 @@ export default async function Home() {
               <div className={styles.splitHead}>
                 <IconOffline size={16} />
                 <div>
-                  <span className={`display ${styles.splitName}`}>CyberTrack — the arena</span>
-                  <span className={styles.splitSub}>missions, submissions, scores — open it in Cursor&apos;s browser</span>
+                  <span className={`display ${styles.splitName}`}>CyberTrack: the arena</span>
+                  <span className={styles.splitSub}>missions, submissions, scores. Open it in Cursor&apos;s browser</span>
                 </div>
               </div>
               <ul className={styles.splitList}>
@@ -232,11 +231,11 @@ export default async function Home() {
             </div>
           </div>
           <p className={styles.splitNote}>
-            The skill being scored is how you work with the model — asking
-            sharp questions, feeding it the right evidence, catching it when
-            it&apos;s wrong. A small <code className="mono">cybertf</code> CLI
-            handles timing and scoring in the background. No cloud AI anywhere
-            in the loop.
+            The skill being scored is how you work with the model: ask sharp
+            questions, feed it the right evidence, catch it when it&apos;s
+            wrong. A small <code className="mono">cybertf</code> CLI handles
+            timing and scoring in the background. No cloud AI anywhere in the
+            loop.
           </p>
         </div>
       </section>
@@ -272,10 +271,10 @@ export default async function Home() {
             })}
           </div>
           <div className={styles.slopeKey}>
-            <SlopeBadge slope="green" label="Green — qualification" size={12} />
-            <SlopeBadge slope="blue" label="Blue — sprint" size={12} />
-            <SlopeBadge slope="black" label="Black — advanced field" size={12} />
-            <SlopeBadge slope="double-black" label="Double black — marathon" size={12} />
+            <SlopeBadge slope="green" label="Green: qualification" size={12} />
+            <SlopeBadge slope="blue" label="Blue: sprint" size={12} />
+            <SlopeBadge slope="black" label="Black: advanced field" size={12} />
+            <SlopeBadge slope="double-black" label="Double black: marathon" size={12} />
           </div>
         </div>
       </section>
@@ -327,7 +326,7 @@ export default async function Home() {
               </div>
               <p>
                 Cursor for the missions. Ollama for local Gemma. This arena for
-                the score — keep it open in Cursor&apos;s in-app browser. Setup
+                the score. Keep it open in Cursor&apos;s in-app browser. Setup
                 takes about five minutes.
               </p>
               <div className={styles.setupLinks}>

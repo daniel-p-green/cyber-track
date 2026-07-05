@@ -23,7 +23,7 @@ supported check types.
    constrained-AI discipline: verify the claim, catch the hallucinated tool,
    reject the confident bad plan, write the handoff the model can execute.
 2. **Fair red herrings.** The tempting wrong answer must be discoverable as
-   wrong from evidence inside the workspace — never outside knowledge.
+   wrong from evidence inside the workspace: never outside knowledge.
    Signal Lost's storm is refutable from `node_17.log` + the maintenance
    note.
 3. **Synthetic and defensive, always.** Fictional systems (HALCYON grid),
@@ -38,11 +38,11 @@ supported check types.
    `evidence_includes`) that embed no answer at all.
 6. **Point budget.** Aim for 90 check points; the engine adds time (5) and
    local/offline compliance (5) for a clean 100.
-7. **Timing.** `expected_seconds.min` is the suspicious-time floor — set it
+7. **Timing.** `expected_seconds.min` is the suspicious-time floor: set it
    at the fastest an honest expert could go. `par_seconds` is the
    full-speed-bonus threshold. Timebox is the decay endpoint.
 8. **The model moment.** Design the brief so the operator's natural first
-   `cybertf ask` happens before they've gathered evidence — then let the
+   `cybertf ask` happens before they've gathered evidence: then let the
    evidence correct the picture. Never script the live model; use archived
    advisories (fixture files) when a wrong claim must be deterministic.
 

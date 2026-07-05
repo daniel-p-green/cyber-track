@@ -63,14 +63,14 @@ def _fmt_time(seconds: int) -> str:
 def cmd_enlist(args) -> int:
     telemetry_opt_in = not args.no_telemetry
     profile = enlist(args.callsign, args.github or "", telemetry_opt_in)
-    banner(f"operator enlisted — {profile['callsign']}")
+    banner(f"operator enlisted: {profile['callsign']}")
     ok(f"Local profile saved to .cybertrack/profile.json")
     ok(f"Rank: {profile['rank']} · XP: {profile['xp']}")
     if telemetry_opt_in:
         print(
             _c(
                 DIM,
-                "  Telemetry consent: ON — mission timestamps, cybertf ask "
+                "  Telemetry consent: ON. Mission timestamps, cybertf ask "
                 "prompts/responses,\n  submissions, and scores are logged to the "
                 "run folder inside this workspace\n  only. Nothing outside the "
                 "workspace is ever captured. See docs/TELEMETRY.md.\n  Disable "
@@ -79,7 +79,7 @@ def cmd_enlist(args) -> int:
             )
         )
     else:
-        warn("Telemetry OFF — decision-trace checks will be skipped in scoring.")
+        warn("Telemetry OFF. Decision-trace checks will be skipped in scoring.")
     if args.register:
         try:
             body = register_operator(profile["callsign"], profile.get("github_url", ""))
@@ -91,7 +91,7 @@ def cmd_enlist(args) -> int:
 
 def cmd_list(args) -> int:
     missions = list_missions()
-    banner("season zero — mission board")
+    banner("season zero mission board")
     if not missions:
         warn("No missions found in challenges/.")
         return 1
@@ -108,7 +108,7 @@ def cmd_list(args) -> int:
 
 def cmd_brief(args) -> int:
     m = load_mission(args.mission_id)
-    banner(f"mission brief — {m.title}")
+    banner(f"mission brief: {m.title}")
     text = m.brief_path.read_text() if m.brief_path.is_file() else m.summary
     print(text)
     if args.audio:
@@ -125,7 +125,7 @@ def cmd_brief(args) -> int:
 def cmd_run(args) -> int:
     m = load_mission(args.mission_id)
     run_dir = start_run(m, no_telemetry=args.no_telemetry)
-    banner(f"mission start — {m.title}")
+    banner(f"mission start: {m.title}")
     ok(f"Run directory: {run_dir.relative_to(Path.cwd()) if run_dir.is_relative_to(Path.cwd()) else run_dir}")
     ok(f"Timer started. Timebox: {m.timebox_minutes} minutes.")
     print(_c(DIM, f"\n  Brief:    cybertf brief {m.id}"))
@@ -161,7 +161,7 @@ def cmd_ask(args) -> int:
         return 1
     record_ask(args.question, context_files, out)
     tag = "SIMULATION" if out["simulated"] else f"{out['model']} · local · {out['latency_ms']}ms"
-    banner(f"field ai — {tag}")
+    banner(f"field ai: {tag}")
     print(out["response"].strip())
     if not out["simulated"]:
         print(_c(DIM, "\n  Verify before you trust: the field AI only knows what you show it."))
@@ -176,19 +176,19 @@ def cmd_submit(args) -> int:
         return 1
     run_dir, run = submit_answer(m, answer_file)
     score = score_run(m, run_dir, run)
-    banner(f"submission scored — {m.title}")
+    banner(f"submission scored: {m.title}")
     pct = round(score["total"] / score["max_total"] * 100) if score["max_total"] else 0
     ok(f"Score: {score['total']}/{score['max_total']} ({pct}%)")
     ok(f"Elapsed: {_fmt_time(score['elapsed_seconds'])}")
     for c in score["checks"]:
         (ok if c["passed"] else fail)(f"{c['label']} ({c['points']}/{c['max']})")
     if score["flags"]["suspicious_fast"]:
-        warn("Suspicious completion time — run flagged UNVERIFIED, no XP awarded.")
+        warn("Suspicious completion time. Run flagged UNVERIFIED, no XP awarded.")
     if score["xp_awarded"]:
         profile = award_xp(score["xp_awarded"], m.id)
         ok(f"+{score['xp_awarded']} XP → {profile['xp']} total")
         if profile.get("promoted"):
-            banner(f"promotion confirmed — {profile['rank'].upper()}")
+            banner(f"promotion confirmed: {profile['rank'].upper()}")
             audio.play_cue("promotion")
         else:
             audio.play_cue("complete")
@@ -227,7 +227,7 @@ def cmd_publish(args) -> int:
     op = body.get("operator", {})
     ok(f"Operator: {op.get('callsign')} · {op.get('rank')} · {op.get('xp')} XP (arena)")
     if body.get("promoted"):
-        banner(f"promotion confirmed — {body.get('new_rank', '').upper()}")
+        banner(f"promotion confirmed: {body.get('new_rank', '').upper()}")
         audio.play_cue("promotion")
     pos = body.get("leaderboard_position")
     if pos:
@@ -262,7 +262,7 @@ def cmd_verify_model(args) -> int:
     ok(f"Selected model: {result['selected_model']}")
     ok(f"Canary response: {result['canary_response']!r}")
     ok(f"Round-trip latency: {result['latency_ms']}ms")
-    print(_c(GREEN, "\n  ● GEMMA4 · LOCAL · OFFLINE — field AI ready."))
+    print(_c(GREEN, "\n  ● GEMMA4 · LOCAL · OFFLINE. Field AI ready."))
     return 0
 
 
@@ -293,7 +293,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="cybertf",
         description=(
-            "CyberTrack mission league — offline AI operator readiness in "
+            "CyberTrack mission league: offline AI operator readiness in "
             "Cursor, powered by local Gemma4."
         ),
     )

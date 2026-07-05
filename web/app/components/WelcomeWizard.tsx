@@ -108,7 +108,7 @@ export default function WelcomeWizard() {
         ref={panelRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Welcome to CyberTrack — Season Zero briefing"
+        aria-label="Welcome to CyberTrack: Season Zero briefing"
         tabIndex={-1}
         className={`panel hud-corners hud-corners-signal ${styles.panel}`}
         onClick={(e) => e.stopPropagation()}
@@ -153,9 +153,9 @@ export default function WelcomeWizard() {
           {step === 0 && (
             <>
               <p className={styles.lede}>
-                <strong>CyberTrack is Call of Duty for AI operators</strong> —
-                timed technical operations scored on judgment, not typing
-                speed.
+                <strong>CyberTrack is Call of Duty for AI operators.</strong>{" "}
+                You solve timed incidents and get scored on judgment, not
+                typing speed.
               </p>
               <div className={styles.enemyRow}>
                 <span className={`display ${styles.enemyLabel}`}>The enemy</span>
@@ -164,8 +164,8 @@ export default function WelcomeWizard() {
                 <span className="tag tag-amber">incomplete evidence</span>
               </div>
               <p className={styles.text}>
-                Every mission runs with <strong>local Gemma only</strong> —
-                simulating edge deployments where cloud AI is unavailable,
+                Every mission runs with <strong>local Gemma only</strong>. It
+                simulates edge deployments where cloud AI is unavailable,
                 untrusted, or too slow. Offline, private, on your own machine.
               </p>
             </>
@@ -181,14 +181,14 @@ export default function WelcomeWizard() {
                 <li>
                   <IconFile size={15} />
                   <span>
-                    <strong>Workspace</strong> — the repo ships every mission:
-                    briefs, evidence files, and the answer artifact you edit.
+                    <strong>Workspace.</strong> The repo ships every mission:
+                    briefs, evidence files, and the answer file you edit.
                   </span>
                 </li>
                 <li>
                   <IconChat size={15} />
                   <span>
-                    <strong>Cursor Chat</strong> — your only AI is Gemma running
+                    <strong>Cursor Chat.</strong> Your only AI is Gemma running
                     locally. Ask sharp questions, feed it the right evidence,
                     catch it when it&apos;s wrong.
                   </span>
@@ -196,7 +196,7 @@ export default function WelcomeWizard() {
                 <li>
                   <IconTerminal size={15} />
                   <span>
-                    <strong>Support commands</strong> — a small{" "}
+                    <strong>Support commands.</strong> A small{" "}
                     <code className="mono">cybertf</code> CLI arms timers and
                     scores runs. Scaffolding, not the skill.
                   </span>
@@ -220,7 +220,7 @@ export default function WelcomeWizard() {
                   <IconOffline size={15} />
                   <span>
                     Deterministic scoring on whether you{" "}
-                    <strong>verified, challenged, and recovered</strong> — no
+                    <strong>verified, challenged, and recovered</strong>. No
                     model grades you.
                   </span>
                 </li>
@@ -246,14 +246,14 @@ export default function WelcomeWizard() {
                 green, work toward double black.
               </p>
               <div className={styles.slopes}>
-                <SlopeBadge slope="green" label="Green — qualification" size={13} />
-                <SlopeBadge slope="blue" label="Blue — sprint" size={13} />
-                <SlopeBadge slope="black" label="Black — advanced field" size={13} />
-                <SlopeBadge slope="double-black" label="Double black — marathon" size={13} />
+                <SlopeBadge slope="green" label="Green: qualification" size={13} />
+                <SlopeBadge slope="blue" label="Blue: sprint" size={13} />
+                <SlopeBadge slope="black" label="Black: advanced field" size={13} />
+                <SlopeBadge slope="double-black" label="Double black: marathon" size={13} />
               </div>
               <p className={styles.text}>
                 Setup takes about five minutes: Cursor, the workspace, Ollama,
-                local Gemma, a callsign — then fly Basic Qualification.
+                local Gemma, a callsign. Then fly Basic Qualification.
               </p>
               <div className={styles.ctaRow}>
                 <Link href="/qualification" className="btn btn-primary" onClick={close}>

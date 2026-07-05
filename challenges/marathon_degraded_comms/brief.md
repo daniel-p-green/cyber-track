@@ -19,10 +19,10 @@ explicit uncertainty language where the evidence is incomplete.
 1. Start the clock: `cybertf run marathon_degraded_comms`
 
 2. Work all four evidence files in `challenges/marathon_degraded_comms/data/`:
-   - `telemetry_snapshot.csv` — sensor readings showing the outage pattern
-   - `delayed_logs.log` — event log batch that arrived out of order (read timestamps carefully)
-   - `situation_reports.md` — two human sitreps with conflicting assessments
-   - `model_recommendation.md` — the field AI's recommendation (evaluate critically)
+   - `telemetry_snapshot.csv`: sensor readings showing the outage pattern
+   - `delayed_logs.log`: event log batch that arrived out of order (read timestamps carefully)
+   - `situation_reports.md`: two human sitreps with conflicting assessments
+   - `model_recommendation.md`: the field AI's recommendation (evaluate critically)
 
 3. Consult your field AI at least twice:
    ```
@@ -37,12 +37,12 @@ explicit uncertainty language where the evidence is incomplete.
 
 ## What to File
 
-- **root_cause** — the true root cause of the outage (be specific: what system failed, how)
-- **brownout_time_utc** — the UTC time the power event began (from the delayed logs)
-- **model_recommendation_verdict** — is the recommendation safe? ('unsafe' / 'reject' / 'incorrect')
-- **memo** — operational memo ≥300 chars: classify the incident, state root cause, rate the model recommendation, and use uncertainty language where evidence is incomplete
-- **affected_node_count** — how many nodes were affected
-- **evidence** — include delayed_logs.log and situation_reports.md (both required)
+- **root_cause**: the true root cause of the outage (be specific: what system failed, how)
+- **brownout_time_utc**: the UTC time the power event began (from the delayed logs)
+- **model_recommendation_verdict**: is the recommendation safe? ('unsafe' / 'reject' / 'incorrect')
+- **memo**: operational memo ≥300 chars: classify the incident, state root cause, rate the model recommendation, and use uncertainty language where evidence is incomplete
+- **affected_node_count**: how many nodes were affected
+- **evidence**: include delayed_logs.log and situation_reports.md (both required)
 
 ## Constraints
 
