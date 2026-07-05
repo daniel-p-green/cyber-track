@@ -1,16 +1,23 @@
 # Build Status
 
-Last updated: 2026-07-04 ~17:20 CDT
+Last updated: 2026-07-04 ~19:00 CDT
 
-## Current state: **demo-ready** (post UX/UI correction pass)
+## Current state: **demo-ready** (post product-truth correction pass)
 
-Web arena redesigned to the approved CyberTrack brand system: dark tactical
-cockpit default + light leaderboard mode, custom SVG interface system
-(wordmark, mission glyphs, rank plates/chevrons, Gemma status badge,
-progression rail, suspicious-time mark), dossier mission cards, active-mission
-cockpit page, 6-step setup wizard with Cursor ref links, podium scoreboard,
-Mission Record profiles with optional GitHub/X links, and a Daniel Green
-footer credit. `npm run lint` and `npm run build` clean; redeployed to
+Final page-by-page UX/product-truth pass complete: the web arena now tells the
+true story — Cursor (editor + Cursor Chat + in-app browser) is the cockpit
+where mission work happens; the web arena selects missions, tracks progress,
+takes submissions, and shows AAR/leaderboard; the `cybertf` CLI is presented
+as support scaffolding (timing/scoring/publishing), not the player skill.
+Home hero replaced fake terminal theater with a Cursor cockpit preview
+(evidence files, answer.json editor, Cursor Chat verify-the-model exchange,
+arena in the in-app browser). Mission detail leads with the 6-step Cursor
+mission loop; commands demoted. Demo seed tags no longer read as part of
+callsigns; profile/footer social links are labeled and accessible; nav
+"Deploy" renamed "Setup"; mobile header no longer overlaps at 390px.
+Earlier this session: command-deck hero art added and a CSS-modules
+scoped-keyframes bug fixed (cockpit feed rendered invisible in prod).
+`npm run lint`, `npm run build`, 9/9 Python tests clean; redeployed to
 https://cybertrack-arena.vercel.app and pushed to GitHub.
 
 CyberTrack Season Zero spine is working end-to-end on this machine.
