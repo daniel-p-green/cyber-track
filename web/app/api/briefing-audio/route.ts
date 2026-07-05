@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 
 const BRIEFING_DIR = path.join(process.cwd(), "public", "audio", "briefings");
 
-/** Serve pre-generated briefings or synthesize via ElevenLabs / local TTS. */
+/** Serve pre-generated briefings or synthesize via ElevenLabs / OpenAI / local TTS. */
 export async function GET(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id")?.trim();
   const text = req.nextUrl.searchParams.get("text")?.trim();
@@ -35,10 +35,13 @@ export async function GET(req: NextRequest) {
   const eleven = await synthesizeElevenLabs(text);
   if (eleven) return audioResponse(eleven);
 
+  const openai = await synthesizeOpenAI(text);
+  if (openai) return audioResponse(openai);
+
   return NextResponse.json(
     {
       error: "briefing audio unavailable",
-      hint: "Run scripts/generate_briefings.py, or set ELEVENLABS_API_KEY / CYBERTF_TTS_URL",
+      hint: "Run scripts/generate_briefings.py, or set ELEVENLABS_API_KEY / OPENAI_API_KEY / CYBERTF_TTS_URL",
     },
     { status: 503 }
   );
@@ -67,6 +70,31 @@ async function synthesizeElevenLabs(text: string): Promise<Buffer | null> {
     body: JSON.stringify({
       text,
       model_id: "eleven_multilingual_v2",
+    }),
+  });
+  if (!res.ok) return null;
+  return Buffer.from(await res.arrayBuffer());
+}
+
+async function synthesizeOpenAI(text: string): Promise<Buffer | null> {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) return null;
+
+  const base = (process.env.OPENAI_API_BASE ?? "https://api.openai.com/v1").replace(/\/$/, "");
+  const model = process.env.OPENAI_TTS_MODEL ?? "tts-1-hd";
+  const voice = process.env.OPENAI_TTS_VOICE ?? "onyx";
+
+  const res = await fetch(`${base}/audio/speech`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${key}`,
+    },
+    body: JSON.stringify({
+      model,
+      input: text,
+      voice,
+      response_format: "mp3",
     }),
   });
   if (!res.ok) return null;

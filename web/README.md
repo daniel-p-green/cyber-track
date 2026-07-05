@@ -45,8 +45,11 @@ Mission and hero briefings play from pre-generated MP3s in
 `public/audio/briefings/`. Regenerate with better voices:
 
 ```bash
-# ElevenLabs (recommended for demo video)
+# ElevenLabs
 ELEVENLABS_API_KEY=... python3 scripts/generate_briefings.py --backend elevenlabs --force
+
+# OpenAI TTS (tts-1-hd, onyx voice by default)
+OPENAI_API_KEY=... python3 scripts/generate_briefings.py --backend openai --force
 
 # Local Piper
 PIPER_MODEL_PATH=/path/to/model.onnx python3 scripts/generate_briefings.py --backend piper --force
@@ -55,7 +58,7 @@ PIPER_MODEL_PATH=/path/to/model.onnx python3 scripts/generate_briefings.py --bac
 CYBERTF_TTS_URL=http://localhost:5500/tts python3 scripts/generate_briefings.py --backend local-http --force
 ```
 
-Set `ELEVENLABS_API_KEY` or `CYBERTF_TTS_URL` on Vercel for on-demand
-fallback when a static file is missing.
+Set `ELEVENLABS_API_KEY`, `OPENAI_API_KEY`, or `CYBERTF_TTS_URL` on Vercel
+for on-demand fallback when a static file is missing.
 
 No secrets, no answer keys, no auth: operator identity is a callsign.

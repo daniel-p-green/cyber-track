@@ -3,7 +3,8 @@
 
 Backends (first match wins):
   1. elevenlabs  — ELEVENLABS_API_KEY in env
-  2. piper       — piper binary + PIPER_MODEL_PATH
+  2. openai      — OPENAI_API_KEY in env (tts-1-hd)
+  3. piper       — piper binary + PIPER_MODEL_PATH
   3. local-http  — POST text to CYBERTF_TTS_URL, save response body
   4. say         — macOS `say` + ffmpeg → mp3
   5. edge        — edge-tts CLI (dev fallback; needs network)
@@ -11,6 +12,7 @@ Backends (first match wins):
 Usage:
   python3 scripts/generate_briefings.py
   python3 scripts/generate_briefings.py --backend elevenlabs
+  python3 scripts/generate_briefings.py --backend openai
   python3 scripts/generate_briefings.py --backend piper --id sprint_signal_lost
 """
 
@@ -76,6 +78,34 @@ def synthesize_elevenlabs(text: str, out: Path) -> bool:
         return out.stat().st_size > 0
     except Exception as exc:
         print(f"  elevenlabs failed: {exc}", file=sys.stderr)
+        return False
+
+
+def synthesize_openai(text: str, out: Path) -> bool:
+    key = os.environ.get("OPENAI_API_KEY")
+    if not key:
+        return False
+    base = os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1").rstrip("/")
+    model = os.environ.get("OPENAI_TTS_MODEL", "tts-1-hd")
+    voice = os.environ.get("OPENAI_TTS_VOICE", "onyx")
+    payload = json.dumps(
+        {"model": model, "input": text, "voice": voice, "response_format": "mp3"}
+    ).encode()
+    req = urllib.request.Request(
+        f"{base}/audio/speech",
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {key}",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            out.write_bytes(resp.read())
+        return out.stat().st_size > 0
+    except Exception as exc:
+        print(f"  openai failed: {exc}", file=sys.stderr)
         return False
 
 
@@ -174,6 +204,7 @@ def synthesize_edge(text: str, out: Path) -> bool:
 
 BACKENDS = {
     "elevenlabs": synthesize_elevenlabs,
+    "openai": synthesize_openai,
     "piper": synthesize_piper,
     "local-http": synthesize_local_http,
     "say": synthesize_say,
@@ -186,6 +217,8 @@ def pick_backend(requested: str | None) -> str:
         return requested
     if os.environ.get("ELEVENLABS_API_KEY"):
         return "elevenlabs"
+    if os.environ.get("OPENAI_API_KEY"):
+        return "openai"
     if os.environ.get("PIPER_MODEL_PATH") and shutil.which("piper"):
         return "piper"
     if os.environ.get("CYBERTF_TTS_URL"):

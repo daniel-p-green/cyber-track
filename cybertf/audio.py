@@ -4,9 +4,9 @@ Default path is fully offline: macOS built-in `say` for briefings and a
 system sound for mission-complete cues. This matches the edge/offline
 thesis — no cloud voice required.
 
-ElevenLabs is an optional polish tier, used only when ELEVENLABS_API_KEY
-is present in the environment and --voice elevenlabs is requested.
-The key is never stored or committed.
+ElevenLabs and OpenAI TTS are optional demo polish tiers, used only when
+the corresponding API key is present and --voice elevenlabs|openai is
+requested. Keys are never stored or committed.
 """
 
 from __future__ import annotations
@@ -121,6 +121,37 @@ def speak_local_http(text: str, out_path: Path) -> bool:
         return False
 
 
+def speak_openai(text: str, out_path: Path) -> bool:
+    """Demo polish tier via OpenAI TTS. Requires OPENAI_API_KEY in env."""
+    key = os.environ.get("OPENAI_API_KEY")
+    if not key:
+        return False
+    base = os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1").rstrip("/")
+    model = os.environ.get("OPENAI_TTS_MODEL", "tts-1-hd")
+    voice = os.environ.get("OPENAI_TTS_VOICE", "onyx")
+    req = urllib.request.Request(
+        f"{base}/audio/speech",
+        data=json.dumps(
+            {"model": model, "input": text, "voice": voice, "response_format": "mp3"}
+        ).encode(),
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {key}",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            out_path.write_bytes(resp.read())
+    except Exception:
+        return False
+    if shutil.which("afplay"):
+        subprocess.Popen(
+            ["afplay", str(out_path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+    return out_path.stat().st_size > 0
+
+
 def speak_elevenlabs(text: str, out_path: Path) -> bool:
     """Optional cloud polish tier. Requires ELEVENLABS_API_KEY in env."""
     key = os.environ.get("ELEVENLABS_API_KEY")
@@ -151,13 +182,16 @@ def speak(text: str, voice: str = "offline", out_dir: Path | None = None) -> str
     if voice == "elevenlabs":
         if speak_elevenlabs(text, target):
             return "elevenlabs"
+    if voice == "openai":
+        if speak_openai(text, target):
+            return "openai"
     if voice == "piper":
         if speak_piper(text, target):
             return "piper"
     if voice == "local":
         if speak_local_http(text, target):
             return "local"
-    if voice in ("elevenlabs", "piper", "local"):
+    if voice in ("elevenlabs", "openai", "piper", "local"):
         # explicit tier failed; do not silently downgrade for named tiers
         return "none"
     if speak_offline(text):
