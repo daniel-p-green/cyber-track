@@ -37,7 +37,7 @@ Open in Cursor: repo root, terminal panel, `challenges/sprint_signal_lost/brief.
 python3 -m cybertf.cli verify-model
 ```
 
-**Say:** "Every mission starts by proving the field AI is real, local, and offline: not a cloud substitute."
+**Say:** "Every mission starts by proving the field AI is real, local, and offline, not a cloud substitute."
 
 ---
 
@@ -57,7 +57,7 @@ python3 -m cybertf.cli ask "What caused the packet loss?" \
   --file challenges/sprint_signal_lost/data/logs/gateway.log
 ```
 
-**Say:** "The field AI helps: but it only knows what you show it. The maintenance note is a false lead; the config push broke the link MTU."
+**Say:** "The field AI helps, but it only knows what you show it. The maintenance note is a false lead; the config push broke the link MTU."
 
 **Fix** `challenges/sprint_signal_lost/data/config/uplink.conf` (mtu 9000 → 1500), fill `runs/<run_id>/answer.json`.
 
@@ -74,7 +74,7 @@ python3 -m cybertf.cli submit sprint_signal_lost runs/<run_id>/answer.json
 
 **Open:** `runs/<run_id>/aar.md`: dimension bars, decision trace, Gemma debrief.
 
-**Say:** "Deterministic scoring across readiness dimensions: no model in the grading loop."
+**Say:** "Deterministic scoring across readiness dimensions. No model in the grading loop."
 
 ---
 
@@ -88,7 +88,7 @@ python3 -m cybertf.cli publish <run_id>
 
 **Show:** `/leaderboard`: your run, rank/XP, a **UNVERIFIED · SUSPICIOUS TIME** row on a fast run.
 
-**Say:** "Speed counts, but impossible times get flagged: not celebrated. Local `cybertf season` works fully offline if the network fails."
+**Say:** "Speed counts, but impossible times get flagged, not celebrated. Local `cybertf season` works fully offline if the network fails."
 
 ---
 
@@ -96,7 +96,7 @@ python3 -m cybertf.cli publish <run_id>
 
 **Show:** `/qualification` page + mission board with Basic Qual through Marathon.
 
-**Say:** "Cursor is the cockpit. Gemma4 is the field AI. CyberTrack is a flight simulator for AI-era technical judgment: built during the hackathon, open source, training-only framing."
+**Say:** "Cursor is the cockpit. Gemma4 is the field AI. CyberTrack is a flight simulator for AI-era technical judgment. Built during the hackathon, open source, training-only framing."
 
 ---
 

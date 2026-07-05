@@ -23,7 +23,7 @@ supported check types.
    constrained-AI discipline: verify the claim, catch the hallucinated tool,
    reject the confident bad plan, write the handoff the model can execute.
 2. **Fair red herrings.** The tempting wrong answer must be discoverable as
-   wrong from evidence inside the workspace: never outside knowledge.
+   wrong from evidence inside the workspace, never outside knowledge.
    Signal Lost's storm is refutable from `node_17.log` + the maintenance
    note.
 3. **Synthetic and defensive, always.** Fictional systems (HALCYON grid),

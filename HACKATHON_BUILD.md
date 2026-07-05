@@ -36,7 +36,7 @@ reused dependencies, and roadmap.
 - AI coding assistants (Cursor with Claude-family models) were used as
   build accelerators for this codebase, the same way any team member would
   be. The **player-facing model in the product is exclusively local
-  Gemma4**: no cloud model appears anywhere in mission play.
+  Gemma4**. No cloud model appears anywhere in mission play.
 
 ## Synthetic data disclosure
 

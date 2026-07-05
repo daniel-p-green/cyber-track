@@ -88,7 +88,7 @@ export default function DeploymentProtocol({ steps }: { steps: ProtocolStep[] })
       {/* Progress header */}
       <div className={styles.progressHead}>
         <span className={`display ${styles.progressLabel}`}>
-          {allDone ? "Setup complete — you are mission-capable" : "Setup progress"}
+          {allDone ? "Setup complete. You are mission-capable" : "Setup progress"}
         </span>
         <span
           className={`mono ${styles.progressCount}`}

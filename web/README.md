@@ -3,7 +3,7 @@
 The competitive scoreboard wrapper around the Cursor mission cockpit:
 callsign enlistment, mission board, submissions API, leaderboards
 (global / season / per-mission), rank progression, and suspicious-time
-flagging. Mission solving happens in Cursor with local Gemma4: never here.
+flagging. Mission solving happens in Cursor with local Gemma4, never here.
 
 ## Run locally
 

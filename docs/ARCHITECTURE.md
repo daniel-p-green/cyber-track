@@ -3,7 +3,7 @@
 CyberTrack is a local-first mission league for AI operator readiness. It has two connected surfaces:
 
 1. **Cursor mission workspace**: where operators complete missions using the `cybertf` CLI and a local Gemma4 model. Works fully offline.
-2. **Web arena**: the competitive scoreboard wrapper: callsigns, mission board, submissions, leaderboards, ranks. Requires network only for leaderboard submission.
+2. **Web arena**: the competitive scoreboard wrapper (callsigns, mission board, submissions, leaderboards, ranks). Requires network only for leaderboard submission.
 
 ```
 ┌─────────────────────────────┐        ┌──────────────────────────┐
@@ -147,7 +147,7 @@ cybertf publish <run_id>       # POSTs submission artifact to the arena
 ```
 
 - `xp_awarded = round(total / max_total * xp_base * difficulty_multiplier)` where multiplier = 1 + (difficulty - 1) * 0.25.
-- `suspicious_fast` is true when `elapsed_seconds < expected_seconds.min`: the leaderboard shows the run as **UNVERIFIED · SUSPICIOUS TIME** instead of celebrating it.
+- `suspicious_fast` is true when `elapsed_seconds < expected_seconds.min`; the leaderboard shows the run as **UNVERIFIED · SUSPICIOUS TIME** instead of celebrating it.
 
 ## Web arena API (Next.js route handlers)
 

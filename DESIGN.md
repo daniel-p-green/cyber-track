@@ -51,7 +51,7 @@ Every page keeps the "solve it in Cursor" loop explicit: the arena issues missio
 
 ## Visual Direction
 
-**Feel:** a dark, quiet, confident tactical operations center. MMORPG/esports command hub, not literal FPS. Cinematic restraint: the intensity comes from typography, spacing, and signal colors: not decoration.
+**Feel:** a dark, quiet, confident tactical operations center. MMORPG/esports command hub, not literal FPS. Cinematic restraint: the intensity comes from typography, spacing, and signal colors, not decoration.
 
 ### Color
 

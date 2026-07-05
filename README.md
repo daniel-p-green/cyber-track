@@ -113,7 +113,7 @@ in [docs/TELEMETRY.md](docs/TELEMETRY.md).
 ## What CyberTrack is not
 
 Training and readiness feedback only. Not hiring, recruiting, screening, or
-job-suitability scoring. All scenarios are synthetic and defensive: no live
+job-suitability scoring. All scenarios are synthetic and defensive. No live
 targets, no offensive content. The web arena is a scoreboard, not the
 product.
 

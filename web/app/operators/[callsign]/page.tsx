@@ -324,7 +324,7 @@ export default async function OperatorRecordPage({ params }: Props) {
 
             {Object.keys(bestDims).length > 0 && (
               <div className={`panel ${styles.sideCard}`}>
-                <div className="section-label">AAR Highlights</div>
+                <div className="section-label">Best Scores by Dimension</div>
                 {Object.entries(bestDims)
                   .filter(([, v]) => v.max > 0)
                   .sort(([, a], [, b]) => b.points / b.max - a.points / a.max)

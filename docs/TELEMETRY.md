@@ -22,7 +22,7 @@ the complete inventory of what is and is not captured.
 | `submission` | mission id, elapsed seconds |
 | `score` | totals and XP awarded |
 
-Everything is written to `runs/<run_id>/telemetry.jsonl`: a plain-text file
+Everything is written to `runs/<run_id>/telemetry.jsonl`, a plain-text file
 inside your workspace that you can open, read, and delete. A SHA-256 digest
 of that file travels with arena submissions as tamper evidence.
 
@@ -39,7 +39,7 @@ of that file travels with arena submissions as tamper evidence.
 Nowhere, by default. Telemetry lives in your local `runs/` folder
 (gitignored). If you choose to `cybertf publish` a run, only the **score
 artifact** (scores, dimensions, flags, elapsed time, model info, telemetry
-digest, ask count) is sent to the arena: the raw telemetry log itself,
+digest, ask count) is sent to the arena; the raw telemetry log itself,
 including your prompts and the model's responses, stays on your machine.
 
 The goal is a replayable assessment, not surveillance.
