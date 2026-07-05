@@ -85,7 +85,11 @@ export default async function MissionBriefing({ params }: Props) {
             <h1 className={`display ${styles.title}`}>{mission.title}</h1>
             <p className={styles.summary}>{mission.hook}</p>
             <div className={styles.headVoice}>
-              <VoiceBriefing text={mission.briefing} label="Play voice briefing" />
+              <VoiceBriefing
+                briefingId={mission.id}
+                text={mission.briefing}
+                label="Play voice briefing"
+              />
             </div>
           </div>
         </header>

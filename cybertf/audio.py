@@ -64,6 +64,63 @@ def play_cue(kind: str = "complete") -> bool:
     return True
 
 
+def speak_piper(text: str, out_path: Path) -> bool:
+    """Local Piper TTS. Requires piper binary and PIPER_MODEL_PATH."""
+    model = os.environ.get("PIPER_MODEL_PATH")
+    piper = shutil.which("piper")
+    if not model or not piper:
+        return False
+    wav = out_path.with_suffix(".wav")
+    try:
+        subprocess.run(
+            [piper, "--model", model, "--output_file", str(wav)],
+            input=text.encode(),
+            check=True,
+            capture_output=True,
+        )
+        if shutil.which("ffmpeg"):
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-y",
+                    "-i",
+                    str(wav),
+                    "-codec:a",
+                    "libmp3lame",
+                    "-qscale:a",
+                    "3",
+                    str(out_path),
+                ],
+                check=True,
+                capture_output=True,
+            )
+            wav.unlink(missing_ok=True)
+            return out_path.is_file()
+        out_path = wav
+        return wav.is_file()
+    except subprocess.CalledProcessError:
+        return False
+
+
+def speak_local_http(text: str, out_path: Path) -> bool:
+    """POST {text} to CYBERTF_TTS_URL (Piper/Kokoro/local voice server)."""
+    base = os.environ.get("CYBERTF_TTS_URL", "").rstrip("/")
+    if not base:
+        return False
+    req = urllib.request.Request(
+        base,
+        data=json.dumps({"text": text}).encode(),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            out_path.write_bytes(resp.read())
+        return out_path.stat().st_size > 0
+    except Exception:
+        return False
+
+
 def speak_elevenlabs(text: str, out_path: Path) -> bool:
     """Optional cloud polish tier. Requires ELEVENLABS_API_KEY in env."""
     key = os.environ.get("ELEVENLABS_API_KEY")
@@ -90,10 +147,19 @@ def speak_elevenlabs(text: str, out_path: Path) -> bool:
 
 def speak(text: str, voice: str = "offline", out_dir: Path | None = None) -> str:
     """Speak text with the requested tier. Returns the tier actually used."""
+    target = (out_dir or Path.cwd()) / "briefing.mp3"
     if voice == "elevenlabs":
-        target = (out_dir or Path.cwd()) / "briefing.mp3"
         if speak_elevenlabs(text, target):
             return "elevenlabs"
+    if voice == "piper":
+        if speak_piper(text, target):
+            return "piper"
+    if voice == "local":
+        if speak_local_http(text, target):
+            return "local"
+    if voice in ("elevenlabs", "piper", "local"):
+        # explicit tier failed; do not silently downgrade for named tiers
+        return "none"
     if speak_offline(text):
         return "offline"
     return "none"

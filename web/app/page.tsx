@@ -12,10 +12,8 @@ import {
 } from "./components/svg";
 import ZuluClock from "./components/ZuluClock";
 import VoiceBriefing from "./components/VoiceBriefing";
+import { HERO_BRIEFING_ID, HERO_BRIEFING_TEXT } from "@/lib/briefing-audio";
 import styles from "./page.module.css";
-
-const HERO_BRIEFING =
-  "CyberTrack. A tactical mission arena inside Cursor. Timed incidents, incomplete evidence, and a local Gemma model as your only A I, confidently wrong at least once. Make the call, cite your proof, and read the after action report. Anyone can get an A I answer. Operators verify one under pressure.";
 
 const LOOP = [
   {
@@ -137,7 +135,11 @@ export default function Home() {
               <Link href="/missions" className="btn btn-primary">
                 View Missions
               </Link>
-              <VoiceBriefing text={HERO_BRIEFING} label="Play briefing" />
+              <VoiceBriefing
+                briefingId={HERO_BRIEFING_ID}
+                text={HERO_BRIEFING_TEXT}
+                label="Play briefing"
+              />
               <Link href="/qualification" className={styles.heroQuiet}>
                 Set up in 5 minutes →
               </Link>

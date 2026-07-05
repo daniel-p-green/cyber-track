@@ -144,7 +144,7 @@ export default function MissionsPage() {
                   <Link href={`/missions/${m.id}`} className="btn btn-primary">
                     Open Briefing →
                   </Link>
-                  <VoiceBriefing text={m.briefing} label="Voice" compact />
+                  <VoiceBriefing briefingId={m.id} text={m.briefing} label="Voice" compact />
                   <Link
                     href={`/leaderboard?scope=mission&mission_id=${m.id}`}
                     className={styles.boardLink}
