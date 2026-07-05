@@ -1,5 +1,5 @@
 .root {
-  padding-bottom: 40px;
+  padding-bottom: 56px;
 }
 
 /* ── Ops status strip ─────────────────────────────────────────────────── */
@@ -32,310 +32,157 @@
   letter-spacing: 0.08em;
 }
 
-/* ── Hero ─────────────────────────────────────────────────────────────── */
+/* ── Hero ──────────────────────────────────────────────────────────────
+   Quiet and editorial. No artwork, no mockups. The thesis carries it. */
 .hero {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(36px, 6vw, 68px) 0 clamp(30px, 5vw, 56px);
+  padding: clamp(64px, 11vw, 128px) 0 clamp(48px, 8vw, 96px);
   border-bottom: 1px solid var(--line);
 }
-/* Command-deck atmosphere art — decorative only, fades into --bg so the
-   hero copy keeps full contrast in both themes. */
-.heroArt {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(90deg, var(--bg) 4%, color-mix(in srgb, var(--bg) 74%, transparent) 46%, color-mix(in srgb, var(--bg) 30%, transparent) 100%),
-    linear-gradient(0deg, var(--bg) 0%, transparent 45%),
-    linear-gradient(180deg, color-mix(in srgb, var(--bg) 55%, transparent), transparent 30%),
-    url("/art/hero-command-deck.jpg");
-  background-size: auto, auto, auto, cover;
-  background-position: center, center, center, center right;
-  opacity: 0.5;
-}
-:global([data-theme="light"]) .heroArt {
-  opacity: 0.12;
-  filter: saturate(0.6);
-}
-.hero > :global(.container) {
-  position: relative;
-}
-.heroGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-  gap: clamp(28px, 5vw, 60px);
-  align-items: center;
+.heroCopy {
+  max-width: 720px;
 }
 .heroKicker {
   font-size: 11.5px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   color: var(--signal);
-  margin-bottom: 14px;
+  margin-bottom: 22px;
 }
 .heroTitle {
-  font-size: clamp(24px, 3.1vw, 36px);
-  font-weight: 700;
-  line-height: 1.12;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4.4vw, 52px);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: 0.005em;
   color: var(--text);
-  margin-bottom: 16px;
-  max-width: 26ch;
+  margin-bottom: 22px;
+  text-transform: none;
 }
-.heroCloud {
-  color: var(--ice);
+.heroDim {
+  color: var(--muted);
 }
 .heroText {
   color: var(--muted);
-  font-size: 15px;
-  line-height: 1.7;
-  max-width: 52ch;
-  margin-bottom: 26px;
+  font-size: 16px;
+  line-height: 1.75;
+  max-width: 58ch;
+  margin-bottom: 32px;
 }
 .heroActions {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 24px;
   flex-wrap: wrap;
 }
-
-/* ── Cursor cockpit sketch ────────────────────────────────────────────────
-   A stylized concept sketch of the actual player loop: evidence files in the
-   workspace, the answer artifact in the editor, and the local Gemma exchange
-   where the operator catches a wrong claim. Not a pixel copy of Cursor. */
-.cockpit {
-  padding: 0;
-  overflow: hidden;
-  box-shadow: 0 24px 60px var(--shadow);
-}
-.cockpitHead {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 9px 14px;
-  border-bottom: 1px solid var(--line);
-}
-.winDots {
-  display: inline-flex;
-  gap: 5px;
-}
-.winDots i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--line-strong);
-}
-.cockpitTitle {
-  font-size: 11px;
-  color: var(--text);
-  font-weight: 500;
-}
-.cockpitTag {
-  margin-left: auto;
-  font-size: 10px;
-  color: var(--signal);
-  letter-spacing: 0.08em;
+.heroQuiet {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+}
+.heroQuiet:hover {
+  color: var(--ice);
+  text-decoration: none;
 }
 
-.cockpitBody {
+/* Fact line — replaces the mockup. Four quiet key/value pairs. */
+.heroFacts {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  background: color-mix(in srgb, var(--bg) 55%, var(--panel));
-  font-size: 10.5px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+  margin: clamp(40px, 7vw, 72px) 0 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  max-width: 920px;
 }
-.paneLabel {
-  display: block;
+.heroFact dt {
   font-family: var(--font-display);
-  font-size: 9px;
+  font-size: 10.5px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.13em;
   color: var(--muted);
-  margin-bottom: 7px;
+  margin-bottom: 6px;
 }
-
-.paneFiles {
-  padding: 10px 12px;
-  border-right: 1px solid var(--line);
-}
-.fileRow {
-  padding: 3px 6px;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.fileActive {
-  color: var(--text);
-  background: var(--paper);
-  border-left: 2px solid var(--signal);
-}
-
-.paneEditor {
-  grid-column: 1;
-  padding: 10px 12px;
-  border-top: 1px solid var(--line);
-  border-right: 1px solid var(--line);
-}
-.editorCode {
+.heroFact dd {
   margin: 0;
-  font-size: 9.5px;
-  line-height: 1.6;
-  color: var(--muted);
-  white-space: pre;
-  overflow: hidden;
-}
-
-.paneChat {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* Keyframes must live in this module — CSS Modules scopes animation names,
-   so referencing globals.css keyframes silently resolves to nothing. */
-@keyframes feed-line {
-  from { opacity: 0; transform: translateX(-4px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-.msg {
-  padding: 5px 8px;
-  border-radius: 2px;
+  font-size: 14px;
   line-height: 1.5;
-  opacity: 0;
-  animation: feed-line 300ms ease-out forwards;
-}
-.d1 { animation-delay: 300ms; }
-.d2 { animation-delay: 900ms; }
-.d3 { animation-delay: 1300ms; }
-.d4 { animation-delay: 1900ms; }
-.d5 { animation-delay: 2500ms; }
-.d6 { animation-delay: 2900ms; }
-.chipRow {
-  padding: 0;
-  display: flex;
-  justify-content: flex-start;
-}
-.msgYou {
-  align-self: flex-end;
-  max-width: 92%;
-  background: color-mix(in srgb, var(--ice) 9%, transparent);
-  border: 1px solid color-mix(in srgb, var(--ice) 22%, transparent);
   color: var(--text);
-}
-.msgAi {
-  align-self: flex-start;
-  max-width: 92%;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  color: var(--muted);
-}
-
-.cockpitArena {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 9px 14px;
-  border-top: 1px solid var(--line);
-  font-size: 10.5px;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-}
-.arenaLabel {
-  font-family: var(--font-display);
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-}
-.arenaMission {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.arenaSubmit {
-  flex-shrink: 0;
-  font-weight: 700;
 }
 
 /* ── The loop ─────────────────────────────────────────────────────────── */
 .loopSection {
-  padding: clamp(30px, 5vw, 48px) 0;
+  padding: clamp(48px, 7vw, 80px) 0;
   border-bottom: 1px solid var(--line);
 }
 .loop {
+  list-style: none;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: 28px;
 }
 .loopStep {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 16px 16px 18px;
+  gap: 8px;
   min-width: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-strong);
 }
-.loopHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--signal);
-  margin-bottom: 4px;
-}
-.loopIcon { display: inline-flex; }
 .loopNum {
-  font-size: 10px;
-  color: var(--muted);
+  font-size: 11px;
+  color: var(--signal);
 }
 .loopTitle {
-  font-size: 15px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 .loopNote {
-  font-size: 12.5px;
+  font-size: 13.5px;
   color: var(--muted);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 .loopFoot {
-  margin-top: 16px;
+  margin-top: 36px;
   color: var(--muted);
-  font-size: 13px;
-  line-height: 1.65;
-  max-width: 74ch;
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 64ch;
 }
 
 /* ── Scored on + AAR extract ──────────────────────────────────────────── */
 .scoredSection {
-  padding: clamp(30px, 5vw, 52px) 0;
+  padding: clamp(48px, 7vw, 88px) 0;
   border-bottom: 1px solid var(--line);
 }
 .scoredGrid {
   display: grid;
-  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
-  gap: clamp(24px, 4vw, 48px);
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(32px, 6vw, 80px);
   align-items: start;
 }
 .scoredCopy { min-width: 0; }
 .scoredTitle {
-  font-size: clamp(20px, 2.4vw, 26px);
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 600;
+  line-height: 1.2;
   color: var(--text);
-  margin-bottom: 10px;
+  margin: 22px 0 12px;
+  text-transform: none;
 }
 .scoredText {
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.7;
-  max-width: 54ch;
-  margin-bottom: 20px;
+  font-size: 14.5px;
+  line-height: 1.75;
+  max-width: 52ch;
+  margin-bottom: 28px;
 }
 .scoredList {
   list-style: none;
@@ -344,9 +191,9 @@
 }
 .scoredList li {
   display: grid;
-  grid-template-columns: 170px minmax(0, 1fr);
-  gap: 14px;
-  padding: 10px 0;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 18px;
+  padding: 13px 0;
   border-top: 1px solid var(--line);
   align-items: baseline;
 }
@@ -357,23 +204,24 @@
   letter-spacing: 0.06em;
 }
 .scoredNote {
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
-/* AAR extract card — the payoff artifact */
+/* AAR extract card — the payoff artifact. The page's one allowed glow. */
 .aarCard {
   padding: 0;
   overflow: hidden;
   min-width: 0;
+  box-shadow: 0 28px 70px var(--shadow);
 }
 .aarHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 18px;
+  padding: 14px 22px;
   border-bottom: 1px solid var(--line);
 }
 .aarLabel {
@@ -392,12 +240,12 @@
 .aarScoreRow {
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 16px 18px;
+  gap: 20px;
+  padding: 20px 22px;
   border-bottom: 1px solid var(--line);
 }
 .aarScore {
-  font-size: 38px;
+  font-size: 40px;
   font-weight: 700;
   color: var(--signal);
   line-height: 1;
@@ -409,12 +257,12 @@
   font-weight: 400;
 }
 .aarVerdict {
-  font-size: 12.5px;
+  font-size: 13px;
   color: var(--muted);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 .aarChecks {
-  padding: 10px 18px;
+  padding: 12px 22px;
   border-bottom: 1px solid var(--line);
   display: flex;
   flex-direction: column;
@@ -422,19 +270,19 @@
 .aarCheck {
   display: flex;
   align-items: baseline;
-  gap: 10px;
-  padding: 5px 0;
-  font-size: 12.5px;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 13px;
 }
 .aarCheckMark { flex-shrink: 0; font-size: 12px; }
 .aarCheckLabel { flex: 1; min-width: 0; color: var(--text); }
 .aarCheckPts { color: var(--muted); font-size: 11.5px; flex-shrink: 0; }
 .aarDims {
-  padding: 12px 18px;
+  padding: 14px 22px;
   border-bottom: 1px solid var(--line);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 .aarDim {
   display: grid;
@@ -469,27 +317,27 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 18px;
+  padding: 12px 22px;
   font-size: 10.5px;
   color: var(--muted);
 }
 
 /* ── Campaign rail ────────────────────────────────────────────────────── */
 .railSection {
-  padding: clamp(30px, 5vw, 48px) 0;
+  padding: clamp(48px, 7vw, 80px) 0;
   border-bottom: 1px solid var(--line);
 }
 .rail {
   display: flex;
   align-items: flex-start;
-  padding: 8px 0 4px;
+  padding: 24px 0 4px;
 }
 .railStop {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   flex: 1;
   min-width: 0;
   padding: 0 8px;
@@ -534,8 +382,8 @@
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin-top: 18px;
-  padding-top: 12px;
+  margin-top: 28px;
+  padding-top: 16px;
   border-top: 1px solid var(--line);
 }
 .slopeKey {
@@ -554,22 +402,21 @@
 
 /* ── Setup CTA ────────────────────────────────────────────────────────── */
 .bottomSection {
-  padding: clamp(30px, 5vw, 48px) 0 12px;
+  padding: clamp(48px, 7vw, 80px) 0 12px;
 }
 .setupPanel {
   display: grid;
   grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-  gap: 24px;
-  padding: 22px 24px;
+  gap: 32px;
   align-items: center;
 }
 .setupCopy { min-width: 0; }
 .setupCopy p {
   color: var(--muted);
-  font-size: 13.5px;
-  line-height: 1.65;
+  font-size: 14.5px;
+  line-height: 1.7;
   max-width: 58ch;
-  margin-bottom: 14px;
+  margin: 18px 0;
 }
 .setupLinks {
   display: flex;
@@ -604,16 +451,15 @@
 
 /* ── Responsive ───────────────────────────────────────────────────────── */
 @media (max-width: 960px) {
-  .heroGrid { grid-template-columns: 1fr; }
-  .cockpit { max-width: 560px; }
-  .loop { grid-template-columns: repeat(2, 1fr); }
+  .heroFacts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .loop { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .loopStep:last-child { grid-column: 1 / -1; }
   .scoredGrid { grid-template-columns: 1fr; }
   .setupPanel { grid-template-columns: 1fr; }
   .setupActions { flex-direction: row; flex-wrap: wrap; }
 
   /* Campaign rail becomes a vertical route on small screens */
-  .rail { flex-direction: column; align-items: stretch; gap: 0; }
+  .rail { flex-direction: column; align-items: stretch; gap: 0; padding-top: 8px; }
   .railStop {
     flex-direction: row;
     align-items: center;
@@ -631,7 +477,8 @@
 @media (max-width: 480px) {
   .statusHideSm { display: none; }
   .loop { grid-template-columns: 1fr; }
+  .heroFacts { grid-template-columns: 1fr; }
   .railChips span.mono:last-child { display: none; }
-  .scoredList li { grid-template-columns: 1fr; gap: 2px; }
+  .scoredList li { grid-template-columns: 1fr; gap: 4px; }
   .aarDim { grid-template-columns: 130px minmax(0, 1fr) 32px; }
 }

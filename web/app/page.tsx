@@ -5,14 +5,9 @@ import {
   MissionGlyph,
   RailNode,
   SlopeBadge,
-  VerifyChip,
-  IconChat,
   IconOffline,
   IconExternal,
   IconBars,
-  IconTimer,
-  IconFile,
-  IconTerminal,
   type NodeState,
 } from "./components/svg";
 import ZuluClock from "./components/ZuluClock";
@@ -22,27 +17,22 @@ const LOOP = [
   {
     title: "Brief",
     note: "Pick a mission. Start the run, the timer arms.",
-    icon: <IconTimer size={15} />,
   },
   {
     title: "Evidence",
     note: "Read the logs, configs, and sitreps in the editor.",
-    icon: <IconFile size={15} />,
   },
   {
     title: "Interrogate",
     note: "Ask local Gemma. It only knows what you show it.",
-    icon: <IconChat size={15} />,
   },
   {
     title: "Decide",
     note: "Verify or reject its claims. File your call with citations.",
-    icon: <IconTerminal size={15} />,
   },
   {
     title: "Debrief",
     note: "Deterministic score, after-action report, XP, rank.",
-    icon: <IconBars size={15} />,
   },
 ];
 
@@ -67,11 +57,6 @@ const SCORED_ON = [
     name: "Local compliance",
     note: "A verified local model, no cloud, the whole run.",
   },
-];
-
-const SETUP_LINKS = [
-  { label: "Download Cursor", href: "https://cursor.com?ref=CyberTrack" },
-  { label: "Install Ollama", href: "https://ollama.com/download" },
 ];
 
 /* Illustrative AAR extract, modeled on real cybertf score output:
@@ -103,7 +88,7 @@ function lineClass(state: NodeState): string {
 
 export default function Home() {
   return (
-    <div className={`${styles.root} ops-grid-bg`}>
+    <div className={styles.root}>
       {/* ── Ops status strip ─────────────────────────────────────────── */}
       <div className={styles.statusStrip}>
         <div className={`container ${styles.statusInner}`}>
@@ -124,104 +109,53 @@ export default function Home() {
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className={styles.hero}>
-        <div className={styles.heroArt} aria-hidden />
         <div className="container">
-          <div className={styles.heroGrid}>
-            <div className={`boot boot-1 ${styles.heroCopy}`}>
-              <p className={`display ${styles.heroKicker}`}>
-                Tactical mission arena · Season Zero
-              </p>
-              <h1 className={`display ${styles.heroTitle}`}>
-                Anyone can get an AI answer.
-                <br />
-                Operators <span className={styles.heroCloud}>verify one</span>{" "}
-                under pressure.
-              </h1>
-              <p className={styles.heroText}>
-                CyberTrack drops you into timed technical incidents inside
-                Cursor with a local Gemma model as your only AI. The evidence
-                is incomplete, the clock is running, and the model is
-                confidently wrong at least once. Make the call, cite your
-                proof, and read the after-action report.
-              </p>
-              <div className={styles.heroActions}>
-                <Link href="/missions" className="btn btn-primary">
-                  View Missions
-                </Link>
-                <Link href="/qualification" className="btn btn-outline">
-                  Set Up in 5 Minutes
-                </Link>
-              </div>
-            </div>
-
-            {/* Cursor cockpit sketch — the actual player loop at a glance */}
-            <div
-              className={`panel hud-corners boot boot-2 ${styles.cockpit}`}
-              role="img"
-              aria-label="Sketch of the Cursor cockpit: evidence files in the workspace, the answer artifact in the editor, and a local Gemma exchange where the operator catches a wrong claim"
-            >
-              <div className={styles.cockpitHead} aria-hidden>
-                <span className={styles.winDots}>
-                  <i /> <i /> <i />
-                </span>
-                <span className={`mono ${styles.cockpitTitle}`}>
-                  Cursor · cyber-track
-                </span>
-                <span className={`mono ${styles.cockpitTag}`}>the cockpit</span>
-              </div>
-              <div className={`mono ${styles.cockpitBody}`} aria-hidden>
-                <div className={styles.paneFiles}>
-                  <span className={styles.paneLabel}>Evidence</span>
-                  <div className={styles.fileRow}>relay_roster.txt</div>
-                  <div className={styles.fileRow}>advisory.txt</div>
-                  <div className={`${styles.fileRow} ${styles.fileActive}`}>
-                    answer.json
-                  </div>
-                </div>
-                <div className={styles.paneEditor}>
-                  <span className={styles.paneLabel}>answer.json</span>
-                  <pre className={styles.editorCode}>{`{
-  "finding":
-    "R-7 not in roster",
-  "evidence": [
-    "relay_roster.txt"
-  ]
-}`}</pre>
-                </div>
-                <div className={styles.paneChat}>
-                  <span className={styles.paneLabel}>
-                    local gemma · offline
-                  </span>
-                  <div className={`${styles.msg} ${styles.d1} ${styles.msgYou}`}>
-                    Which relay does the advisory blame?
-                  </div>
-                  <div className={`${styles.msg} ${styles.d2} ${styles.msgAi}`}>
-                    Relay R-7 caused the outage.
-                  </div>
-                  <div className={`${styles.msg} ${styles.d3} ${styles.chipRow}`}>
-                    <VerifyChip kind="warning" compact />
-                  </div>
-                  <div className={`${styles.msg} ${styles.d4} ${styles.msgYou}`}>
-                    R-7 isn&apos;t in the roster. <span className="amber">Verify.</span>
-                  </div>
-                  <div className={`${styles.msg} ${styles.d5} ${styles.msgAi}`}>
-                    Correct. The claim fails against relay_roster.txt.
-                  </div>
-                  <div className={`${styles.msg} ${styles.d6} ${styles.chipRow}`}>
-                    <VerifyChip kind="corrected" compact />
-                  </div>
-                </div>
-              </div>
-              <div className={`mono ${styles.cockpitArena}`} aria-hidden>
-                <span className="pulse-dot" />
-                <span className={styles.arenaLabel}>run active</span>
-                <span className={styles.arenaMission}>
-                  Signal Lost · T-07:42
-                </span>
-                <span className={`signal ${styles.arenaSubmit}`}>catch scored →</span>
-              </div>
+          <div className={`boot boot-1 ${styles.heroCopy}`}>
+            <p className={`display ${styles.heroKicker}`}>
+              Tactical mission arena
+            </p>
+            <h1 className={styles.heroTitle}>
+              Anyone can get an AI answer.
+              <br />
+              <span className={styles.heroDim}>
+                Operators verify one under pressure.
+              </span>
+            </h1>
+            <p className={styles.heroText}>
+              CyberTrack drops you into timed technical incidents inside
+              Cursor with a local Gemma model as your only AI. The evidence is
+              incomplete, the clock is running, and the model is confidently
+              wrong at least once. Make the call, cite your proof, read the
+              after-action report.
+            </p>
+            <div className={styles.heroActions}>
+              <Link href="/missions" className="btn btn-primary">
+                View Missions
+              </Link>
+              <Link href="/qualification" className={styles.heroQuiet}>
+                Set up in 5 minutes →
+              </Link>
             </div>
           </div>
+
+          <dl className={`boot boot-3 ${styles.heroFacts}`}>
+            <div className={styles.heroFact}>
+              <dt>Interface</dt>
+              <dd>Cursor</dd>
+            </div>
+            <div className={styles.heroFact}>
+              <dt>Field AI</dt>
+              <dd>Local Gemma, offline</dd>
+            </div>
+            <div className={styles.heroFact}>
+              <dt>Scoring</dt>
+              <dd>Deterministic, no model grades you</dd>
+            </div>
+            <div className={styles.heroFact}>
+              <dt>Season Zero</dt>
+              <dd>{MISSIONS.length} missions, XP, ranks</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
@@ -231,24 +165,21 @@ export default function Home() {
           <div className="section-label">
             <span className="idx">01</span> The Loop
           </div>
-          <div className={styles.loop}>
+          <ol className={styles.loop}>
             {LOOP.map((step, i) => (
-              <div key={step.title} className={`panel ${styles.loopStep}`}>
-                <div className={styles.loopHead}>
-                  <span className={styles.loopIcon}>{step.icon}</span>
-                  <span className={`mono ${styles.loopNum}`}>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
+              <li key={step.title} className={styles.loopStep}>
+                <span className={`mono ${styles.loopNum}`}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <span className={`display ${styles.loopTitle}`}>{step.title}</span>
                 <span className={styles.loopNote}>{step.note}</span>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
           <p className={styles.loopFoot}>
-            Cursor is the interface. Gemma is the local edge AI. The arena
-            keeps score. Missions simulate the conditions where cloud AI is
-            unavailable, untrusted, or inappropriate.
+            Missions simulate the conditions where cloud AI is unavailable,
+            untrusted, or inappropriate. The work happens in your editor; the
+            arena keeps score.
           </p>
         </div>
       </section>
@@ -261,14 +192,13 @@ export default function Home() {
               <div className="section-label">
                 <span className="idx">02</span> Scored On
               </div>
-              <h2 className={`display ${styles.scoredTitle}`}>
+              <h2 className={styles.scoredTitle}>
                 The skills that matter under uncertainty
               </h2>
               <p className={styles.scoredText}>
-                Scoring is deterministic. No model grades you; every point
-                traces to a check the run artifacts can prove. Speed is worth
-                at most ten percent, and impossibly fast runs are flagged and
-                earn nothing.
+                Every point traces to a check the run artifacts can prove.
+                Speed is worth at most ten percent, and impossibly fast runs
+                are flagged and earn nothing.
               </p>
               <ul className={styles.scoredList}>
                 {SCORED_ON.map((s) => (
@@ -281,7 +211,7 @@ export default function Home() {
             </div>
 
             {/* AAR extract — the payoff */}
-            <div className={`panel hud-corners ${styles.aarCard}`}>
+            <div className={`panel ${styles.aarCard}`}>
               <div className={styles.aarHead}>
                 <span className={`display ${styles.aarLabel}`}>
                   After-Action Report
@@ -394,7 +324,7 @@ export default function Home() {
       {/* ── Setup CTA ────────────────────────────────────────────────── */}
       <section className={styles.bottomSection}>
         <div className="container">
-          <div className={`panel ${styles.setupPanel}`}>
+          <div className={styles.setupPanel}>
             <div className={styles.setupCopy}>
               <div className="section-label">
                 <span className="idx">04</span> Fly It Yourself
@@ -405,11 +335,12 @@ export default function Home() {
                 fly Basic Qualification in about five minutes.
               </p>
               <div className={styles.setupLinks}>
-                {SETUP_LINKS.map((link) => (
-                  <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">
-                    {link.label} <IconExternal size={11} />
-                  </a>
-                ))}
+                <a href="https://cursor.com?ref=CyberTrack" target="_blank" rel="noopener noreferrer">
+                  Download Cursor <IconExternal size={11} />
+                </a>
+                <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer">
+                  Install Ollama <IconExternal size={11} />
+                </a>
               </div>
             </div>
             <div className={styles.setupActions}>
