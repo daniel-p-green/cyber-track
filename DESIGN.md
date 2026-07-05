@@ -9,26 +9,42 @@ Ground rules for using this doc:
 - Tokens and component patterns here are buildable specs, not moodboard prose.
 - Web tokens live in `web/app/globals.css`. Keep them in sync with section 3.
 - Copy rules in section 9 apply to every user-facing string, including this doc.
+- Visual reference sheet:
+  `/Users/danielgreen/.codex/generated_images/019f2e41-b5ca-7982-acd1-ea1d5696dbab/ig_0c6c567150b60b42016a49a20a1b448197a2611a426cc5a208.png`.
+  Use it as a north star. Recreate components with CSS, inline SVG, and simple
+  icons. Do not slice raster UI assets unless a component cannot be built
+  quickly.
 
 ---
 
 ## 1. Product Identity
 
-**Thesis:** CyberTrack is a competitive AI incident game. Players solve timed
-incidents in Cursor with local Gemma as their only AI, catch bad model
-guidance, submit evidence, and get scored on judgment.
+**Thesis:** The next generation of operators will not be judged by whether
+they can get an AI answer. They will be judged by whether they can verify it
+under pressure.
 
-**Hook:** "Call of Duty for AI operators." Pitch shorthand only. Say it once,
-then immediately explain the practical loop. CyberTrack is an original
-property: no copied game assets, UI, names, typography, or trade dress.
+**What it is:** CyberTrack is a tactical mission arena where players solve
+high-pressure technical incidents inside Cursor using only local Gemma4. Each
+mission simulates conditions when cloud AI is unavailable, untrusted, or
+inappropriate: incomplete evidence, time pressure, imperfect model guidance,
+and the need to make a defensible call.
 
-**Positioning:** a flight simulator for AI-era technical judgment that looks
-like a game. The skill measured is the human operating with a constrained
-model: question it, verify it, recover from its mistakes, decide well.
+**Scoring:** evidence discipline, model skepticism, recovery from bad
+guidance, decision quality, and local/offline compliance. After each mission,
+an after-action report shows where reasoning held up and where it broke.
+
+**Closing line (use in README, pitch, footer-adjacent copy):** Cursor is the
+interface. Gemma4 is the local edge AI. CyberTrack scores what matters when
+the cloud goes dark and the stakes are high.
+
+**Hook (optional pitch shorthand):** "Call of Duty for AI operators." Say it
+at most once, then immediately explain the practical loop. CyberTrack is an
+original property: no copied game assets, UI, names, typography, or trade
+dress.
 
 **CyberTrack is:**
 
-- Timed missions flown inside Cursor with local Gemma (Ollama), offline.
+- Timed missions flown inside Cursor with local Gemma via `cybertf ask`.
 - Deterministic scoring, an after-action report, XP, ranks, a leaderboard.
 - Synthetic, defensive, fictional scenarios (the HALCYON grid does not exist).
 
@@ -45,28 +61,59 @@ model: question it, verify it, recover from its mistakes, decide well.
 
 Two surfaces, one loop.
 
-**Cursor is the cockpit.** Evidence files in the editor, Cursor Chat running
-local Gemma as the only AI, the answer artifact (`answer.json`) edited in the
-workspace, the arena open in Cursor's in-app browser. We teach people to fly
-the editor they already have. We never rebuild an IDE on the web.
+**Cursor is the cockpit.** Evidence files live in the editor, the local Gemma
+field AI is invoked through `cybertf ask` in the terminal, the answer artifact
+(`answer.json`) is edited in the workspace, and the arena runs in Cursor's
+in-app browser. We teach people to fly the editor they already have. We never
+rebuild an IDE on the web.
 
-**The web arena is the mission board and scoreboard.** Pick missions, read
-the control page, submit runs, get the AAR view, climb the leaderboard, see
-the operator record. Every arena page keeps the "solve it in Cursor" loop
-explicit.
+**The web arena is the mission map, scoreboard, and service record.** It shows
+Season Zero progression, mission briefings, published runs, web AAR pages,
+ranks, and the operator record. Every arena page keeps the "solve it in
+Cursor" loop explicit. The arena wraps the mission engine; it is not where
+missions are solved.
+
+**Page roles (information architecture):**
+
+- **Home:** the thesis, the five-step loop (brief, evidence, interrogate,
+  decide, debrief), what gets scored, an AAR extract as the payoff preview,
+  the Season Zero rail, and the setup CTA. One idea per section, one hero.
+- **Setup (`/qualification`):** Cursor + Ollama + local Gemma + callsign +
+  first mission, in six persisted steps. Commands live here because setup is
+  the one place terminal work is the content.
+- **Mission board (`/missions`):** scenario-led dossier cards. Each card
+  leads with the hook and the operator's call, then timebox, XP, evidence
+  count, and skills tested. No command text on cards.
+- **Mission detail (`/missions/[id]`):** a briefing, not a checklist. Zones
+  in order: Situation (with the edge condition called out), Evidence (files
+  with roles plus a session checklist), The Model Will Get This Wrong (the
+  planted-trap warning), Your Decision, then one demoted "flight ops"
+  terminal block. Scoring and top runs live in the aside.
+- **AAR (`/runs/[runId]`):** the payoff. Score ring and XP up top, then
+  "where it broke" before "where it held up" (failures teach more),
+  readiness dimension bars, and a run-integrity panel (local model, time
+  bounds, telemetry, deterministic scoring). Flagged runs carry an amber
+  banner.
+- **Leaderboard (`/leaderboard`):** real runs only by default. Demo seed
+  rows are hidden behind an explicit "show demo reference rows" toggle and
+  render dimmed with a boxed `demo` tag when shown. Empty boards invite the
+  first run instead of faking a crowd. Run rows link to their AAR pages.
+- **Operator record (`/operators/[callsign]`):** rank, XP progress, mission
+  record with AAR links, badges, best dimension scores.
 
 **Local Gemma is the constrained field AI.** Useful, fast, sometimes wrong.
 It simulates edge deployments where cloud AI is unavailable, untrusted, or
-too slow. It is the mission AI, not the judge. The `cybertf` CLI is support
-scaffolding: it arms timers, scores runs, publishes results. Present it as
-scaffolding, never as the skill.
+too slow. It is the mission AI, not the judge. The `cybertf` CLI is the
+instrumented mission interface: it verifies the model, starts runs, sends
+Gemma prompts, logs ask/submission telemetry, scores artifacts, writes AARs,
+and publishes results.
 
 **Mission loop (design every screen against this):**
 
 1. Setup once: Cursor, workspace, Ollama, pull Gemma, verify, claim callsign.
 2. Pick a mission on the arena board. Start the run (timer arms).
 3. Read the evidence files in Cursor.
-4. Ask Cursor Chat (local Gemma) with the right files and context.
+4. Ask local Gemma through `cybertf ask` with the right files and context.
 5. Verify or reject the model's claims against the evidence.
 6. Edit the answer artifact in Cursor.
 7. Submit. Deterministic scoring, AAR written, XP awarded.
@@ -167,6 +214,10 @@ Rules:
   not from adding more sizes. If a screen uses more than five distinct font
   sizes, remove some.
 - Minimum sizes: 10px for display labels, 12px for anything users must read.
+- Hero headlines: cap at about 36px desktop, weight 700, line-height at or
+  above 1.1, max 26ch. A hero that shouts reads as amateur; the thesis
+  carries the weight, not the font size. One accent word or phrase in ice,
+  no underline decorations.
 
 ## 5. Layout Rhythm
 
@@ -179,12 +230,16 @@ Rules:
 - Negative space is a feature. Every page should have one clearly dominant
   element (hero, HUD strip, podium, score ring). If everything is loud,
   nothing is.
-- Two-column pages (mission detail, profile, setup): main column plus a
+- Two-column pages (mission detail, AAR, profile, setup): main column plus a
   300 to 420px aside. The aside is sticky on desktop, stacks below on mobile.
-- Mission detail must scan top to bottom as: identity (title, tags, summary),
-  HUD strip (timebox, status, reward, constraint), the numbered Cursor
-  mission loop, evidence checklist, then support commands demoted at the
-  bottom. Scoring and top runs live in the aside.
+- Mission detail must scan top to bottom as: identity (title, tags, hook),
+  HUD strip (timebox, status, reward, constraint, flag threshold), then the
+  briefing zones: Situation, Evidence, The Model Will Get This Wrong, Your
+  Decision, and finally the demoted flight-ops command block. Scoring and
+  top runs live in the aside.
+- Command text is never the dominant content of a page except Setup. On any
+  other page, terminal commands appear in at most one demoted block near the
+  bottom of the main column.
 - Mobile: single column, no horizontal overflow at 390px. Rails become
   vertical lists. Verify overflow on every touched page before shipping.
 
@@ -206,20 +261,29 @@ Concrete patterns. Reuse these; do not invent parallel versions.
   available, dotted locked. Always include a compact legend. Do not
   functionally lock missions in the demo.
 - **Mission dossier card:** hex-badged mission glyph, index number, event-type
-  tag, slope difficulty badge, title, one-line objective, meta grid (timebox,
-  XP, AI allowed), scored-on chips, evidence file list, Start Mission button
-  plus a quiet Top Runs link.
-- **Active mission cockpit (web):** breadcrumb + Gemma chip status bar,
-  mission head, HUD strip (5 cells desktop, 2-col mobile), numbered mission
-  loop with copy buttons only on the bookend commands, evidence checklist,
-  demoted support-commands block.
+  tag, slope difficulty badge, title, one-line scenario hook, "your call"
+  line, meta grid (timebox, XP, evidence count), skills-tested chips, Open
+  Briefing button plus a quiet Top Runs link. No commands on cards.
+- **Mission briefing (web):** breadcrumb + Gemma chip status bar, mission
+  head, HUD strip (5 cells desktop, 2-col mobile), then stacked briefing
+  zones. The model-trap zone uses the amber accent; the edge-condition
+  callout inside Situation uses the ice accent. One demoted flight-ops
+  block with copy buttons closes the main column.
+- **Web AAR page:** header panel with score ring, elapsed time, exchange
+  count, and XP; "where it broke" (alert accent) above "where it held up"
+  (signal accent) as check rows with points; readiness dimension bars; run
+  integrity list; the training-not-hiring rule. Suspicious runs get an amber
+  flag banner in the header. When per-check data was not published, point to
+  `runs/<run_id>/aar.md` instead of faking detail.
 - **Evidence checklist:** toggleable file rows (`challenges/<id>/data/<file>`)
   with check marks and an `n/m REVIEWED` mono counter. Session-local state;
   the CLI is the scoring source of truth.
-- **Cursor Chat / local Gemma panel (illustrative):** stylized concept sketch
-  only: files pane, answer editor pane, chat exchange where the player
-  catches a wrong claim. Clearly a sketch, never a pixel copy of Cursor and
-  never fake terminal output.
+- **Local Gemma field AI panel:** terminal-native `cybertf ask` exchange with
+  attached evidence files, model name, latency, and a clear "verify before you
+  trust" note. This is the real instrumented mission AI path.
+- **Cursor cockpit sketch (illustrative):** stylized concept sketch only:
+  files pane, answer editor pane, terminal exchange, and arena browser. Clearly
+  a sketch, never a pixel copy of Cursor and never fake terminal output.
 - **Submission panel:** the submit/publish commands with copy buttons, plus
   the deterministic-scoring note and flag threshold. Submission happens via
   CLI; the panel explains it, it does not fake a web submit.
@@ -231,8 +295,13 @@ Concrete patterns. Reuse these; do not invent parallel versions.
   rank name in display caps, mono XP, thin progress bar toward next rank.
   Original abstract geometry only, no real-world insignia.
 - **Leaderboard row:** position, callsign (mono, link), rank marks + name,
-  mono XP or score, missions/time. Demo seed rows carry a detached boxed
-  `demo` tag that never reads as part of the callsign.
+  mono XP or score, missions/time, and on mission scope an AAR link. Demo
+  seed rows are hidden by default behind a "show demo reference rows"
+  toggle; when shown they render at reduced opacity with a detached boxed
+  `demo` tag that never reads as part of the callsign, and they never rank
+  above real runs on the podium.
+- **Empty leaderboard state:** never fake a crowd. State that no verified
+  runs are posted and offer the setup or briefing CTA.
 - **Suspicious-time flag:** amber triangle icon plus `Suspicious time` tag;
   row muted at about 60% opacity, position replaced by the icon, zero XP.
   Flagged, not celebrated.
@@ -248,6 +317,12 @@ Concrete patterns. Reuse these; do not invent parallel versions.
 - Missions are rich scenarios with fictional systems (Relay Station K4,
   HALCYON grid), written as calm field dispatches: situation, objective,
   constraints, deliverable, start commands. Second person, present tense.
+- Each mission has a short briefing with color beyond tasks. It names a
+  fictional location/system, what changed, what is at risk, why cloud AI is
+  unavailable or inappropriate, and what the operator must decide.
+- The selected demo mission should have a live voice briefing in the video
+  path. Target 8 to 12 seconds. Voice narration is demo polish; local Gemma is
+  still the only mission AI.
 - No copy/paste gameplay. A mission is broken if it can be completed by
   pasting commands without reading evidence. The work is reading files,
   reasoning, and writing a decision.
@@ -299,7 +374,7 @@ Concrete patterns. Reuse these; do not invent parallel versions.
   seamless, leverage. Banned structures: "In summary", "Overall", "Let's
   walk through", "This guide explores", "Not only X but also Y", "From X to
   Y", "It is important to remember".
-- Preferred terms: Cursor, Cursor Chat, local Gemma, evidence, AAR,
+- Preferred terms: Cursor, `cybertf ask`, local Gemma field AI, evidence, AAR,
   leaderboard, timed mission, callsign, XP, rank, Season Zero. Use
   "operator", "mission", and "arena" where they earn their place; use
   simpler words elsewhere.
@@ -315,13 +390,16 @@ Concrete patterns. Reuse these; do not invent parallel versions.
   product: local Gemma confidently gives a wrong answer, the player catches
   it against the evidence, the deterministic score rewards the catch, the
   AAR and leaderboard show it.
-- Always show Cursor, local Gemma, evidence files, the correction, and the
-  AAR together. The website alone is not the product; never let a demo
-  linger on the arena without pointing back at the cockpit.
-- Show the suspicious-time flag once. Integrity is a feature.
-- Keep the CLI visible only at the bookends (start, submit, publish).
-- State the honest boundaries out loud: ephemeral demo store, hash-based
-  validation tier, which missions were flown end to end.
+- The 60-second video flow is: Cursor workspace, `cybertf verify-model`, one
+  short voice briefing, mission run, `cybertf ask`, evidence correction,
+  submit/score, AAR, publish to arena, service record or Season Zero map.
+- Always show Cursor, local Gemma, evidence files, the correction, and the AAR
+  as one connected loop. The website alone is not the product.
+- Show the arena as the progression wrapper after the scored run exists.
+- Show the suspicious-time flag if it fits the edit. Integrity is a feature.
+- State the honest boundaries out loud when relevant: demo seed data,
+  ephemeral store, hash-based validation tier, and which missions were flown
+  end to end.
 
 ## 11. Anti-Patterns
 
@@ -346,3 +424,8 @@ Reject these on sight, in code review and in design review:
   labeled.
 - Decoration creep: second glow, second texture, second accent per
   component, animation loops, parallax, fake 3D.
+- Command-first product pages: `cybertf`, copy buttons, and `answer.json`
+  dominating mission or home surfaces. The scenario and the decision are the
+  content; commands are demoted scaffolding (Setup excepted).
+- Prominent fake data: seeded rows on podiums, demo operators presented as
+  real, populated-looking boards with zero real runs.

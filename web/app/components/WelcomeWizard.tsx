@@ -153,20 +153,21 @@ export default function WelcomeWizard() {
           {step === 0 && (
             <>
               <p className={styles.lede}>
-                <strong>CyberTrack is Call of Duty for AI operators.</strong>{" "}
-                You solve timed incidents and get scored on judgment, not
-                typing speed.
+                The next generation of operators will not be judged by whether
+                they can get an AI answer. They will be judged by whether they
+                can <strong>verify it under pressure</strong>.
               </p>
               <div className={styles.enemyRow}>
                 <span className={`display ${styles.enemyLabel}`}>The enemy</span>
-                <span className="tag tag-amber">uncertainty</span>
-                <span className="tag tag-amber">bad AI guidance</span>
                 <span className="tag tag-amber">incomplete evidence</span>
+                <span className="tag tag-amber">time pressure</span>
+                <span className="tag tag-amber">bad AI guidance</span>
               </div>
               <p className={styles.text}>
-                Every mission runs with <strong>local Gemma only</strong>. It
-                simulates edge deployments where cloud AI is unavailable,
-                untrusted, or too slow. Offline, private, on your own machine.
+                CyberTrack is a tactical mission arena. You solve high-pressure
+                incidents in Cursor with <strong>local Gemma4 only</strong>.
+                Scored on evidence discipline, model skepticism, recovery from
+                bad guidance, and defensible calls.
               </p>
             </>
           )}
@@ -188,7 +189,7 @@ export default function WelcomeWizard() {
                 <li>
                   <IconChat size={15} />
                   <span>
-                    <strong>Cursor Chat.</strong> Your only AI is Gemma running
+                    <strong>cybertf ask.</strong> Your only AI is Gemma4 running
                     locally. Ask sharp questions, feed it the right evidence,
                     catch it when it&apos;s wrong.
                   </span>

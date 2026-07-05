@@ -5,7 +5,6 @@ import { MISSIONS } from "@/lib/missions";
 import { formatElapsed, slopeForDifficulty } from "@/lib/utils";
 import {
   GemmaStatus,
-  LocalChip,
   RankChevrons,
   RankPlate,
   SlopeBadge,
@@ -81,7 +80,7 @@ function buildMissionEntries(missionId: string, ops: Operator[], subs: Submissio
         maxScore: sub.max_total,
         elapsed: sub.elapsed_seconds,
         runId: sub.run_id,
-        seeded: sub.seeded,
+        seeded: sub.seeded || op?.seeded,
         flags: sub.flags,
         local: sub.local_model?.simulated === false,
       };
@@ -101,23 +100,50 @@ function SeedMark({ seeded }: { seeded?: boolean }) {
   );
 }
 
+function withPos<T extends { seeded?: boolean }>(entries: T[]): (T & { pos: number })[] {
+  return entries.map((e, i) => ({ ...e, pos: i + 1 }));
+}
+
 export default async function ArenaPage({
   searchParams,
 }: {
-  searchParams: Promise<{ scope?: string; mission_id?: string }>;
+  searchParams: Promise<{ scope?: string; mission_id?: string; demo?: string }>;
 }) {
   const sp = await searchParams;
   const scope = sp.scope ?? "global";
   const missionId = sp.mission_id ?? MISSIONS[0].id;
+  const showDemo = sp.demo === "1";
 
   const [ops, subs] = await Promise.all([getAllOperators(), getAllSubmissions()]);
 
-  const globalEntries = buildGlobalEntries([...ops], subs);
-  const seasonEntries = buildSeasonEntries([...ops], subs);
-  const missionEntries = buildMissionEntries(missionId, ops, subs);
+  const globalAll = buildGlobalEntries([...ops], subs);
+  const seasonAll = buildSeasonEntries([...ops], subs);
+  const missionAll = buildMissionEntries(missionId, ops, subs);
   const activeMission = MISSIONS.find((m) => m.id === missionId) ?? MISSIONS[0];
 
-  const podium = globalEntries.slice(0, 3);
+  // Real runs lead. Demo seed rows are reference data, hidden by default.
+  const globalEntries = showDemo ? globalAll : withPos(globalAll.filter((e) => !e.seeded));
+  const seasonEntries = showDemo ? seasonAll : withPos(seasonAll.filter((e) => !e.seeded));
+  const missionEntries = showDemo
+    ? missionAll
+    : missionAll
+        .filter((e) => !e.seeded)
+        .map((e, i) => ({ ...e, pos: e.flags.suspicious_fast ? null : i + 1 }));
+
+  const demoCount =
+    scope === "mission"
+      ? missionAll.filter((e) => e.seeded).length
+      : (scope === "global" ? globalAll : seasonAll).filter((e) => e.seeded).length;
+
+  const podium = globalEntries.filter((e) => !e.seeded).slice(0, 3);
+
+  const demoToggleHref = (() => {
+    const params = new URLSearchParams();
+    params.set("scope", scope);
+    if (scope === "mission") params.set("mission_id", missionId);
+    if (!showDemo) params.set("demo", "1");
+    return `/leaderboard?${params.toString()}`;
+  })();
 
   return (
     <div className={styles.root}>
@@ -133,7 +159,6 @@ export default async function ArenaPage({
           </div>
           <span className={styles.headerChips}>
             <GemmaStatus />
-            <LocalChip />
           </span>
         </div>
 
@@ -148,15 +173,6 @@ export default async function ArenaPage({
                   href={`/operators/${entry.callsign}`}
                   className={`panel ${styles.podiumCard} ${isFirst ? `hud-corners hud-corners-signal ${styles.podiumFirst}` : ""}`}
                 >
-                  {entry.seeded && (
-                    <span
-                      className={`display ${styles.podiumSeed}`}
-                      title="Demo seed row: sample data, not a real run"
-                      aria-label="demo seed data"
-                    >
-                      demo
-                    </span>
-                  )}
                   <span className={`mono ${styles.podiumPos}`}>
                     {String(entry.pos).padStart(2, "0")}
                   </span>
@@ -196,7 +212,7 @@ export default async function ArenaPage({
               href={`/leaderboard?scope=mission&mission_id=${m.id}`}
               className={`${styles.tab} ${scope === "mission" && missionId === m.id ? styles.tabActive : ""}`}
             >
-              {m.title.replace(/^(Relay|Marathon): /, "")}
+              {m.title}
             </Link>
           ))}
         </div>
@@ -204,38 +220,51 @@ export default async function ArenaPage({
         {/* Global / Season table */}
         {(scope === "global" || scope === "season") && (
           <div className={`panel ${styles.tableWrap}`}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Callsign</th>
-                  <th>Rank</th>
-                  <th className={styles.right}>XP</th>
-                  <th className={styles.right}>Missions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(scope === "global" ? globalEntries : seasonEntries).map((entry) => (
-                  <tr key={entry.callsign}>
-                    <td className={`mono ${styles.pos}`}>{entry.pos}</td>
-                    <td>
-                      <Link href={`/operators/${entry.callsign}`} className={`mono ${styles.callsign}`}>
-                        {entry.callsign}
-                      </Link>
-                      <SeedMark seeded={entry.seeded} />
-                    </td>
-                    <td>
-                      <span className={styles.rankCell}>
-                        <RankChevrons tier={entry.tier} size={8} />
-                        <span className={`display ${styles.rankName}`}>{entry.rank}</span>
-                      </span>
-                    </td>
-                    <td className={`mono ${styles.xp} ${styles.right}`}>{entry.xp.toLocaleString()}</td>
-                    <td className={`mono ${styles.missions} ${styles.right}`}>{entry.missions}</td>
+            {(scope === "global" ? globalEntries : seasonEntries).length === 0 ? (
+              <div className={styles.emptyBoard}>
+                <p>No verified runs on the board yet.</p>
+                <p className={styles.emptySub}>
+                  Fly a mission in Cursor and publish the run to claim the top
+                  spot.
+                </p>
+                <Link href="/qualification" className="btn btn-primary">
+                  Start Setup →
+                </Link>
+              </div>
+            ) : (
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Callsign</th>
+                    <th>Rank</th>
+                    <th className={styles.right}>XP</th>
+                    <th className={styles.right}>Missions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {(scope === "global" ? globalEntries : seasonEntries).map((entry) => (
+                    <tr key={entry.callsign} className={entry.seeded ? styles.seedRow : ""}>
+                      <td className={`mono ${styles.pos}`}>{entry.pos}</td>
+                      <td>
+                        <Link href={`/operators/${entry.callsign}`} className={`mono ${styles.callsign}`}>
+                          {entry.callsign}
+                        </Link>
+                        <SeedMark seeded={entry.seeded} />
+                      </td>
+                      <td>
+                        <span className={styles.rankCell}>
+                          <RankChevrons tier={entry.tier} size={8} />
+                          <span className={`display ${styles.rankName}`}>{entry.rank}</span>
+                        </span>
+                      </td>
+                      <td className={`mono ${styles.xp} ${styles.right}`}>{entry.xp.toLocaleString()}</td>
+                      <td className={`mono ${styles.missions} ${styles.right}`}>{entry.missions}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         )}
 
@@ -254,29 +283,31 @@ export default async function ArenaPage({
               </span>
             </div>
             <div className={`panel ${styles.tableWrap}`}>
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Callsign</th>
-                    <th>Rank</th>
-                    <th className={styles.right}>Score</th>
-                    <th className={styles.right}>Time</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {missionEntries.length === 0 ? (
+              {missionEntries.length === 0 ? (
+                <div className={styles.emptyBoard}>
+                  <p>No verified runs posted for this mission yet.</p>
+                  <Link href={`/missions/${missionId}`} className="btn btn-primary">
+                    Open the Briefing →
+                  </Link>
+                </div>
+              ) : (
+                <table className={styles.table}>
+                  <thead>
                     <tr>
-                      <td colSpan={6} className={styles.empty}>
-                        No runs posted yet. Be first on the board.
-                      </td>
+                      <th>#</th>
+                      <th>Callsign</th>
+                      <th>Rank</th>
+                      <th className={styles.right}>Score</th>
+                      <th className={styles.right}>Time</th>
+                      <th>Status</th>
+                      <th className={styles.right}>AAR</th>
                     </tr>
-                  ) : (
-                    missionEntries.map((entry) => (
+                  </thead>
+                  <tbody>
+                    {missionEntries.map((entry) => (
                       <tr
                         key={entry.runId}
-                        className={entry.flags.suspicious_fast ? styles.suspiciousRow : ""}
+                        className={`${entry.flags.suspicious_fast ? styles.suspiciousRow : ""} ${entry.seeded ? styles.seedRow : ""}`}
                       >
                         <td className={`mono ${styles.pos}`}>
                           {entry.pos ?? <IconSuspicious size={13} />}
@@ -317,13 +348,30 @@ export default async function ArenaPage({
                             <span className="tag tag-signal">Verified</span>
                           )}
                         </td>
+                        <td className={styles.right}>
+                          <Link href={`/runs/${entry.runId}`} className={styles.aarLink}>
+                            View →
+                          </Link>
+                        </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </>
+        )}
+
+        {/* Demo data toggle — reference rows stay out of the way */}
+        {demoCount > 0 && (
+          <div className={styles.demoNote}>
+            <Link href={demoToggleHref} className={styles.demoToggle}>
+              {showDemo
+                ? "Hide demo reference rows"
+                : `Show ${demoCount} demo reference row${demoCount === 1 ? "" : "s"}`}
+            </Link>
+            <span>Sample data illustrating a populated season. Never ranked above real runs.</span>
+          </div>
         )}
 
         {/* Legend */}
@@ -333,10 +381,6 @@ export default async function ArenaPage({
             <span>Mission score × difficulty. XP sets your rank tier.</span>
           </div>
           <div className={styles.legendItem}>
-            <span className={`display ${styles.legendKey}`}>Rank</span>
-            <span>{RANKS.map((r) => r.name).join(" → ")}.</span>
-          </div>
-          <div className={styles.legendItem}>
             <span className={styles.legendIcon}><IconSuspicious size={13} /></span>
             <span>Impossibly fast run: flagged, zero XP, no podium.</span>
           </div>
@@ -344,23 +388,7 @@ export default async function ArenaPage({
             <span className={styles.legendIcon} style={{ color: "var(--ice)" }}>
               <IconOffline size={13} />
             </span>
-            <span>Every scored run used local Gemma4, verified before the mission.</span>
-          </div>
-          <div className={styles.legendItem}>
-            <span className={`display ${styles.legendSeed}`}>demo</span>
-            <span>Sample data for the demo.</span>
-          </div>
-          <div className={styles.legendItem}>
-            <span className={styles.legendSlopes}>
-              <SlopeBadge slope="green" withLabel={false} size={11} />
-              <SlopeBadge slope="blue" withLabel={false} size={11} />
-              <SlopeBadge slope="black" withLabel={false} size={11} />
-              <SlopeBadge slope="double-black" withLabel={false} size={11} />
-            </span>
-            <span>
-              Difficulty: green qualification, blue sprint, black advanced,
-              double-black marathon.
-            </span>
+            <span>Every verified run used a local model, checked before the mission.</span>
           </div>
         </div>
       </div>

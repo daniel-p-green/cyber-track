@@ -8,10 +8,14 @@ here is synthetic training data. No live systems.
 
 ## Situation
 
-You are taking over monitoring duty for the HALCYON relay grid. A previous
-shift left an **archived field-AI advisory** in the workspace. Field AI models
-run locally and offline. They are useful and fast, but they only know what
-they were shown. Your first discipline as an operator: **verify before you
+You are reporting to the HALCYON training annex, a sealed replica of the
+relay grid built for operator certification. Standing policy keeps the annex
+air-gapped: no cloud AI, no outside networks, only the local Gemma4 field
+model on your machine. That is not an obstacle, it is the point. The grid you
+will one day defend runs the same way. A previous shift left an **archived
+field-AI advisory** in the workspace, and part of it does not match the relay
+roster. Your first decision as an operator: which claims in that advisory
+survive contact with the evidence, and which do not. **Verify before you
 trust.**
 
 ## Objectives

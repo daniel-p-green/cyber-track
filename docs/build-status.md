@@ -5,13 +5,13 @@ Last updated: 2026-07-04 ~19:00 CDT
 ## Current state: **demo-ready** (post product-truth correction pass)
 
 Final page-by-page UX/product-truth pass complete: the web arena now tells the
-true story: Cursor (editor + Cursor Chat + in-app browser) is the cockpit
-where mission work happens; the web arena selects missions, tracks progress,
-takes submissions, and shows AAR/leaderboard; the `cybertf` CLI is presented
-as support scaffolding (timing/scoring/publishing), not the player skill.
-Home hero replaced fake terminal theater with a Cursor cockpit preview
-(evidence files, answer.json editor, Cursor Chat verify-the-model exchange,
-arena in the in-app browser). Mission detail leads with the 6-step Cursor
+true story: Cursor is the interface; mission work happens in the editor with
+instrumented <code>cybertf ask</code> (local Gemma4); the web arena selects
+missions, tracks progress, takes submissions, and shows AAR/leaderboard; the
+<code>cybertf</code> CLI is support scaffolding (timing/scoring/publishing),
+not the player skill. Home hero uses a Cursor cockpit preview (evidence files,
+answer.json editor, cybertf ask verify-the-model exchange, arena in the
+in-app browser). Mission detail leads with the 6-step Cursor
 mission loop; commands demoted. Demo seed tags no longer read as part of
 callsigns; profile/footer social links are labeled and accessible; nav
 "Deploy" renamed "Setup"; mobile header no longer overlaps at 390px.

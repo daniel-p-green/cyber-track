@@ -5,10 +5,8 @@ import {
   MissionGlyph,
   RailNode,
   GemmaStatus,
-  LocalChip,
   HexBadge,
   SlopeBadge,
-  IconFile,
   IconTimer,
   type NodeState,
 } from "../components/svg";
@@ -38,14 +36,15 @@ export default function MissionsPage() {
             </div>
             <h1 className={`display ${styles.title}`}>Mission Board</h1>
             <p className={styles.subtitle}>
-              Pick a mission here. Fly it in Cursor with Cursor Chat and local
-              Gemma. Submit back here for score, AAR, and rank.
+              Six incidents on the HALCYON grid, a synthetic training
+              environment. Each one plants at least one confident model claim
+              the evidence disproves. The mission is flown in Cursor; the
+              score posts here.
             </p>
           </div>
           <div className={styles.edgeStatus}>
             <span className={styles.chipRow}>
               <GemmaStatus />
-              <LocalChip />
             </span>
             <span className={`mono ${styles.edgeNote}`}>edge mode · offline inference</span>
           </div>
@@ -67,9 +66,7 @@ export default function MissionsPage() {
                   <RailNode state={nodeState(i)} size={38}>
                     <MissionGlyph eventType={m.event_type} missionId={m.id} size={19} />
                   </RailNode>
-                  <span className={`display ${styles.railLabel}`}>
-                    {m.title.replace(/^(Relay|Marathon): /, "")}
-                  </span>
+                  <span className={`display ${styles.railLabel}`}>{m.title}</span>
                   <SlopeBadge slope={slope.id} label={slope.label} withLabel={false} size={11} />
                 </Link>
               );
@@ -77,29 +74,14 @@ export default function MissionsPage() {
           </div>
         </div>
 
-        {/* Route + slope keys */}
-        <div className={styles.routeKey} aria-label="Route line key">
-          <span className={styles.routeKeyItem}>
-            <i className={`${styles.routeSample} ${styles.lineCompleted}`} /> Completed
-          </span>
-          <span className={styles.routeKeyItem}>
-            <i className={`${styles.routeSample} ${styles.lineActive}`} /> Active
-          </span>
-          <span className={styles.routeKeyItem}>
-            <i className={`${styles.routeSample} ${styles.lineAvailable}`} /> Available
-          </span>
-          <span className={styles.routeKeyItem}>
-            <i className={`${styles.routeSample} ${styles.lineLocked}`} /> Locked
-          </span>
-        </div>
         <div className={styles.slopeKey}>
           <SlopeBadge slope="green" label="Green: qualification" size={12} />
           <SlopeBadge slope="blue" label="Blue: sprint" size={12} />
-          <SlopeBadge slope="black" label="Black: advanced field" size={12} />
+          <SlopeBadge slope="black" label="Black: field" size={12} />
           <SlopeBadge slope="double-black" label="Double black: marathon" size={12} />
         </div>
 
-        {/* Campaign grid — one continuous board, campaign order */}
+        {/* Mission dossiers — scenario first */}
         <div className={styles.missionGrid}>
           {MISSIONS.map((m, i) => {
             const slope = slopeForDifficulty(m.difficulty);
@@ -127,7 +109,12 @@ export default function MissionsPage() {
 
                 <h2 className={`display ${styles.dossierTitle}`}>{m.title}</h2>
 
-                <p className={styles.objective}>{m.summary}</p>
+                <p className={styles.hook}>{m.hook}</p>
+
+                <p className={styles.decision}>
+                  <span className={`display ${styles.fieldLabel}`}>Your call</span>
+                  {m.decision}
+                </p>
 
                 <div className={styles.metaGrid}>
                   <div>
@@ -141,46 +128,25 @@ export default function MissionsPage() {
                     <span className="mono signal">+{m.xp_base} XP</span>
                   </div>
                   <div>
-                    <span className={`display ${styles.fieldLabel}`}>AI Allowed</span>
-                    <span className={`mono ${styles.constraintVal}`}>local Gemma only</span>
+                    <span className={`display ${styles.fieldLabel}`}>Evidence</span>
+                    <span className="mono">
+                      {m.evidence.length} file{m.evidence.length > 1 ? "s" : ""}
+                    </span>
                   </div>
                 </div>
 
                 <div className={styles.scoredOn}>
-                  <span className={`display ${styles.fieldLabel}`}>Scored On</span>
+                  <span className={`display ${styles.fieldLabel}`}>Skills tested</span>
                   <div className={styles.dimChips}>
-                    {m.dimensions.slice(0, 3).map((d) => (
-                      <span key={d} className="tag tag-muted">{d}</span>
+                    {m.skills.map((s) => (
+                      <span key={s} className="tag tag-muted">{s}</span>
                     ))}
-                    {m.dimensions.length > 3 && (
-                      <span className={`mono ${styles.dimMore}`}>
-                        +{m.dimensions.length - 3}
-                      </span>
-                    )}
                   </div>
-                </div>
-
-                <div className={styles.evidence}>
-                  <span className={`display ${styles.fieldLabel}`}>
-                    Evidence · {m.evidence.length} file{m.evidence.length > 1 ? "s" : ""}
-                  </span>
-                  <ul>
-                    {m.evidence.slice(0, 3).map((f) => (
-                      <li key={f} className="mono">
-                        <IconFile size={11} /> {f}
-                      </li>
-                    ))}
-                    {m.evidence.length > 3 && (
-                      <li className={`mono ${styles.evidenceMore}`}>
-                        +{m.evidence.length - 3} more
-                      </li>
-                    )}
-                  </ul>
                 </div>
 
                 <footer className={styles.dossierFoot}>
                   <Link href={`/missions/${m.id}`} className="btn btn-primary">
-                    Start Mission →
+                    Open Briefing →
                   </Link>
                   <Link
                     href={`/leaderboard?scope=mission&mission_id=${m.id}`}

@@ -1,0 +1,210 @@
+.root { padding: 28px 0 64px; }
+
+.breadcrumb {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 22px;
+  min-width: 0;
+}
+
+/* ── AAR head ──────────────────────────────────────────────────────────── */
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 26px;
+  margin-bottom: 18px;
+}
+.headMain { min-width: 0; }
+.headTags {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.aarKicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--signal);
+}
+.title {
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.runMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--muted);
+}
+.flagBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent);
+  background: color-mix(in srgb, var(--amber) 6%, transparent);
+  border-radius: 2px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--amber);
+  max-width: 56ch;
+}
+.headScore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.headStats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+.headStat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ── Grid ──────────────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 16px;
+  align-items: start;
+}
+.main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.aside {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 70px;
+}
+
+.zone { padding: 0; overflow: hidden; }
+.zoneHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line);
+  color: var(--signal);
+}
+.zoneHead > span.display {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.06em;
+}
+.zoneHeadAlert { color: var(--alert); }
+.zoneCount {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Check lists */
+.checkList {
+  list-style: none;
+  padding: 8px 18px;
+}
+.check {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 13px;
+}
+.check + .check { border-top: 1px solid var(--line); }
+.checkMark { flex-shrink: 0; font-size: 12px; }
+.checkLabel { flex: 1; min-width: 0; color: var(--text); line-height: 1.5; }
+.checkPts { color: var(--muted); font-size: 11.5px; flex-shrink: 0; }
+.noChecks {
+  padding: 16px 18px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+/* Dimension bars */
+.dimBody {
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.dimRow { min-width: 0; }
+.dimHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 5px;
+}
+.dimLabel { font-size: 12.5px; color: var(--text); }
+.dimPts { font-size: 11px; color: var(--muted); }
+.dimTrack {
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.dimFill { height: 100%; }
+
+/* Integrity */
+.integrityList {
+  list-style: none;
+  padding: 8px 18px;
+}
+.integrityList li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 12.5px;
+}
+.integrityList li + li { border-top: 1px solid var(--line); }
+.integrityKey {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+}
+.integrityVal { font-size: 11.5px; text-align: right; }
+
+.ruleNote {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  padding: 0 4px;
+}
+
+@media (max-width: 940px) {
+  .head { flex-direction: column; align-items: flex-start; }
+  .headScore { flex-direction: row; align-items: center; }
+  .headStats { align-items: flex-start; }
+  .grid { grid-template-columns: 1fr; }
+  .aside { position: static; }
+}

@@ -17,6 +17,16 @@ export interface SubmissionDimension {
   max: number;
 }
 
+/** Per-check detail from the deterministic scorer (cybertrack.score.v1). */
+export interface SubmissionCheck {
+  id: string;
+  label: string;
+  passed: boolean;
+  points: number;
+  max: number;
+  dimension: string;
+}
+
 export interface Submission {
   run_id: string;
   mission_id: string;
@@ -27,6 +37,8 @@ export interface Submission {
   elapsed_seconds: number;
   submitted_at: string;
   dimensions: Record<string, SubmissionDimension>;
+  checks?: SubmissionCheck[];
+  ask_count?: number;
   flags: {
     suspicious_fast: boolean;
     missing_telemetry: boolean;

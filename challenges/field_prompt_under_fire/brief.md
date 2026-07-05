@@ -4,14 +4,17 @@
 
 ## Situation
 
-A degraded HALCYON relay (R-7) needs restoration. A prior shift queried the
-field model and received three draft plans archived in `data/proposed_plans.md`.
-The plans have not been reviewed. One is safe. The others contain problems that
-a careful operator must catch before anyone acts.
+Relay R-7 on the HALCYON grid is degraded, and the exercise assumes a
+contested environment: outbound traffic cannot be trusted, so all cloud AI
+is off the table and every plan must be checked against documents you hold
+locally. A prior shift queried the field model and archived three draft
+restoration plans in `data/proposed_plans.md`. Nobody has reviewed them. One
+is safe. One violates standing ops policy. One calls for a tool the HALCYON
+grid does not have, a detail the model invented. If the wrong plan executes,
+R-7 goes from degraded to down.
 
-Your job is not to restore the relay. Your job is to review the plans, identify
-which is safe, which violates standing ops policy, and which references a tool
-the HALCYON grid does not have.
+Your decision is not how to restore the relay. It is which plan an operator
+can act on, and why the others cannot leave the queue.
 
 ## Objectives
 

@@ -64,13 +64,13 @@ function DimIcon({ dim, size = 13 }: { dim: string; size?: number }) {
 const DIM_LABELS: Record<string, string> = {
   mission_completion: "Mission Completion",
   evidence_discipline: "Evidence Discipline",
-  hallucination_resistance: "Hallucination Resistance",
+  hallucination_resistance: "Model Skepticism",
   tool_reliability: "Tool Reliability",
   prompt_discipline: "Prompt Discipline",
   communication_quality: "Communication Quality",
-  recovery_from_bad_ai_guidance: "AI Recovery",
+  recovery_from_bad_ai_guidance: "Recovery From Bad Guidance",
   time_to_signal: "Time to Signal",
-  local_offline_compliance: "Offline Compliance",
+  local_offline_compliance: "Local/Offline Compliance",
   terminal_recovery: "Terminal Recovery",
 };
 
@@ -254,6 +254,7 @@ export default async function OperatorRecordPage({ params }: Props) {
                       <th className={styles.right}>XP</th>
                       <th>Status</th>
                       <th className={styles.hideSm}>Date</th>
+                      <th className={styles.right}>AAR</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -308,6 +309,14 @@ export default async function OperatorRecordPage({ params }: Props) {
                               month: "short",
                               day: "numeric",
                             })}
+                          </td>
+                          <td className={styles.right}>
+                            <Link
+                              href={`/runs/${sub.run_id}`}
+                              className={`display ${styles.aarLink}`}
+                            >
+                              View →
+                            </Link>
                           </td>
                         </tr>
                       );

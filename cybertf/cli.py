@@ -111,10 +111,11 @@ def cmd_brief(args) -> int:
     banner(f"mission brief: {m.title}")
     text = m.brief_path.read_text() if m.brief_path.is_file() else m.summary
     print(text)
-    if args.audio:
-        spoken = audio.speak(
-            f"Mission briefing. {m.title}. {m.summary}", voice=args.voice
+    if args.audio or args.voice is not None:
+        script = audio.briefing_script(
+            m.id, fallback=f"Mission briefing. {m.title}. {m.summary}"
         )
+        spoken = audio.speak(script, voice=args.voice or "offline")
         if spoken == "none":
             warn("No audio path available on this machine.")
         else:
@@ -313,7 +314,14 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("brief", help="Print a mission brief")
     s.add_argument("mission_id")
     s.add_argument("--audio", action="store_true", help="Read the briefing aloud (offline TTS)")
-    s.add_argument("--voice", default="offline", choices=["offline", "elevenlabs"])
+    s.add_argument(
+        "--voice",
+        nargs="?",
+        const="offline",
+        default=None,
+        choices=["offline", "elevenlabs"],
+        help="Play the mission voice briefing (default: offline macOS say)",
+    )
     s.set_defaults(func=cmd_brief)
 
     s = sub.add_parser("run", help="Start a mission (starts the timer)")

@@ -1,8 +1,9 @@
 # Hackathon Build Disclosure
 
-Project: **CyberTrack**: RAISE Summit Hackathon 2026, Google DeepMind
-Remote track (Edge / On-Device: app running Gemma locally for offline,
-privacy-first inference).
+Project: **CyberTrack** — a tactical mission arena where operators verify
+local Gemma4 guidance under pressure. RAISE Summit Hackathon 2026, Google
+DeepMind Remote track (Edge / On-Device: app running Gemma locally for
+offline, privacy-first inference).
 
 Everything in this repository was designed and built during the hackathon on
 **July 4, 2026** (see git history: the repo began the same day as an empty

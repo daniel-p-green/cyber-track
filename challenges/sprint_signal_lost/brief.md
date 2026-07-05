@@ -5,11 +5,16 @@ uplink (synthetic training environment)
 
 ## Situation
 
-At 02:10 UTC a routine configuration push went out to the HALCYON uplink
-gateway. Since then, field sensors have been dropping packets and telemetry
-is arriving in fragments. It is storm season, node 17's antenna has been
-noisy for weeks, and the previous shift's hunch was "weather." Someone needs
-to find the real cause, fast.
+At 02:10 UTC a routine configuration push went out to the uplink gateway at
+HALCYON's coastal sensor line, the ring of field nodes that feeds early
+storm warnings to three downstream stations. Since then, sensors have been
+dropping packets and telemetry is arriving in fragments. The same degraded
+uplink is your only backhaul: with the link flapping, there is no cloud AI
+to call, only the Gemma4 model running on the gateway's maintenance laptop.
+It is storm season, node 17's antenna has been noisy for weeks, and the
+previous shift's hunch was "weather." If the warning feed stays dark through
+the next front, downstream stations fly blind. Find the real cause and patch
+the config, fast.
 
 ## Objectives
 

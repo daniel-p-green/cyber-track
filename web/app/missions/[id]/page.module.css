@@ -102,7 +102,12 @@
   gap: 18px;
   align-items: start;
 }
-.main { min-width: 0; }
+.main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 .aside {
   position: sticky;
   top: 70px;
@@ -131,38 +136,75 @@
   color: var(--muted);
 }
 
-/* Cockpit sequence */
-.sequence {
+/* Briefing zones */
+.zoneBody {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.prose {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+  max-width: 68ch;
+}
+.edgeNote {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--ice) 28%, transparent);
+  background: color-mix(in srgb, var(--ice) 5%, transparent);
+  border-radius: 2px;
+}
+.edgeIcon { color: var(--ice); flex-shrink: 0; margin-top: 3px; }
+.edgeNote p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.zoneTrap .zoneHead { color: var(--amber); }
+.trapNote,
+.decisionNote {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 68ch;
+}
+
+/* Evidence list with roles */
+.evidenceList {
   list-style: none;
   display: flex;
   flex-direction: column;
-  padding: 8px 18px;
-  background: color-mix(in srgb, var(--bg) 45%, var(--panel));
 }
-.seqStep {
+.evidenceList li {
   display: grid;
-  grid-template-columns: 30px minmax(0, 1fr);
-  gap: 8px;
-  padding: 11px 0;
+  grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);
+  gap: 14px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
 }
-.seqStep + .seqStep { border-top: 1px solid var(--line); }
-.seqNum {
-  font-size: 11px;
-  color: var(--signal);
-  padding-top: 3px;
+.evidenceList li:first-child { border-top: none; padding-top: 0; }
+.evidenceFile {
+  font-size: 12.5px;
+  color: var(--ice);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.seqBody {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
+.evidenceRole {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
 }
-.seqTitle {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: 0.05em;
+.checklistBlock {
+  padding-top: 12px;
+  border-top: 1px dashed var(--line-strong);
 }
+
 .seqCmdRow {
   display: flex;
   align-items: center;
@@ -179,62 +221,40 @@
 }
 .seqCmd::-webkit-scrollbar { display: none; }
 .prompt { color: var(--muted); }
-.seqNote {
-  font-size: 12px;
+.cmdNote {
+  font-size: 11px;
   color: var(--muted);
-  line-height: 1.5;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
-.verifyRow {
+
+/* Flight ops — demoted terminal block */
+.supportZone {
+  background: color-mix(in srgb, var(--bg) 40%, var(--panel));
+}
+.supportHead {
   display: flex;
+  align-items: baseline;
+  gap: 12px;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-}
-
-/* Evidence */
-.evidenceBlock {
-  padding: 18px;
-  border-top: 1px solid var(--line);
-}
-.evidenceNote {
-  margin-top: 12px;
-  color: var(--muted);
-  font-size: 12.5px;
-  line-height: 1.6;
-}
-.inline {
-  font-size: 12px;
-  color: var(--ice);
-  background: var(--panel-2);
-  padding: 1px 5px;
-  border-radius: 2px;
-}
-
-/* Support commands — visually demoted below the mission loop */
-.supportBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  padding: 13px 18px 15px;
-  border-top: 1px dashed var(--line-strong);
-  background: color-mix(in srgb, var(--bg) 30%, var(--panel));
+  padding: 11px 18px;
+  border-bottom: 1px dashed var(--line-strong);
 }
 .supportLabel {
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.11em;
   color: var(--muted);
-  margin-bottom: 2px;
 }
-.supportCmd { color: var(--muted); font-size: 11.5px; flex: 0 1 auto; }
-.supportNote {
-  font-size: 11px;
-  color: var(--line-strong);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
-  min-width: 0;
+.supportSub {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+.supportBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 13px 18px 15px;
 }
 
 /* Arena zone */

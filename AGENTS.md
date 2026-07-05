@@ -39,6 +39,6 @@ If you are an AI coding assistant working in this repo:
 - Parent repo holds official rules, strategy docs, demo-video scaffold, and private build-progress dashboard outside the public product repo.
 - Mission engine lives in `cybertf/` CLI; web arena at `web/` deploys to https://cybertrack-arena.vercel.app as scoreboard/mission board, not the mission cockpit.
 - Cursor is the operator cockpit; web arena is for mission selection, progress, submission, and leaderboard — not where missions execute.
-- Known product-truth tension: web UI copy often says Cursor Chat; engine telemetry and scoring instrument `cybertf ask` only.
+- Known product-truth: `cybertf ask` is the instrumented local Gemma field AI; Cursor is the interface (editor + in-app browser).
 - Player-facing mission AI must be local Gemma only; cloud build assistants (Claude/Cursor) are separate from in-mission play.
-- "Call of Duty for AI Operators" is internal pitch shorthand only — do not copy protected CoD IP, assets, or trade dress.
+- "Call of Duty for AI Operators" is deprecated pitch shorthand — use "verify AI under pressure" instead. Do not copy protected CoD IP, assets, or trade dress.

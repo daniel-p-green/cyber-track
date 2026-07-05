@@ -4,15 +4,18 @@
 
 ## Situation
 
-Three sensors on HALCYON forward cluster FWD-7 went unresponsive around
-03:42 UTC. The evidence is fragmented: telemetry shows a clean dropout, the
-logs arrived out of order (a delayed batch mixing events from different hours),
-two human sitreps partially contradict each other, and the field AI filed a
-high-confidence recommendation that you suspect is wrong.
-
-You have 25 minutes to correlate the evidence, find the true root cause,
-rate the model recommendation, and write a careful operational memo that uses
-explicit uncertainty language where the evidence is incomplete.
+Forward cluster FWD-7 sits at the far edge of the HALCYON grid, two relay
+hops past the last hardened station, on a satellite backhaul that has been
+degraded since last night. Three of its sensors went unresponsive around
+03:42 UTC. The evidence reaching you is fragmented: telemetry shows a clean
+dropout, a delayed log batch arrived out of order mixing events from
+different hours, and two human sitreps partially contradict each other.
+Cloud AI is out of reach and would be too slow anyway; round trips over the
+degraded backhaul take longer than the decisions do. The local field AI has
+already filed a high-confidence recommendation, and you suspect it is wrong.
+Acting on a bad recommendation could restart the wrong subsystem and extend
+the outage. Your decision: what actually failed, and whether the model's
+recommendation is safe to execute.
 
 ## Objectives
 

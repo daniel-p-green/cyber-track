@@ -1,15 +1,29 @@
 # CyberTrack
 
-**Call of Duty for AI operators.**
-A competitive AI incident game. Players solve timed incidents in Cursor,
-catch bad model guidance, submit evidence, and get scored on judgment.
+The next generation of operators will not be judged by whether they can get
+an AI answer. They will be judged by whether they can verify it under
+pressure.
 
-Every mission runs with **local Gemma only**, simulating edge deployments
-where cloud AI is unavailable, untrusted, or too slow. Players read logs,
-ask Gemma, reject wrong hypotheses, fix the problem, and cite the evidence
-that proves it. Scoring is deterministic: evidence discipline, model
-skepticism, decision quality, recovery from bad AI guidance. It looks like a
-game. Under the hood it is a flight simulator for AI-era technical judgment.
+CyberTrack is a tactical mission arena where players solve high-pressure
+technical incidents inside Cursor using only local Gemma4.
+
+Each mission simulates the conditions operators face when cloud AI is
+unavailable, untrusted, or inappropriate: incomplete evidence, time
+pressure, imperfect model guidance, and the need to make a defensible call.
+
+Players are scored on the human-AI skills that matter under uncertainty:
+evidence discipline, model skepticism, recovery from bad guidance, decision
+quality, and local/offline compliance.
+
+After each mission, CyberTrack generates an after-action report showing where
+the operator's reasoning held up and where it broke.
+
+The prototype includes Gemma4-powered missions running locally via Ollama,
+deterministic scoring, after-action reports, Season Zero progression,
+XP/ranks, a mission map, and a public arena leaderboard.
+
+**Cursor is the interface. Gemma4 is the local edge AI. CyberTrack scores
+what matters when the cloud goes dark and the stakes are high.**
 
 > RAISE Summit Hackathon 2026 · Google DeepMind Remote track
 > (Edge / On-Device: best app running Gemma locally for offline,

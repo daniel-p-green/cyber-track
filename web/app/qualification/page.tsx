@@ -22,8 +22,9 @@ const STEPS: ProtocolStep[] = [
     body: (
       <>
         <p>
-          Missions are flown inside Cursor: evidence in the editor, Cursor Chat
-          as your AI, this arena in the in-app browser. Already use Cursor?
+          Missions are flown inside Cursor: evidence in the editor,{" "}
+          <code className={`mono ${styles.inline}`}>cybertf ask</code> as your
+          field AI, this arena in the in-app browser. Already use Cursor?
           This step is done.
         </p>
         <div className={styles.linkRow}>
@@ -83,8 +84,9 @@ const STEPS: ProtocolStep[] = [
         </Code>
         <p>
           Green <code className={`mono ${styles.inline}`}>FIELD AI ONLINE</code>{" "}
-          means you&apos;re ready to fly offline. Point Cursor Chat at the same
-          local model to keep the whole loop on-device.
+          means you&apos;re ready to fly offline. Every model query goes through{" "}
+          <code className={`mono ${styles.inline}`}>cybertf ask</code> on the
+          same local Gemma4 path.
         </p>
       </>
     ),
@@ -109,7 +111,8 @@ const STEPS: ProtocolStep[] = [
       <>
         <p>
           Start the run, then do the real work in Cursor: read the evidence,
-          ask Cursor Chat, catch the one bad model claim, and write{" "}
+          run <code className={`mono ${styles.inline}`}>cybertf ask</code>,
+          catch the one bad model claim, and write{" "}
           <code className={`mono ${styles.inline}`}>answer.json</code>.
           15 minutes on the clock.
         </p>
@@ -151,9 +154,9 @@ export default function QualificationPage() {
           </div>
           <h1 className={`display ${styles.title}`}>Get Mission-Capable</h1>
           <p className={styles.subtitle}>
-            Six steps from zero to your first scored run. Cursor is the
-            cockpit; Cursor Chat with local Gemma flies the mission; this arena
-            keeps score.
+            Six steps from zero to your first scored run: Cursor as the
+            cockpit, Ollama running Gemma locally, a callsign, and one
+            qualification mission. About five minutes of setup.
           </p>
           <div className={styles.slopeRow}>
             <SlopeBadge slope="green" label="Green Circle: Basic Qualification" size={13} />
@@ -169,9 +172,10 @@ export default function QualificationPage() {
               Mission constraint: local Gemma only
             </div>
             <p>
-              Missions run offline and private. Your only AI is Gemma on your
-              own machine, in Cursor Chat and the terminal fallback. That
-              constraint is the training.
+              Missions run offline and private. Your only AI is a Gemma model
+              on your own machine. That constraint is the training: it
+              simulates the edge conditions where cloud AI is unavailable,
+              untrusted, or inappropriate.
             </p>
           </div>
         </div>
@@ -187,7 +191,8 @@ export default function QualificationPage() {
               </div>
               <p className={styles.refNote}>
                 Scaffolding for timing, scoring, and publishing. The mission
-                itself is flown in Cursor Chat and the editor.
+                itself is flown in the editor and via{" "}
+                <code className={`mono ${styles.inline}`}>cybertf ask</code>.
               </p>
               <div className={styles.refList}>
                 {QUICK_REF.map((item) => (

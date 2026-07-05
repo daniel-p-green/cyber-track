@@ -18,6 +18,24 @@ import subprocess
 import urllib.request
 from pathlib import Path
 
+# Radio-operator voice briefings, keyed by mission id. Target 8 to 12
+# seconds at the `say` rate below. Missions without an entry fall back to
+# title + summary.
+BRIEFING_SCRIPTS = {
+    "sprint_signal_lost": (
+        "Operator, HALCYON control. A config push broke the coastal uplink. "
+        "Sensors are dropping packets ahead of the storm front. No cloud on "
+        "this link, just you and the local field AI. Verify before you "
+        "trust. Clock is running."
+    ),
+}
+
+
+def briefing_script(mission_id: str, fallback: str = "") -> str:
+    """Return the voice briefing for a mission, or the fallback text."""
+    return BRIEFING_SCRIPTS.get(mission_id, fallback)
+
+
 COMPLETE_SOUND = "/System/Library/Sounds/Glass.aiff"
 PROMOTE_SOUND = "/System/Library/Sounds/Hero.aiff"
 

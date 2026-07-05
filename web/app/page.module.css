@@ -25,7 +25,6 @@
   color: var(--muted);
   white-space: nowrap;
 }
-.statusItem strong { color: var(--text); font-size: 11.5px; }
 .statusClock {
   margin-left: auto;
   color: var(--ice);
@@ -33,11 +32,11 @@
   letter-spacing: 0.08em;
 }
 
-/* ── Command hero ─────────────────────────────────────────────────────── */
+/* ── Hero ─────────────────────────────────────────────────────────────── */
 .hero {
   position: relative;
   overflow: hidden;
-  padding: clamp(36px, 6vw, 64px) 0 clamp(30px, 5vw, 52px);
+  padding: clamp(36px, 6vw, 68px) 0 clamp(30px, 5vw, 56px);
   border-bottom: 1px solid var(--line);
 }
 /* Command-deck atmosphere art — decorative only, fades into --bg so the
@@ -53,7 +52,7 @@
     url("/art/hero-command-deck.jpg");
   background-size: auto, auto, auto, cover;
   background-position: center, center, center, center right;
-  opacity: 0.55;
+  opacity: 0.5;
 }
 :global([data-theme="light"]) .heroArt {
   opacity: 0.12;
@@ -69,40 +68,29 @@
   align-items: center;
 }
 .heroKicker {
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.16em;
   color: var(--signal);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 .heroTitle {
-  font-size: clamp(28px, 4vw, 44px);
-  font-weight: 800;
-  line-height: 1.04;
+  font-size: clamp(24px, 3.1vw, 36px);
+  font-weight: 700;
+  line-height: 1.12;
   color: var(--text);
   margin-bottom: 16px;
-  max-width: 24ch;
+  max-width: 26ch;
 }
 .heroCloud {
   color: var(--ice);
-  position: relative;
-}
-.heroCloud::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 3px;
-  height: 3px;
-  background: var(--ice);
-  opacity: 0.5;
 }
 .heroText {
   color: var(--muted);
   font-size: 15px;
   line-height: 1.7;
-  max-width: 54ch;
-  margin-bottom: 24px;
+  max-width: 52ch;
+  margin-bottom: 26px;
 }
 .heroActions {
   display: flex;
@@ -110,11 +98,10 @@
   flex-wrap: wrap;
 }
 
-/* ── Cursor cockpit preview ───────────────────────────────────────────────
+/* ── Cursor cockpit sketch ────────────────────────────────────────────────
    A stylized concept sketch of the actual player loop: evidence files in the
-   workspace, the answer artifact in the editor, Cursor Chat running local
-   Gemma, and this arena open in the in-app browser. Not a pixel copy of
-   Cursor — just enough to make the architecture unmistakable. */
+   workspace, the answer artifact in the editor, and the local Gemma exchange
+   where the operator catches a wrong claim. Not a pixel copy of Cursor. */
 .cockpit {
   padding: 0;
   overflow: hidden;
@@ -230,9 +217,8 @@
 .chipRow {
   padding: 0;
   display: flex;
+  justify-content: flex-start;
 }
-.chipRow:nth-of-type(3) { justify-content: flex-start; }
-.chipRow:last-child { justify-content: flex-start; }
 .msgYou {
   align-self: flex-end;
   max-width: 92%;
@@ -278,80 +264,214 @@
   font-weight: 700;
 }
 
-/* ── Cockpit ⇄ Arena split ────────────────────────────────────────────── */
-.splitSection {
+/* ── The loop ─────────────────────────────────────────────────────────── */
+.loopSection {
   padding: clamp(30px, 5vw, 48px) 0;
   border-bottom: 1px solid var(--line);
 }
-.split {
+.loop {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: stretch;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
 }
-.splitCol {
-  padding: 22px 24px;
+.loopStep {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 16px 18px;
   min-width: 0;
 }
-.splitHead {
+.loopHead {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 16px;
+  align-items: center;
+  justify-content: space-between;
   color: var(--signal);
+  margin-bottom: 4px;
 }
-.splitHead > div { display: flex; flex-direction: column; gap: 1px; }
-.splitName {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--text);
-  line-height: 1.1;
-}
-.splitSub {
-  font-size: 12px;
+.loopIcon { display: inline-flex; }
+.loopNum {
+  font-size: 10px;
   color: var(--muted);
 }
-.splitList {
+.loopTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.05em;
+}
+.loopNote {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.loopFoot {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+  max-width: 74ch;
+}
+
+/* ── Scored on + AAR extract ──────────────────────────────────────────── */
+.scoredSection {
+  padding: clamp(30px, 5vw, 52px) 0;
+  border-bottom: 1px solid var(--line);
+}
+.scoredGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: start;
+}
+.scoredCopy { min-width: 0; }
+.scoredTitle {
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.scoredText {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 54ch;
+  margin-bottom: 20px;
+}
+.scoredList {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 9px;
 }
-.splitList li {
-  display: flex;
+.scoredList li {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 14px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
   align-items: baseline;
-  gap: 10px;
-  font-size: 13.5px;
+}
+.scoredName {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.06em;
+}
+.scoredNote {
+  font-size: 13px;
   color: var(--muted);
   line-height: 1.5;
 }
-.splitNum {
-  font-size: 10px;
+
+/* AAR extract card — the payoff artifact */
+.aarCard {
+  padding: 0;
+  overflow: hidden;
+  min-width: 0;
+}
+.aarHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.aarLabel {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.08em;
+}
+.aarMeta {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.aarScoreRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.aarScore {
+  font-size: 38px;
+  font-weight: 700;
   color: var(--signal);
+  line-height: 1;
   flex-shrink: 0;
 }
-.splitSpine {
+.aarScoreMax {
+  font-size: 15px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.aarVerdict {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.aarChecks {
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--line);
   display: flex;
   flex-direction: column;
+}
+.aarCheck {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 12.5px;
+}
+.aarCheckMark { flex-shrink: 0; font-size: 12px; }
+.aarCheckLabel { flex: 1; min-width: 0; color: var(--text); }
+.aarCheckPts { color: var(--muted); font-size: 11.5px; flex-shrink: 0; }
+.aarDims {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.aarDim {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr) 32px;
+  gap: 12px;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 0 18px;
-  border-left: 1px dashed var(--line-strong);
-  border-right: 1px dashed var(--line-strong);
-  background: color-mix(in srgb, var(--signal) 3%, transparent);
 }
-.spineCmd {
-  font-size: 10px;
-  color: var(--signal);
-  writing-mode: initial;
-  white-space: nowrap;
-}
-.splitNote {
-  margin-top: 14px;
+.aarDimLabel {
+  font-size: 10.5px;
   color: var(--muted);
-  font-size: 13px;
-  line-height: 1.6;
-  max-width: 72ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.aarDimTrack {
+  display: block;
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.aarDimFill {
+  display: block;
+  height: 100%;
+}
+.aarDimPct {
+  font-size: 10.5px;
+  color: var(--text);
+  text-align: right;
+}
+.aarFoot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-size: 10.5px;
+  color: var(--muted);
 }
 
 /* ── Campaign rail ────────────────────────────────────────────────────── */
@@ -385,38 +505,10 @@
   width: calc(100% - 68px);
   border-top: 2px dashed var(--line-strong);
 }
-/* Route line states per the brand sheet */
 .lineCompleted { border-top-style: solid; border-top-color: var(--signal); }
 .lineActive    { border-top-style: solid; border-top-color: var(--ice); }
 .lineAvailable { border-top-style: dashed; border-top-color: var(--line-strong); }
 .lineLocked    { border-top-style: dotted; border-top-color: var(--line-strong); }
-
-/* Route key — compact line-style legend */
-.routeKey {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 22px;
-  margin-top: 18px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
-}
-.routeKeyItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-display);
-  font-size: 10.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--muted);
-  white-space: nowrap;
-}
-.routeSample {
-  display: inline-block;
-  width: 34px;
-  border-top: 2px dashed var(--line-strong);
-}
 .railIndex {
   font-size: 10px;
   color: var(--muted);
@@ -436,87 +528,48 @@
   font-size: 10px;
   color: var(--muted);
 }
+.railFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
 .slopeKey {
   display: flex;
   flex-wrap: wrap;
   gap: 10px 22px;
-  margin-top: 12px;
+}
+.railLink {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
-/* ── Bottom grid ──────────────────────────────────────────────────────── */
+/* ── Setup CTA ────────────────────────────────────────────────────────── */
 .bottomSection {
   padding: clamp(30px, 5vw, 48px) 0 12px;
 }
-.bottomGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: 16px;
-  align-items: stretch;
-}
-
-.leaderPanel {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-.leaderHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 13px 18px;
-  border-bottom: 1px solid var(--line);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-}
-.leaderLink {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-}
-.leaderTable {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-.leaderTable td {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.leaderTable td:first-child { width: 58px; }
-.leaderTable td {
-  padding: 10px 18px;
-  border-bottom: 1px solid var(--line);
-  font-size: 13px;
-}
-.leaderTable tbody tr:hover td { background: var(--paper); }
-.leaderRank { color: var(--muted); font-size: 12px; }
-.leaderXp { text-align: right; color: var(--signal); }
-.leaderFoot {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 18px;
-  margin-top: auto;
-  font-size: 11px;
-  color: var(--muted);
-}
-
 .setupPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  gap: 24px;
   padding: 22px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  min-width: 0;
+  align-items: center;
 }
-.setupPanel p {
+.setupCopy { min-width: 0; }
+.setupCopy p {
   color: var(--muted);
   font-size: 13.5px;
   line-height: 1.65;
+  max-width: 58ch;
+  margin-bottom: 14px;
 }
 .setupLinks {
   display: flex;
@@ -542,26 +595,22 @@
   color: var(--ice);
   text-decoration: none;
 }
-.setupCta {
-  margin-top: auto;
-  justify-content: center;
+.setupActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
+.setupActions :global(.btn) { justify-content: center; }
 
 /* ── Responsive ───────────────────────────────────────────────────────── */
 @media (max-width: 960px) {
   .heroGrid { grid-template-columns: 1fr; }
   .cockpit { max-width: 560px; }
-  .split { grid-template-columns: 1fr; }
-  .splitSpine {
-    flex-direction: row;
-    padding: 10px 18px;
-    border-left: none;
-    border-right: none;
-    border-top: 1px dashed var(--line-strong);
-    border-bottom: 1px dashed var(--line-strong);
-  }
-  .splitSpine svg { transform: rotate(90deg); }
-  .bottomGrid { grid-template-columns: 1fr; }
+  .loop { grid-template-columns: repeat(2, 1fr); }
+  .loopStep:last-child { grid-column: 1 / -1; }
+  .scoredGrid { grid-template-columns: 1fr; }
+  .setupPanel { grid-template-columns: 1fr; }
+  .setupActions { flex-direction: row; flex-wrap: wrap; }
 
   /* Campaign rail becomes a vertical route on small screens */
   .rail { flex-direction: column; align-items: stretch; gap: 0; }
@@ -581,11 +630,8 @@
 
 @media (max-width: 480px) {
   .statusHideSm { display: none; }
+  .loop { grid-template-columns: 1fr; }
   .railChips span.mono:last-child { display: none; }
-  .leaderRank { display: none; }
-  .leaderTable td { padding: 10px 10px; font-size: 12px; }
-  .leaderFoot { padding: 10px; font-size: 10px; }
-}
-@media (max-width: 380px) {
-  .statusHideMd { display: none; }
+  .scoredList li { grid-template-columns: 1fr; gap: 2px; }
+  .aarDim { grid-template-columns: 130px minmax(0, 1fr) 32px; }
 }

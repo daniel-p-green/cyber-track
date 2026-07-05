@@ -4,13 +4,17 @@
 
 ## Situation
 
-You are the Shift 1 operator on an active sensor calibration incident
-(HALCYON-INC-0078). You have made progress (three of five affected nodes are
-corrected) but your shift is ending. Shift 2 takes over, and the local Gemma
-field model will assist the incoming operator.
+You are the Shift 1 operator at HALCYON Sector 4, the array that watches the
+grid's eastern approach. An active calibration incident (HALCYON-INC-0078)
+has five nodes reading drifted values; you have corrected three, and your
+shift is ending. Sector 4 handles raw positional data classified
+grid-internal, so incident details never leave the local network: no cloud
+AI sees this traffic, by policy, ever. Shift 2 inherits the incident with
+only the local Gemma field model to assist them. If your handoff is vague,
+the wrong nodes get recalibrated and the validation deadline is missed.
 
-Your task: write a handoff brief that gives the field model enough context to
-continue the incident. Then test whether the model can actually use it.
+Your decision: what must the handoff brief contain so the field model can
+actually continue the work. Write it, then test it against the model.
 
 The incident details are in `data/incident_context.md`. Read it carefully;
 the remaining node IDs and the exact offset value are facts that must appear

@@ -171,11 +171,17 @@
   margin-bottom: 4px;
 }
 
-.objective {
+.hook {
   color: var(--text);
-  font-size: 13.5px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.55;
 }
+.decision {
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+.decision .fieldLabel { margin-bottom: 2px; }
 
 .metaGrid {
   display: grid;

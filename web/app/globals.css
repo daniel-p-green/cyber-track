@@ -30,26 +30,28 @@
   --font-mono:    "JetBrains Mono", ui-monospace, "Cascadia Mono", monospace;
 }
 
+/* Light theme: gray/steel daylight command console. Lighter than dark mode,
+   never paper white. Values track DESIGN.md section 3 light targets. */
 :root[data-theme="light"] {
   color-scheme: light;
 
-  --bg:          #E9EDF1;
-  --bg-2:        #DFE5EB;
-  --panel:       #F8FAFB;
-  --panel-2:     #EDF1F5;
-  --panel-3:     #DFE6EC;
-  --line:        #CDD6DE;
-  --line-strong: #9FAEBC;
-  --text:        #10151B;
-  --muted:       #55636F;
-  --signal:      #0F8A4B;
-  --ice:         #0B7AB8;
-  --amber:       #9A6400;
-  --alert:       #C03434;
-  --shadow:      rgba(16, 21, 27, 0.10);
-  --paper:       rgba(16, 21, 27, 0.045);
-  --scanline:    rgba(16, 21, 27, 0.02);
-  --btn-ink:     #F8FAFB;
+  --bg:          #C2CBD4;   /* steel gray */
+  --bg-2:        #B7C1CB;
+  --panel:       #D3DAE1;
+  --panel-2:     #C7CFD7;
+  --panel-3:     #BAC4CD;
+  --line:        #9FACB9;
+  --line-strong: #7E8D9B;
+  --text:        #131A21;
+  --muted:       #42505D;
+  --signal:      #0A5F33;  /* darkened past DESIGN target for AA on steel */
+  --ice:         #09578A;
+  --amber:       #6F4700;
+  --alert:       #992727;
+  --shadow:      rgba(19, 26, 33, 0.14);
+  --paper:       rgba(19, 26, 33, 0.05);
+  --scanline:    rgba(19, 26, 33, 0.02);
+  --btn-ink:     #EDF1F5;
 }
 
 @theme inline {

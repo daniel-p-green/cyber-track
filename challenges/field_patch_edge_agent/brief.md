@@ -4,9 +4,15 @@
 
 ## Situation
 
-The edge severity classifier deployed on HALCYON forward nodes has a bug.
-Sensor events at a specific boundary score are being misclassified. Operators
-are receiving the wrong severity label, which affects escalation and response.
+The severity classifier deployed on HALCYON's forward sensor nodes has a
+bug. Events at a specific boundary score are being mislabeled, so real
+warnings are escalating late across the whole forward line. These nodes are
+solar-powered field hardware with no route to the cloud; the classifier runs
+on the device, and so does your only AI. That is by design: an edge agent
+that phones home is an edge agent that fails when the link does. The fix
+ships tonight with the next maintenance window. Your decision: what the
+minimal correct change is, backed by the spec, not by intuition (yours or
+the model's).
 
 The classifier is in `data/edge_agent.py`. The specification is in
 `data/severity_spec.md`. The test suite is in `data/test_edge_agent.py`.

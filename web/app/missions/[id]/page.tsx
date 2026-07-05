@@ -6,16 +6,16 @@ import { eventTypeLabel, eventTypeColor, formatElapsed, slopeForDifficulty } fro
 import {
   MissionGlyph,
   GemmaStatus,
-  LocalChip,
   HexBadge,
-  VerifyChip,
   ScoreRing,
   SlopeBadge,
   IconTimer,
+  IconFile,
   IconChat,
   IconSuspicious,
   IconOffline,
   IconBars,
+  IconTerminal,
 } from "../../components/svg";
 import CopyCmd from "../../components/CopyCmd";
 import EvidenceChecklist from "../../components/EvidenceChecklist";
@@ -31,7 +31,7 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-export default async function MissionCockpit({ params }: Props) {
+export default async function MissionBriefing({ params }: Props) {
   const { id } = await params;
   const mission = MISSIONS.find((m) => m.id === id);
   if (!mission) notFound();
@@ -47,52 +47,12 @@ export default async function MissionCockpit({ params }: Props) {
     if (!a.flags.suspicious_fast && b.flags.suspicious_fast) return -1;
     return b.total - a.total || a.elapsed_seconds - b.elapsed_seconds;
   });
+  const realSubs = sortedSubs.filter(
+    (s) => !s.seeded && !seededOps.has(s.callsign)
+  );
+  const bestReal = realSubs.find((s) => !s.flags.suspicious_fast);
 
   const slope = slopeForDifficulty(mission.difficulty);
-
-  // The mission loop: Cursor is the cockpit, commands only bookend the run.
-  const loop: {
-    title: string;
-    note: string;
-    cmds?: string[];
-    verifyChips?: boolean;
-  }[] = [
-    {
-      title: "Start the run",
-      note: "Arms the timer and creates your run directory.",
-      cmds: [`cybertf run ${mission.id}`],
-    },
-    {
-      title: "Read the evidence in Cursor",
-      note: `Open challenges/${mission.id}/data/ in the editor and work through each file.`,
-    },
-    {
-      title: "Ask Cursor Chat (local Gemma)",
-      note: "Give it the right files and context. It only knows what you show it.",
-    },
-    {
-      title: "Verify or reject the model's claims",
-      note: "Check every hypothesis against the evidence. Catching a wrong one is scored.",
-      verifyChips: true,
-    },
-    {
-      title: "Edit answer.json in the editor",
-      note: "Your finding, plus the evidence paths that prove it.",
-    },
-    {
-      title: "Submit and publish",
-      note: "Stops the timer, scores deterministically, writes your AAR, posts it here.",
-      cmds: [
-        `cybertf submit ${mission.id} runs/<run_id>/answer.json`,
-        `cybertf publish <run_id>`,
-      ],
-    },
-  ];
-
-  const supportCmds = [
-    { cmd: `cybertf brief ${mission.id}`, note: "print the brief in the terminal" },
-    { cmd: `cybertf ask "your question" --file <evidence-file>`, note: "terminal fallback for model queries" },
-  ];
 
   return (
     <div className={styles.root}>
@@ -105,7 +65,6 @@ export default async function MissionCockpit({ params }: Props) {
           </div>
           <span className={styles.statusChips}>
             <GemmaStatus compact />
-            <LocalChip compact />
           </span>
         </div>
 
@@ -122,7 +81,7 @@ export default async function MissionCockpit({ params }: Props) {
               <SlopeBadge slope={slope.id} label={slope.label} size={14} />
             </div>
             <h1 className={`display ${styles.title}`}>{mission.title}</h1>
-            <p className={styles.summary}>{mission.summary}</p>
+            <p className={styles.summary}>{mission.hook}</p>
           </div>
         </header>
 
@@ -159,99 +118,169 @@ export default async function MissionCockpit({ params }: Props) {
         </div>
 
         <div className={styles.layout}>
-          {/* ── Zone A: the cockpit ───────────────────────────────────── */}
+          {/* ── Main: the briefing ────────────────────────────────────── */}
           <div className={styles.main}>
+            {/* Situation */}
             <section className={`panel ${styles.zone}`}>
               <div className={styles.zoneHead}>
-                <IconChat size={15} />
-                <span className="display">In your cockpit: Cursor</span>
-                <span className={styles.zoneSub}>editor + chat + evidence</span>
+                <IconFile size={15} />
+                <span className="display">Situation</span>
+                <span className={styles.zoneSub}>HALCYON grid · synthetic</span>
               </div>
+              <div className={styles.zoneBody}>
+                <p className={styles.prose}>{mission.situation}</p>
+                <div className={styles.edgeNote}>
+                  <IconOffline size={14} className={styles.edgeIcon} />
+                  <p>{mission.edge_condition}</p>
+                </div>
+              </div>
+            </section>
 
-              <ol className={styles.sequence}>
-                {loop.map((step, i) => (
-                  <li key={i} className={styles.seqStep}>
-                    <span className={`mono ${styles.seqNum}`}>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div className={styles.seqBody}>
-                      <span className={`display ${styles.seqTitle}`}>{step.title}</span>
-                      <span className={styles.seqNote}>{step.note}</span>
-                      {step.verifyChips && (
-                        <span className={styles.verifyRow}>
-                          <VerifyChip kind="warning" compact />
-                          <VerifyChip kind="corrected" compact />
-                        </span>
-                      )}
-                      {step.cmds?.map((cmd) => (
-                        <div key={cmd} className={styles.seqCmdRow}>
-                          <code className={`mono ${styles.seqCmd}`}>
-                            <span className={styles.prompt}>$ </span>
-                            {cmd}
-                          </code>
-                          <CopyCmd text={cmd} />
-                        </div>
-                      ))}
-                    </div>
-                  </li>
-                ))}
-              </ol>
+            {/* Evidence */}
+            <section className={`panel ${styles.zone}`}>
+              <div className={styles.zoneHead}>
+                <IconFile size={15} />
+                <span className="display">Evidence</span>
+                <span className={styles.zoneSub}>
+                  {mission.evidence.length} file{mission.evidence.length > 1 ? "s" : ""} in the workspace
+                </span>
+              </div>
+              <div className={styles.zoneBody}>
+                <ul className={styles.evidenceList}>
+                  {mission.evidence.map((e) => (
+                    <li key={e.file}>
+                      <code className={`mono ${styles.evidenceFile}`}>{e.file}</code>
+                      <span className={styles.evidenceRole}>{e.role}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className={styles.checklistBlock}>
+                  <span className={`display ${styles.fieldLabel}`}>
+                    Track your review (session only)
+                  </span>
+                  <EvidenceChecklist
+                    missionId={mission.id}
+                    files={mission.evidence.map((e) => e.file)}
+                  />
+                </div>
+              </div>
+            </section>
 
-              <div className={styles.evidenceBlock}>
-                <div className="section-label">Evidence Checklist</div>
-                <EvidenceChecklist missionId={mission.id} files={mission.evidence} />
-                <p className={styles.evidenceNote}>
-                  Citing your evidence is scored. List the paths in{" "}
-                  <code className={`mono ${styles.inline}`}>answer.json</code>.
+            {/* Model hypothesis */}
+            <section className={`panel ${styles.zone} ${styles.zoneTrap}`}>
+              <div className={styles.zoneHead}>
+                <IconChat size={15} />
+                <span className="display">The Model Will Get This Wrong</span>
+              </div>
+              <div className={styles.zoneBody}>
+                <p className={styles.prose}>{mission.model_trap}</p>
+                <p className={styles.trapNote}>
+                  Catching a planted bad claim is scored. Missing it costs you.
+                  The model is your field AI, not your judge: deterministic
+                  checks grade the run.
                 </p>
               </div>
+            </section>
 
-              <div className={styles.supportBlock}>
+            {/* Operator decision */}
+            <section className={`panel ${styles.zone}`}>
+              <div className={styles.zoneHead}>
+                <IconTerminal size={15} />
+                <span className="display">Your Decision</span>
+              </div>
+              <div className={styles.zoneBody}>
+                <p className={styles.prose}>{mission.decision}</p>
+                <p className={styles.decisionNote}>
+                  File it as a finding with the evidence paths that prove it.
+                  The answer artifact lives in your run folder; the template is
+                  created when the run starts.
+                </p>
+              </div>
+            </section>
+
+            {/* Flight ops — commands demoted to one compact block */}
+            <section className={`panel ${styles.supportZone}`}>
+              <div className={styles.supportHead}>
                 <span className={`display ${styles.supportLabel}`}>
-                  Support commands (optional scaffolding)
+                  Flight ops · terminal
                 </span>
-                {supportCmds.map((item) => (
-                  <div key={item.cmd} className={styles.seqCmdRow}>
-                    <code className={`mono ${styles.seqCmd} ${styles.supportCmd}`}>
-                      <span className={styles.prompt}>$ </span>
-                      {item.cmd}
-                    </code>
-                    <span className={styles.supportNote}>{item.note}</span>
-                    <CopyCmd text={item.cmd} />
-                  </div>
-                ))}
+                <span className={styles.supportSub}>
+                  start and submit bookend the run; everything between happens in the editor
+                </span>
+              </div>
+              <div className={styles.supportBody}>
+                <div className={styles.seqCmdRow}>
+                  <code className={`mono ${styles.seqCmd}`}>
+                    <span className={styles.prompt}>$ </span>
+                    cybertf run {mission.id}
+                  </code>
+                  <span className={styles.cmdNote}>arms the timer</span>
+                  <CopyCmd text={`cybertf run ${mission.id}`} />
+                </div>
+                <div className={styles.seqCmdRow}>
+                  <code className={`mono ${styles.seqCmd}`}>
+                    <span className={styles.prompt}>$ </span>
+                    cybertf ask &quot;...&quot; --file &lt;evidence&gt;
+                  </code>
+                  <span className={styles.cmdNote}>query local Gemma</span>
+                  <CopyCmd text={`cybertf ask "your question" --file <evidence-file>`} />
+                </div>
+                <div className={styles.seqCmdRow}>
+                  <code className={`mono ${styles.seqCmd}`}>
+                    <span className={styles.prompt}>$ </span>
+                    cybertf submit {mission.id} runs/&lt;run_id&gt;/answer.json
+                  </code>
+                  <span className={styles.cmdNote}>score + AAR</span>
+                  <CopyCmd text={`cybertf submit ${mission.id} runs/<run_id>/answer.json`} />
+                </div>
+                <div className={styles.seqCmdRow}>
+                  <code className={`mono ${styles.seqCmd}`}>
+                    <span className={styles.prompt}>$ </span>
+                    cybertf publish &lt;run_id&gt;
+                  </code>
+                  <span className={styles.cmdNote}>post to the arena</span>
+                  <CopyCmd text={`cybertf publish <run_id>`} />
+                </div>
               </div>
             </section>
           </div>
 
-          {/* ── Zone B: the arena ─────────────────────────────────────── */}
+          {/* ── Aside: scoring + top runs ─────────────────────────────── */}
           <aside className={styles.aside}>
             <section className={`panel ${styles.zone}`}>
               <div className={styles.zoneHead}>
-                <IconOffline size={15} />
-                <span className="display">In the arena: scored here</span>
+                <IconBars size={15} />
+                <span className="display">Scoring</span>
               </div>
 
               <div className={styles.arenaBody}>
                 <div>
-                  <span className={`display ${styles.fieldLabel}`}>Scored On</span>
+                  <span className={`display ${styles.fieldLabel}`}>Scored on</span>
                   <div className={styles.dimChips}>
                     {mission.dimensions.map((d) => (
                       <span key={d} className="tag tag-muted">{d}</span>
                     ))}
                   </div>
                 </div>
+                <div>
+                  <span className={`display ${styles.fieldLabel}`}>Skills tested</span>
+                  <div className={styles.dimChips}>
+                    {mission.skills.map((s) => (
+                      <span key={s} className="tag tag-ice">{s}</span>
+                    ))}
+                  </div>
+                </div>
                 <p className={styles.scoringNote}>
-                  Deterministic scoring. No model grades you. Speed is worth at
-                  most 10%. Under{" "}
+                  Deterministic checks, no model in the grading loop. Speed is
+                  worth at most 10%. Under{" "}
                   <span className="mono amber">
                     {formatElapsed(mission.expected_seconds.min)}
                   </span>{" "}
-                  gets flagged{" "}
+                  is flagged{" "}
                   <span className={styles.flagInline}>
                     <IconSuspicious size={12} /> SUSPICIOUS
-                  </span>
-                  : no XP.
+                  </span>{" "}
+                  and earns no XP.
                 </p>
               </div>
 
@@ -259,70 +288,67 @@ export default async function MissionCockpit({ params }: Props) {
                 <div className="section-label">
                   <IconTimer size={12} /> Top Runs
                 </div>
-                {sortedSubs.length === 0 ? (
-                  <div className={styles.empty}>No runs posted yet. Be first on the board.</div>
+                {realSubs.length === 0 ? (
+                  <div className={styles.empty}>
+                    No verified runs posted yet. The first clean run takes the
+                    board.
+                  </div>
                 ) : (
                   <>
-                    {!sortedSubs[0].flags.suspicious_fast && (
+                    {bestReal && (
                       <div className={styles.bestRun}>
                         <ScoreRing
-                          score={sortedSubs[0].total}
-                          max={sortedSubs[0].max_total}
+                          score={bestReal.total}
+                          max={bestReal.max_total}
                           size={86}
                         />
                         <div className={styles.bestRunText}>
-                          <span className={`display ${styles.bestRunLabel}`}>Best posted run</span>
+                          <span className={`display ${styles.bestRunLabel}`}>Best verified run</span>
                           <span className={`mono ${styles.bestRunMeta}`}>
-                            {sortedSubs[0].callsign} · {formatElapsed(sortedSubs[0].elapsed_seconds)}
+                            {bestReal.callsign} · {formatElapsed(bestReal.elapsed_seconds)}
                           </span>
                         </div>
                       </div>
                     )}
                     <table className={styles.table}>
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>Callsign</th>
-                        <th className={styles.right}>Score</th>
-                        <th className={styles.right}>Time</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sortedSubs.slice(0, 8).map((sub, i) => {
-                        const isSuspicious = sub.flags.suspicious_fast;
-                        const isSeed = sub.seeded || seededOps.has(sub.callsign);
-                        return (
-                          <tr key={sub.run_id} className={isSuspicious ? styles.suspicious : ""}>
-                            <td className="mono muted">
-                              {isSuspicious ? <IconSuspicious size={12} /> : i + 1}
-                            </td>
-                            <td className={styles.callsignCell}>
-                              <Link
-                                href={`/operators/${sub.callsign}`}
-                                className={`mono ${styles.callsign}`}
-                                style={{ color: isSuspicious ? "var(--muted)" : "var(--ice)" }}
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Callsign</th>
+                          <th className={styles.right}>Score</th>
+                          <th className={styles.right}>Time</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {realSubs.slice(0, 8).map((sub, i) => {
+                          const isSuspicious = sub.flags.suspicious_fast;
+                          return (
+                            <tr key={sub.run_id} className={isSuspicious ? styles.suspicious : ""}>
+                              <td className="mono muted">
+                                {isSuspicious ? <IconSuspicious size={12} /> : i + 1}
+                              </td>
+                              <td className={styles.callsignCell}>
+                                <Link
+                                  href={`/operators/${sub.callsign}`}
+                                  className={`mono ${styles.callsign}`}
+                                  style={{ color: isSuspicious ? "var(--muted)" : "var(--ice)" }}
+                                >
+                                  {sub.callsign}
+                                </Link>
+                              </td>
+                              <td
+                                className={`mono ${styles.right}`}
+                                style={{ color: isSuspicious ? "var(--muted)" : "var(--signal)" }}
                               >
-                                {sub.callsign}
-                              </Link>
-                              {isSeed && (
-                                <span className={`display ${styles.seedTag}`} title="Demo seed data">
-                                  demo
-                                </span>
-                              )}
-                            </td>
-                            <td
-                              className={`mono ${styles.right}`}
-                              style={{ color: isSuspicious ? "var(--muted)" : "var(--signal)" }}
-                            >
-                              {sub.total}/{sub.max_total}
-                            </td>
-                            <td className={`mono muted ${styles.right}`}>
-                              {formatElapsed(sub.elapsed_seconds)}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
+                                {sub.total}/{sub.max_total}
+                              </td>
+                              <td className={`mono muted ${styles.right}`}>
+                                {formatElapsed(sub.elapsed_seconds)}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
                     </table>
                   </>
                 )}

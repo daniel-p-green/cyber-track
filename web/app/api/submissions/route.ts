@@ -29,6 +29,8 @@ export async function POST(req: NextRequest) {
     max_total,
     elapsed_seconds,
     dimensions,
+    checks,
+    ask_count,
     local_model,
     telemetry_digest,
     schema: bodySchema,
@@ -98,6 +100,8 @@ export async function POST(req: NextRequest) {
     elapsed_seconds: elapsedSec,
     submitted_at: new Date().toISOString(),
     dimensions: (dimensions as Submission["dimensions"]) ?? {},
+    checks: Array.isArray(checks) ? (checks as Submission["checks"]) : undefined,
+    ask_count: typeof ask_count === "number" ? ask_count : undefined,
     flags: { suspicious_fast, missing_telemetry },
     local_model: (local_model as Submission["local_model"]) ?? {
       provider: "ollama",
