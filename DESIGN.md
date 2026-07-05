@@ -1,121 +1,348 @@
-# CyberTrack Design Bible
+# CyberTrack Design System
 
-**CyberTrack: Call of Duty for AI Operators.**
-Offline AI operator readiness in Cursor, powered by local Gemma4.
+This is the design operating manual for CyberTrack. It is written for humans
+and for AI agents that build on this codebase. When implementation and this
+document disagree, fix one of them in the same change.
 
-This document is the design source of truth for the product, the web arena, mission copy, and the demo.
+Ground rules for using this doc:
 
-## Strategic Narrative
+- Tokens and component patterns here are buildable specs, not moodboard prose.
+- Web tokens live in `web/app/globals.css`. Keep them in sync with section 3.
+- Copy rules in section 9 apply to every user-facing string, including this doc.
 
-Critical infrastructure, cyber defense, emergency operations, and national resilience are moving toward human-AI teaming. But real missions do not always get cloud AI: connectivity fails, data is too sensitive, latency matters, frontier models are unavailable or untrusted. Nobody trains people for that.
+---
 
-CyberTrack is a mission league that looks like a game and works like a flight simulator for AI-era technical judgment. Operators complete timed missions inside Cursor with only a **local Gemma4 model** as their field AI, then get deterministically scored on evidence discipline, model skepticism, decision quality, and recovery under degraded conditions.
+## 1. Product Identity
 
-The next generation of operators will be judged less by whether they can use an AI tool, and more by whether they can question it, verify it, recover from its mistakes, and decide well when the cloud is gone. CyberTrack trains and measures that.
+**Thesis:** CyberTrack is a competitive AI incident game. Players solve timed
+incidents in Cursor with local Gemma as their only AI, catch bad model
+guidance, submit evidence, and get scored on judgment.
 
-**"Call of Duty for AI Operators" is pitch shorthand only.** CyberTrack is an original property. Nothing in this product copies Call of Duty assets, UI, branding, maps, weapons, names, typography, or trade dress.
+**Hook:** "Call of Duty for AI operators." Pitch shorthand only. Say it once,
+then immediately explain the practical loop. CyberTrack is an original
+property: no copied game assets, UI, names, typography, or trade dress.
 
-## What CyberTrack Is Not
+**Positioning:** a flight simulator for AI-era technical judgment that looks
+like a game. The skill measured is the human operating with a constrained
+model: question it, verify it, recover from its mistakes, decide well.
 
-Non-negotiable framing rules:
+**CyberTrack is:**
 
-- Not hiring, recruiting, candidate screening, military selection, or job ranking. Scores are **training and readiness feedback**, never suitability decisions.
-- Not a dashboard product. The web arena is a scoreboard and mission hub wrapped around Cursor mission execution.
-- Not a CTF or cyber range clone. The subject being measured is the **human operating with constrained AI**, not the exploit.
-- Not offensive security. All scenarios are synthetic and defensive. No live targets, malware, or exploit content.
-- Not surveillance. Telemetry is opt-in, transparent, and scoped to the mission workspace only.
+- Timed missions flown inside Cursor with local Gemma (Ollama), offline.
+- Deterministic scoring, an after-action report, XP, ranks, a leaderboard.
+- Synthetic, defensive, fictional scenarios (the HALCYON grid does not exist).
 
-## Audience
+**CyberTrack is not:**
 
-Primary: high school and college students, early-career technical professionals, cyber clubs, STEM/ROTC-adjacent learners who are comfortable opening an editor and a terminal.
+- Hiring, recruiting, screening, or job-suitability scoring. Scores are
+  training feedback. This rule appears in the footer and setup page.
+- A CTF, cyber range, or exploit game. No offensive content, no live targets.
+- A dashboard product. The web arena is a scoreboard around Cursor, never the
+  place where mission work happens.
+- Surveillance. Telemetry is opt-in, transparent, workspace-scoped.
 
-Broader: anyone who wants to prove they can work with AI under constraint: future high-stakes operators, critical infrastructure teams.
+## 2. Experience Model
 
-Design implication: copy must be readable by a smart 16-year-old and respectable to a working SOC engineer. Explain everything once, tersely, in-mission.
+Two surfaces, one loop.
 
-## The Two Surfaces
+**Cursor is the cockpit.** Evidence files in the editor, Cursor Chat running
+local Gemma as the only AI, the answer artifact (`answer.json`) edited in the
+workspace, the arena open in Cursor's in-app browser. We teach people to fly
+the editor they already have. We never rebuild an IDE on the web.
 
-1. **Cursor is the cockpit.** Mission execution happens in a Cursor workspace: reading briefs, inspecting synthetic evidence, editing code, running `cybertf` commands, interrogating local Gemma4. We are not building an IDE; we are teaching people to fly the one they have.
-2. **The web arena is the scoreboard.** Callsign, mission board, submissions, leaderboards, ranks, season framing. It makes the league feel alive. It never replaces the cockpit.
+**The web arena is the mission board and scoreboard.** Pick missions, read
+the control page, submit runs, get the AAR view, climb the leaderboard, see
+the operator record. Every arena page keeps the "solve it in Cursor" loop
+explicit.
 
-## Information Architecture (web arena)
+**Local Gemma is the constrained field AI.** Useful, fast, sometimes wrong.
+It simulates edge deployments where cloud AI is unavailable, untrusted, or
+too slow. It is the mission AI, not the judge. The `cybertf` CLI is support
+scaffolding: it arms timers, scores runs, publishes results. Present it as
+scaffolding, never as the skill.
 
-- `/`: Operations home: season banner, enlist (callsign entry), mission board, live leaderboard strip, Gemma4 LOCAL/OFFLINE badge.
-- `/missions`: Mission board: event cards grouped by type (Qualification, Sprint, Field, Relay, Marathon), difficulty pips, timebox, XP, skills tested.
-- `/missions/[id]`: Mission briefing: summary, skills, cockpit instructions (exact `cybertf` commands), submission panel.
-- `/leaderboard`: Scoreboard: global / per-mission / season scopes, elapsed-time column, suspicious-time flags, rank insignia.
-- `/operators/[callsign]`: Service record: rank, XP, mission history, dimension strengths.
-- `/qualification`: Basic Qualification onboarding page mirroring the tutorial mission.
+**Mission loop (design every screen against this):**
 
-Every page keeps the "solve it in Cursor" loop explicit: the arena issues missions and receives artifacts; it never hosts the work.
+1. Setup once: Cursor, workspace, Ollama, pull Gemma, verify, claim callsign.
+2. Pick a mission on the arena board. Start the run (timer arms).
+3. Read the evidence files in Cursor.
+4. Ask Cursor Chat (local Gemma) with the right files and context.
+5. Verify or reject the model's claims against the evidence.
+6. Edit the answer artifact in Cursor.
+7. Submit. Deterministic scoring, AAR written, XP awarded.
+8. Publish to the arena. Leaderboard row, rank progress, operator record.
 
-## Visual Direction
+## 3. Visual System
 
-**Feel:** a dark, quiet, confident tactical operations center. MMORPG/esports command hub, not literal FPS. Cinematic restraint: the intensity comes from typography, spacing, and signal colors, not decoration.
+**Feel:** premium developer-tool cockpit with restrained tactical/MMORPG
+progression. Quiet, confident, dark-first. Intensity comes from typography,
+spacing, and signal color, never decoration.
 
-### Color
+### Dark theme tokens (primary identity)
 
-| Token | Value | Use |
+| Token | Value | Role |
 |---|---|---|
-| `--bg` | `#07090c` | page background (near-black, blue-cold) |
-| `--panel` | `#0e1319` | cards, panels |
-| `--panel-2` | `#141c26` | raised elements, inputs |
-| `--line` | `#1f2a38` | hairline borders |
-| `--text` | `#e6edf4` | primary text |
-| `--muted` | `#8fa1b3` | secondary text |
-| `--signal` | `#3ddc97` | success, verified, Gemma-online (phosphor green) |
-| `--amber` | `#ffb547` | timers, warnings, in-progress |
-| `--alert` | `#ff5d5d` | failures, suspicious flags |
-| `--ice` | `#5cc8ff` | links, interactive accents, rank accents |
+| `--bg` | `#0B0F14` | page background, near black, blue-cold |
+| `--bg-2` | `#0D1219` | gradient partner for `--bg` |
+| `--panel` | `#13181F` | cards, panels (graphite) |
+| `--panel-2` | `#1C2430` | raised elements, inputs (deep slate) |
+| `--panel-3` | `#232D3A` | highest surface |
+| `--line` | `#232D3A` | hairline borders |
+| `--line-strong` | `#33404F` | emphasized borders, HUD corners |
+| `--text` | `#E6E9EE` | primary text (off white) |
+| `--muted` | `#95A3B3` | secondary text (steel) |
+| `--signal` | `#3BD671` | signal green |
+| `--ice` | `#44C2FF` | cyan |
+| `--amber` | `#FFB020` | amber |
+| `--alert` | `#FF5D5D` | alert red |
 
-Rule: one signal color per component. Never gradient-soup. Backgrounds may carry a faint scanline or topographic texture at ≤4% opacity: atmosphere, never noise.
+### Light theme tokens (gray/steel daylight console)
 
-### Type
+Light mode is lighter than dark mode, not white. Think gray daylight command
+console: soft steel surfaces, muted grid, low eye strain. No paper-white
+backgrounds anywhere. Target values (tune for contrast, keep the steel feel):
 
-- Display/headers: a compressed industrial sans (system stack fallback: `"Barlow Condensed", "Arial Narrow", sans-serif`), uppercase, tight tracking for mission names and section labels.
-- Body: system UI sans.
-- Data (callsigns, timers, scores, run IDs): monospace (`"JetBrains Mono", ui-monospace, monospace`).
-- Timers and scores are the heroes: large mono numerals.
+| Token | Target | Role |
+|---|---|---|
+| `--bg` | `#C2CBD4` | steel gray page background |
+| `--bg-2` | `#B7C1CB` | gradient partner |
+| `--panel` | `#D3DAE1` | cards, panels |
+| `--panel-2` | `#C7CFD7` | raised elements, inputs |
+| `--panel-3` | `#BAC4CD` | highest surface |
+| `--line` | `#9FACB9` | hairline borders |
+| `--line-strong` | `#7E8D9B` | emphasized borders |
+| `--text` | `#131A21` | primary text |
+| `--muted` | `#42505D` | secondary text |
+| `--signal` | `#0C7A43` | signal green, darkened for contrast |
+| `--ice` | `#0A6DA6` | cyan, darkened |
+| `--amber` | `#8A5A00` | amber, darkened |
+| `--alert` | `#B32E2E` | alert, darkened |
 
-### Motion
+All text/background pairs must pass WCAG AA (4.5:1 body, 3:1 large text).
 
-- Fast and rare: 120–200ms ease-out on state changes.
-- One permitted flourish: leaderboard rows may pulse `--signal` once on insert.
-- A blinking block cursor may appear in headers as a terminal motif.
-- No parallax, no continuous animation loops, no 3D.
+### Accent roles (both themes)
 
-### Components
+- `--signal` green: success, verified, local Gemma online, XP, primary CTA.
+- `--ice` cyan: links, interactive accents, the active mission state.
+- `--amber`: timers, warnings, unverified hypotheses, suspicious-time flags.
+- `--alert` red: failures and integrity violations only. Rare by design.
 
-- **Mission card:** event-type tag (SPRINT/FIELD/RELAY/MARATHON), title, difficulty pips (▮▮▯), timebox, XP, 1-line summary, status.
-- **Leaderboard row:** position, rank insignia glyph, callsign (mono), score, elapsed time, mission, flags. Suspicious rows get an `--alert` "UNVERIFIED · SUSPICIOUS TIME" tag and muted styling: flagged, not celebrated.
-- **Gemma badge:** persistent header pill: `● GEMMA4 · LOCAL · OFFLINE` in `--signal`.
-- **Rank insignia:** original abstract chevron/delta glyphs built from unicode/SVG strokes. Nothing copied from real militaries or games.
+One signal color per component. If a card needs two accents, it is two
+components. Never gradient-soup.
 
-## Mission Tone
+### Surfaces, borders, texture
 
-Briefs are written like calm field dispatches: second person, present tense, short paragraphs, no jargon walls, no hoo-ah theatrics, no real-world adversaries or nations. Missions name fictional systems (Relay Station K4, HALCYON sensor grid). Every mission includes: situation, objective, constraints (local Gemma4 only), deliverable, and the exact commands to start.
+- Surface hierarchy: `--bg` page, `--panel` card, `--panel-2` raised element
+  or input, `--panel-3` sparingly for the highest layer. Never skip levels
+  for contrast tricks; adjust borders instead.
+- Borders are 1px hairlines in `--line`; use `--line-strong` for emphasis and
+  HUD corner brackets (the `.hud-corners` utility). Border radius is 2px.
+  CyberTrack is squared-off; anything rounder than 2px reads as generic SaaS.
+- Background texture: faint grid (`.ops-grid-bg`) or scanline at 4% opacity
+  or less. Atmosphere, never noise. One texture per page maximum.
+- Glow: allowed only as a soft box-shadow on the single hero element of a
+  page (score ring, hero panel) and on the pulse dot. Never on text, borders,
+  buttons, or more than one element per viewport.
 
-Every mission teaches one honest lesson about operating with constrained AI: verify the model, catch the hallucination, recover from the bad hint, write the handoff. Red herrings are fair: discoverable from evidence in the workspace, never gotchas requiring outside knowledge.
+## 4. Typography
 
-## Ranks & Progression
+Three families, three jobs:
 
-Original ladder (fictional, training-progression feedback only):
+- **Display** (`Barlow Condensed`): page titles, section labels, mission
+  names, buttons, tags. Uppercase. Weights 600 to 800.
+- **Body** (system UI sans): paragraphs, descriptions, list items. Weight 400;
+  600 for inline emphasis. Never uppercase body text.
+- **Mono** (`JetBrains Mono`): callsigns, timers, scores, XP, run IDs, file
+  paths, commands. Timers and scores are the heroes: large mono numerals.
 
-Recruit → Operator → Specialist → Sentinel → Warden → Commander → Field Marshal
+Rules:
 
-- Promotion = XP thresholds. XP = score quality × mission difficulty.
-- Promotions are announced like unlocks ("PROMOTION CONFIRMED: SPECIALIST"), quick and satisfying, never gatekeeping.
-- Speed matters but never beats correctness: time contributes ≤10% of mission score, and impossible times get flagged, not rewarded.
+- All-caps is for display-family labels 14px and under, plus page titles.
+  If a string is a full sentence, it is body text and never all-caps.
+- Letter-spacing scales inversely with size: 0.10 to 0.14em on small labels
+  (10 to 12px), 0.04 to 0.06em on buttons and titles, none on body or mono.
+- Body text: 13.5 to 15px at line-height 1.6 to 1.7, max width about 65ch.
+- Dense screens (mission detail): one type size for all body content, one for
+  all labels. Hierarchy comes from weight and color (`--text` vs `--muted`),
+  not from adding more sizes. If a screen uses more than five distinct font
+  sizes, remove some.
+- Minimum sizes: 10px for display labels, 12px for anything users must read.
 
-## Season Framing
+## 5. Layout Rhythm
 
-Season Zero is the proving format: Qualification → Sprint → Field → Relay → Marathon. Future content ships as season/DLC-style mission packs (Degraded Comms, Drone Logistics, Critical Infrastructure, Disaster Response). Missions are data-driven so packs are additive.
+- Container: max-width 1240px, 20px side padding. Section padding clamps
+  around 30 to 48px vertical. Hairline dividers between page sections.
+- Section headers use the `.section-label` pattern: mono index, uppercase
+  label, rule line filling the remaining width.
+- Cards: 18 to 24px internal padding, 13 to 18px gap between stacked blocks.
+  Grids gap at 14 to 18px. Never pack panels edge to edge.
+- Negative space is a feature. Every page should have one clearly dominant
+  element (hero, HUD strip, podium, score ring). If everything is loud,
+  nothing is.
+- Two-column pages (mission detail, profile, setup): main column plus a
+  300 to 420px aside. The aside is sticky on desktop, stacks below on mobile.
+- Mission detail must scan top to bottom as: identity (title, tags, summary),
+  HUD strip (timebox, status, reward, constraint), the numbered Cursor
+  mission loop, evidence checklist, then support commands demoted at the
+  bottom. Scoring and top runs live in the aside.
+- Mobile: single column, no horizontal overflow at 390px. Rails become
+  vertical lists. Verify overflow on every touched page before shipping.
 
-## What To Avoid
+## 6. Components
 
-- Call of Duty (or any game's) protected assets, names, UI, fonts, layouts, or trade dress.
-- Real military insignia, unit names, real nations as adversaries, real classified/operational references.
-- Hiring/screening/selection/ranking-people language anywhere.
-- Dashboard-speak: "analytics", "KPIs", "insights", chart-first layouts.
-- Overdecorated sci-fi: excessive glows, HUD clutter, fake 3D, lens flares.
-- Claiming cloud AI features. The only player-facing model is local Gemma4. Simulation mode, when used for development, is always labeled.
+Concrete patterns. Reuse these; do not invent parallel versions.
+
+- **Wordmark:** CYBERTRACK in display 800, all caps, followed by a small
+  signal-green underscore block that blinks like a terminal caret. Never
+  italicized, never gradiented.
+- **Local Gemma status chip:** outlined pill, pulse dot, `LOCAL GEMMA4`
+  (+ `ONLINE` in full size) in signal green on a 8 to 13% signal tint.
+  Present in the header on every page. A `100% LOCAL` variant may appear on
+  scoring surfaces.
+- **Season progress map:** horizontal rail of mission nodes joined by route
+  lines. Node states: completed (green check ring), active (cyan reticle),
+  available (plain ring), locked (dashed ring, padlock), advanced (amber
+  diamond). Route lines: solid green completed, solid cyan active, dashed
+  available, dotted locked. Always include a compact legend. Do not
+  functionally lock missions in the demo.
+- **Mission dossier card:** hex-badged mission glyph, index number, event-type
+  tag, slope difficulty badge, title, one-line objective, meta grid (timebox,
+  XP, AI allowed), scored-on chips, evidence file list, Start Mission button
+  plus a quiet Top Runs link.
+- **Active mission cockpit (web):** breadcrumb + Gemma chip status bar,
+  mission head, HUD strip (5 cells desktop, 2-col mobile), numbered mission
+  loop with copy buttons only on the bookend commands, evidence checklist,
+  demoted support-commands block.
+- **Evidence checklist:** toggleable file rows (`challenges/<id>/data/<file>`)
+  with check marks and an `n/m REVIEWED` mono counter. Session-local state;
+  the CLI is the scoring source of truth.
+- **Cursor Chat / local Gemma panel (illustrative):** stylized concept sketch
+  only: files pane, answer editor pane, chat exchange where the player
+  catches a wrong claim. Clearly a sketch, never a pixel copy of Cursor and
+  never fake terminal output.
+- **Submission panel:** the submit/publish commands with copy buttons, plus
+  the deterministic-scoring note and flag threshold. Submission happens via
+  CLI; the panel explains it, it does not fake a web submit.
+- **AAR score ring:** large circular progress ring, mono score over `/100`
+  centered. One per screen, may carry the page's single glow.
+- **Metric bars:** label left, mono `n/100` or percent right, 4px track below
+  filled by score color (green 80+, amber 50 to 79, alert below 50).
+- **Rank badge / XP strip:** hex plate with initial, tiered diamond chevrons,
+  rank name in display caps, mono XP, thin progress bar toward next rank.
+  Original abstract geometry only, no real-world insignia.
+- **Leaderboard row:** position, callsign (mono, link), rank marks + name,
+  mono XP or score, missions/time. Demo seed rows carry a detached boxed
+  `demo` tag that never reads as part of the callsign.
+- **Suspicious-time flag:** amber triangle icon plus `Suspicious time` tag;
+  row muted at about 60% opacity, position replaced by the icon, zero XP.
+  Flagged, not celebrated.
+- **Setup wizard:** six expandable steps with persisted completion, segment
+  progress bar, aside with support commands, rank ladder, roadmap note.
+- **Welcome briefing:** four-step modal (mission, cockpit, arena, get
+  started) shown on first visit, replayable from the header `?` button.
+- **Footer:** one line of identity, the training-not-hiring rule, creator
+  credit with labeled X/LinkedIn links. Quiet; never navigation soup.
+
+## 7. Mission Design
+
+- Missions are rich scenarios with fictional systems (Relay Station K4,
+  HALCYON grid), written as calm field dispatches: situation, objective,
+  constraints, deliverable, start commands. Second person, present tense.
+- No copy/paste gameplay. A mission is broken if it can be completed by
+  pasting commands without reading evidence. The work is reading files,
+  reasoning, and writing a decision.
+- Every mission ships evidence artifacts (logs, configs, rosters, sitreps,
+  code, tests) that contain the answer and at least one tempting false lead.
+  Red herrings must be discoverable from the evidence, never outside
+  knowledge.
+- Every mission plants at least one bad model hypothesis: a claim local
+  Gemma will plausibly make that the evidence disproves.
+- The deliverable is an operator decision plus rationale in `answer.json`:
+  finding, evidence paths cited, and where the format asks for it, the
+  verdict on the model's claim.
+- Design for deterministic footprints of skepticism: planted claims have
+  known IDs and known disproving evidence, so catching or missing them is
+  checkable without a model in the grading loop.
+
+## 8. Scoring and AAR
+
+- Scoring is deterministic and reproducible from run artifacts alone. No
+  model grades you. Re-running a submission yields the same score.
+- Dimensions and what they mean: mission completion (right answer), evidence
+  discipline (cited the files that prove it), model skepticism /
+  hallucination resistance (caught planted bad claims), recovery from bad AI
+  guidance (corrected course after a wrong hypothesis), prompt discipline
+  (asked with the right context), communication quality (clear rationale,
+  uncertainty language), time-to-signal (speed, capped at 10% of score),
+  tool reliability, terminal recovery, local/offline compliance (real local
+  model verified, no cloud).
+- The AAR must show: per-dimension scores with the specific checks behind
+  them, the run timeline, the moment the model was wrong and what the player
+  did about it, and an integrity footer (local model verified, time within
+  bounds, telemetry state).
+- Gemma may narrate a debrief in the AAR. Label it as narrative that does
+  not affect the score. Gemma is the field AI being challenged; the grader
+  is the deterministic scorer with the answer key. Keep those roles visually
+  and verbally separate everywhere.
+- Suspicious times earn zero XP and a flag. Evidence beats speed.
+
+## 9. Copy Voice
+
+- Concrete over abstract. Name the player action: opens Cursor, asks local
+  Gemma, checks logs, rejects a bad hypothesis, fixes the config, submits
+  evidence, reads the AAR, climbs the leaderboard.
+- Short over grand. One sentence does one job. Cut thesis sentences.
+- No em dashes anywhere in user-facing copy. Use periods, commas, colons, or
+  parentheses.
+- Banned words unless literal: pivotal, transformative, showcase,
+  underscores, highlights, crucial, foster, enduring, robust, cutting-edge,
+  seamless, leverage. Banned structures: "In summary", "Overall", "Let's
+  walk through", "This guide explores", "Not only X but also Y", "From X to
+  Y", "It is important to remember".
+- Preferred terms: Cursor, Cursor Chat, local Gemma, evidence, AAR,
+  leaderboard, timed mission, callsign, XP, rank, Season Zero. Use
+  "operator", "mission", and "arena" where they earn their place; use
+  simpler words elsewhere.
+- Banned framing: hiring/screening/selection language, real militaries or
+  nations, offensive-security language, "analytics/KPIs/insights"
+  dashboard-speak.
+- Mission briefs: calm, terse, no hoo-ah theatrics, readable by a smart
+  16-year-old, respectable to a SOC engineer.
+
+## 10. Demo Principles
+
+- One complete loop beats a feature tour. The demo beat that carries the
+  product: local Gemma confidently gives a wrong answer, the player catches
+  it against the evidence, the deterministic score rewards the catch, the
+  AAR and leaderboard show it.
+- Always show Cursor, local Gemma, evidence files, the correction, and the
+  AAR together. The website alone is not the product; never let a demo
+  linger on the arena without pointing back at the cockpit.
+- Show the suspicious-time flag once. Integrity is a feature.
+- Keep the CLI visible only at the bookends (start, submit, publish).
+- State the honest boundaries out loud: ephemeral demo store, hash-based
+  validation tier, which missions were flown end to end.
+
+## 11. Anti-Patterns
+
+Reject these on sight, in code review and in design review:
+
+- Dashboard clutter: chart-first layouts, KPI grids, more than one hero per
+  viewport.
+- Fake terminal theater: scripted fake output that misrepresents how players
+  actually work. Sketches must teach the real workflow.
+- White-paper light mode: paper-white backgrounds, default-Bootstrap gray.
+  Light mode is steel, not paper.
+- All-caps overuse: uppercase body text, uppercase sentences, shouting labels
+  above 14px.
+- Copy/paste missions: any mission solvable without reading evidence.
+- Generic SaaS cards: large border radii, drop-shadow stacks, pastel
+  gradients, emoji icons.
+- Military cosplay: real insignia, camo, weapons, soldiers, ranks copied
+  from real forces, war imagery. Restrained tactical is a texture, not a
+  costume.
+- Cloud AI confusion: any UI or copy implying a cloud model plays or grades.
+  The only player-facing model is local Gemma; simulation mode is always
+  labeled.
+- Decoration creep: second glow, second texture, second accent per
+  component, animation loops, parallax, fake 3D.
