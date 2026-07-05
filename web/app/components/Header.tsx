@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
+import { openWelcomeWizard } from "./WelcomeWizard";
 import { Wordmark, GemmaStatus } from "./svg";
 import styles from "./Header.module.css";
 
@@ -40,6 +41,15 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
+          <button
+            type="button"
+            className={styles.briefBtn}
+            onClick={openWelcomeWizard}
+            aria-label="Replay the welcome briefing"
+            title="Replay the welcome briefing"
+          >
+            ?
+          </button>
           <ThemeToggle />
         </nav>
       </div>

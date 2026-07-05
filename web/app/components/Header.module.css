@@ -57,6 +57,27 @@
   background: var(--paper);
 }
 
+.briefBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  margin-left: 4px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--panel-2);
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+.briefBtn:hover {
+  color: var(--signal);
+  border-color: var(--signal);
+}
+
 @media (max-width: 760px) {
   .badge { display: none; }
 }
