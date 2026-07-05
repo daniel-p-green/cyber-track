@@ -319,7 +319,7 @@ def build_parser() -> argparse.ArgumentParser:
         nargs="?",
         const="offline",
         default=None,
-        choices=["offline", "elevenlabs"],
+        choices=["offline", "elevenlabs", "openai", "piper", "local"],
         help="Play the mission voice briefing (default: offline macOS say)",
     )
     s.set_defaults(func=cmd_brief)
@@ -328,7 +328,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("mission_id")
     s.add_argument("--no-telemetry", action="store_true")
     s.add_argument("--audio", action="store_true")
-    s.add_argument("--voice", default="offline", choices=["offline", "elevenlabs"])
+    s.add_argument("--voice", default="offline", choices=["offline", "elevenlabs", "openai", "piper", "local"])
     s.set_defaults(func=cmd_run)
 
     s = sub.add_parser("ask", help="Ask the local Gemma4 field AI")
