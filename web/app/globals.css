@@ -207,14 +207,16 @@ input, textarea, select {
   color: var(--bg);
   text-decoration: none;
 }
+/* Outlined cyan action — deploy/replay/scoreboard style from the brand sheet */
 .btn-outline {
-  background: transparent;
-  color: var(--text);
-  border-color: var(--line-strong);
+  background: color-mix(in srgb, var(--ice) 4%, transparent);
+  color: var(--ice);
+  border-color: color-mix(in srgb, var(--ice) 50%, transparent);
 }
 .btn-outline:hover {
-  border-color: var(--text);
-  color: var(--text);
+  border-color: var(--ice);
+  background: color-mix(in srgb, var(--ice) 10%, transparent);
+  color: var(--ice);
   text-decoration: none;
 }
 

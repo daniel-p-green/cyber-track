@@ -5,6 +5,8 @@ import {
   MissionGlyph,
   RailNode,
   GemmaStatus,
+  LocalChip,
+  HexBadge,
   SlopeBadge,
   IconFile,
   IconTimer,
@@ -14,6 +16,13 @@ import styles from "./page.module.css";
 
 function nodeState(index: number): NodeState {
   return index === 0 ? "active" : "available";
+}
+
+function lineClass(state: NodeState): string {
+  if (state === "completed") return styles.lineCompleted;
+  if (state === "active") return styles.lineActive;
+  if (state === "locked") return styles.lineLocked;
+  return styles.lineAvailable;
 }
 
 export default function MissionsPage() {
@@ -34,7 +43,10 @@ export default function MissionsPage() {
             </p>
           </div>
           <div className={styles.edgeStatus}>
-            <GemmaStatus />
+            <span className={styles.chipRow}>
+              <GemmaStatus />
+              <LocalChip />
+            </span>
             <span className={`mono ${styles.edgeNote}`}>edge mode · offline inference</span>
           </div>
         </div>
@@ -46,7 +58,12 @@ export default function MissionsPage() {
               const slope = slopeForDifficulty(m.difficulty);
               return (
                 <Link key={m.id} href={`/missions/${m.id}`} className={styles.railStop}>
-                  {i > 0 && <span className={styles.railLine} aria-hidden />}
+                  {i > 0 && (
+                    <span
+                      className={`${styles.railLine} ${lineClass(nodeState(i))}`}
+                      aria-hidden
+                    />
+                  )}
                   <RailNode state={nodeState(i)} size={38}>
                     <MissionGlyph eventType={m.event_type} missionId={m.id} size={19} />
                   </RailNode>
@@ -60,7 +77,21 @@ export default function MissionsPage() {
           </div>
         </div>
 
-        {/* Slope key */}
+        {/* Route + slope keys */}
+        <div className={styles.routeKey} aria-label="Route line key">
+          <span className={styles.routeKeyItem}>
+            <i className={`${styles.routeSample} ${styles.lineCompleted}`} /> Completed
+          </span>
+          <span className={styles.routeKeyItem}>
+            <i className={`${styles.routeSample} ${styles.lineActive}`} /> Active
+          </span>
+          <span className={styles.routeKeyItem}>
+            <i className={`${styles.routeSample} ${styles.lineAvailable}`} /> Available
+          </span>
+          <span className={styles.routeKeyItem}>
+            <i className={`${styles.routeSample} ${styles.lineLocked}`} /> Locked
+          </span>
+        </div>
         <div className={styles.slopeKey}>
           <SlopeBadge slope="green" label="Green: qualification" size={12} />
           <SlopeBadge slope="blue" label="Blue: sprint" size={12} />
@@ -75,9 +106,9 @@ export default function MissionsPage() {
             return (
               <article key={m.id} className={`panel hud-corners ${styles.dossier}`}>
                 <header className={styles.dossierHead}>
-                  <span className={styles.dossierIcon}>
-                    <MissionGlyph eventType={m.event_type} missionId={m.id} size={22} />
-                  </span>
+                  <HexBadge size={46} tone="muted" className={styles.dossierIcon}>
+                    <MissionGlyph eventType={m.event_type} missionId={m.id} size={21} />
+                  </HexBadge>
                   <div className={styles.dossierId}>
                     <span className={`mono ${styles.dossierNum}`}>
                       {String(i + 1).padStart(2, "0")}

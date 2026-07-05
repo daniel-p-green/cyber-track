@@ -6,11 +6,16 @@ import { eventTypeLabel, eventTypeColor, formatElapsed, slopeForDifficulty } fro
 import {
   MissionGlyph,
   GemmaStatus,
+  LocalChip,
+  HexBadge,
+  VerifyChip,
+  ScoreRing,
   SlopeBadge,
   IconTimer,
   IconChat,
   IconSuspicious,
   IconOffline,
+  IconBars,
 } from "../../components/svg";
 import CopyCmd from "../../components/CopyCmd";
 import EvidenceChecklist from "../../components/EvidenceChecklist";
@@ -50,6 +55,7 @@ export default async function MissionCockpit({ params }: Props) {
     title: string;
     note: string;
     cmds?: string[];
+    verifyChips?: boolean;
   }[] = [
     {
       title: "Start the run",
@@ -67,6 +73,7 @@ export default async function MissionCockpit({ params }: Props) {
     {
       title: "Verify or reject the model's claims",
       note: "Check every hypothesis against the evidence. Catching a wrong one is scored.",
+      verifyChips: true,
     },
     {
       title: "Edit answer.json in the editor",
@@ -96,14 +103,17 @@ export default async function MissionCockpit({ params }: Props) {
             <Link href="/missions">← Mission Board</Link>
             <span className="muted">/ {mission.title}</span>
           </div>
-          <GemmaStatus compact />
+          <span className={styles.statusChips}>
+            <GemmaStatus compact />
+            <LocalChip compact />
+          </span>
         </div>
 
         {/* Mission head */}
         <header className={styles.missionHead}>
-          <span className={styles.missionIcon}>
-            <MissionGlyph eventType={mission.event_type} missionId={mission.id} size={26} />
-          </span>
+          <HexBadge size={56} tone="muted" className={styles.missionIcon}>
+            <MissionGlyph eventType={mission.event_type} missionId={mission.id} size={24} />
+          </HexBadge>
           <div className={styles.headText}>
             <div className={styles.headTags}>
               <span className={`tag ${eventTypeColor(mission.event_type)}`}>
@@ -167,6 +177,12 @@ export default async function MissionCockpit({ params }: Props) {
                     <div className={styles.seqBody}>
                       <span className={`display ${styles.seqTitle}`}>{step.title}</span>
                       <span className={styles.seqNote}>{step.note}</span>
+                      {step.verifyChips && (
+                        <span className={styles.verifyRow}>
+                          <VerifyChip kind="warning" compact />
+                          <VerifyChip kind="corrected" compact />
+                        </span>
+                      )}
                       {step.cmds?.map((cmd) => (
                         <div key={cmd} className={styles.seqCmdRow}>
                           <code className={`mono ${styles.seqCmd}`}>
@@ -246,7 +262,23 @@ export default async function MissionCockpit({ params }: Props) {
                 {sortedSubs.length === 0 ? (
                   <div className={styles.empty}>No runs posted yet. Be first on the board.</div>
                 ) : (
-                  <table className={styles.table}>
+                  <>
+                    {!sortedSubs[0].flags.suspicious_fast && (
+                      <div className={styles.bestRun}>
+                        <ScoreRing
+                          score={sortedSubs[0].total}
+                          max={sortedSubs[0].max_total}
+                          size={86}
+                        />
+                        <div className={styles.bestRunText}>
+                          <span className={`display ${styles.bestRunLabel}`}>Best posted run</span>
+                          <span className={`mono ${styles.bestRunMeta}`}>
+                            {sortedSubs[0].callsign} · {formatElapsed(sortedSubs[0].elapsed_seconds)}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    <table className={styles.table}>
                     <thead>
                       <tr>
                         <th>#</th>
@@ -291,12 +323,13 @@ export default async function MissionCockpit({ params }: Props) {
                         );
                       })}
                     </tbody>
-                  </table>
+                    </table>
+                  </>
                 )}
               </div>
 
               <Link href="/leaderboard" className={`btn btn-outline ${styles.fullBoard}`}>
-                Full Arena →
+                <IconBars size={13} /> Full Arena
               </Link>
             </section>
           </aside>

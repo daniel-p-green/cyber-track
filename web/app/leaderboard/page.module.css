@@ -6,6 +6,13 @@
   justify-content: space-between;
   gap: 20px;
   margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.headerChips {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 .kicker {
   display: inline-flex;

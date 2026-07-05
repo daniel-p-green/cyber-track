@@ -7,9 +7,11 @@ import {
   MissionGlyph,
   RailNode,
   SlopeBadge,
+  VerifyChip,
   IconChat,
   IconOffline,
   IconExternal,
+  IconBars,
   type NodeState,
 } from "./components/svg";
 import ZuluClock from "./components/ZuluClock";
@@ -56,6 +58,14 @@ const SETUP_LINKS = [
 
 function nodeState(index: number): NodeState {
   return index === 0 ? "active" : "available";
+}
+
+/* Route segment style keys off the node it leads into */
+function lineClass(state: NodeState): string {
+  if (state === "completed") return styles.lineCompleted;
+  if (state === "active") return styles.lineActive;
+  if (state === "locked") return styles.lineLocked;
+  return styles.lineAvailable;
 }
 
 export default async function Home() {
@@ -111,7 +121,7 @@ export default async function Home() {
                   Enter Season Zero
                 </Link>
                 <Link href="/missions" className="btn btn-outline">
-                  Mission Board
+                  <IconBars size={13} /> Mission Board
                 </Link>
               </div>
             </div>
@@ -154,17 +164,23 @@ export default async function Home() {
                   <span className={styles.paneLabel}>
                     Cursor Chat · Gemma (local)
                   </span>
-                  <div className={`${styles.msg} ${styles.msgYou}`}>
+                  <div className={`${styles.msg} ${styles.d1} ${styles.msgYou}`}>
                     Which relay does the advisory blame?
                   </div>
-                  <div className={`${styles.msg} ${styles.msgAi}`}>
+                  <div className={`${styles.msg} ${styles.d2} ${styles.msgAi}`}>
                     Relay R-7 caused the outage.
                   </div>
-                  <div className={`${styles.msg} ${styles.msgYou}`}>
+                  <div className={`${styles.msg} ${styles.d3} ${styles.chipRow}`}>
+                    <VerifyChip kind="warning" compact />
+                  </div>
+                  <div className={`${styles.msg} ${styles.d4} ${styles.msgYou}`}>
                     R-7 isn&apos;t in the roster. <span className="amber">Verify.</span>
                   </div>
-                  <div className={`${styles.msg} ${styles.msgAi}`}>
+                  <div className={`${styles.msg} ${styles.d5} ${styles.msgAi}`}>
                     Correct. The claim fails against relay_roster.txt.
+                  </div>
+                  <div className={`${styles.msg} ${styles.d6} ${styles.chipRow}`}>
+                    <VerifyChip kind="corrected" compact />
                   </div>
                 </div>
               </div>
@@ -251,7 +267,12 @@ export default async function Home() {
               const slope = slopeForDifficulty(m.difficulty);
               return (
                 <Link key={m.id} href={`/missions/${m.id}`} className={styles.railStop}>
-                  {i > 0 && <span className={styles.railLine} aria-hidden />}
+                  {i > 0 && (
+                    <span
+                      className={`${styles.railLine} ${lineClass(nodeState(i))}`}
+                      aria-hidden
+                    />
+                  )}
                   <RailNode state={nodeState(i)} size={44}>
                     <MissionGlyph eventType={m.event_type} missionId={m.id} size={22} />
                   </RailNode>
@@ -269,6 +290,20 @@ export default async function Home() {
                 </Link>
               );
             })}
+          </div>
+          <div className={styles.routeKey} aria-label="Route line key">
+            <span className={styles.routeKeyItem}>
+              <i className={`${styles.routeSample} ${styles.lineCompleted}`} /> Completed
+            </span>
+            <span className={styles.routeKeyItem}>
+              <i className={`${styles.routeSample} ${styles.lineActive}`} /> Active
+            </span>
+            <span className={styles.routeKeyItem}>
+              <i className={`${styles.routeSample} ${styles.lineAvailable}`} /> Available
+            </span>
+            <span className={styles.routeKeyItem}>
+              <i className={`${styles.routeSample} ${styles.lineLocked}`} /> Locked
+            </span>
           </div>
           <div className={styles.slopeKey}>
             <SlopeBadge slope="green" label="Green: qualification" size={12} />

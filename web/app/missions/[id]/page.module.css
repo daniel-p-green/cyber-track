@@ -13,6 +13,12 @@
   font-size: 13px;
   min-width: 0;
 }
+.statusChips {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
 
 /* ── Mission head ──────────────────────────────────────────────────────── */
 .missionHead {
@@ -22,16 +28,7 @@
   margin-bottom: 18px;
 }
 .missionIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 54px;
-  height: 54px;
-  border: 1px solid var(--line-strong);
-  border-radius: 2px;
   color: var(--signal);
-  background: var(--panel);
-  flex-shrink: 0;
   margin-top: 4px;
 }
 .headText { min-width: 0; }
@@ -187,6 +184,12 @@
   color: var(--muted);
   line-height: 1.5;
 }
+.verifyRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
 
 /* Evidence */
 .evidenceBlock {
@@ -274,6 +277,31 @@
 
 /* Leader table */
 .leaderBlock { padding: 16px 18px 8px; }
+.bestRun {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 4px 0 14px;
+}
+.bestRunText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.bestRunLabel {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.bestRunMeta {
+  font-size: 12px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .table {
   width: 100%;
   border-collapse: collapse;

@@ -38,6 +38,12 @@
   gap: 6px;
   flex-shrink: 0;
 }
+.chipRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 .edgeNote {
   font-size: 10px;
   color: var(--muted);
@@ -69,9 +75,38 @@
 .railLine {
   position: absolute;
   top: 19px;
-  right: calc(50% + 26px);
-  width: calc(100% - 52px);
-  border-top: 1.5px dashed var(--line-strong);
+  right: calc(50% + 30px);
+  width: calc(100% - 60px);
+  border-top: 2px dashed var(--line-strong);
+}
+/* Route line states per the brand sheet */
+.lineCompleted { border-top-style: solid; border-top-color: var(--signal); }
+.lineActive    { border-top-style: solid; border-top-color: var(--ice); }
+.lineAvailable { border-top-style: dashed; border-top-color: var(--line-strong); }
+.lineLocked    { border-top-style: dotted; border-top-color: var(--line-strong); }
+
+.routeKey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin-bottom: 10px;
+}
+.routeKeyItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.routeSample {
+  display: inline-block;
+  width: 34px;
+  border-top: 2px dashed var(--line-strong);
 }
 .railLabel {
   font-size: 11.5px;
@@ -109,16 +144,7 @@
   gap: 12px;
 }
 .dossierIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--line-strong);
-  border-radius: 2px;
   color: var(--signal);
-  background: var(--panel-2);
-  flex-shrink: 0;
 }
 .dossierId {
   display: flex;

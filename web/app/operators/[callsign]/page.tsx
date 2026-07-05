@@ -8,12 +8,17 @@ import {
   MissionGlyph,
   RankPlate,
   RankChevrons,
+  HexBadge,
+  ScoreRing,
   SlopeBadge,
   IconGitHub,
   IconX,
   IconSuspicious,
   IconOffline,
   IconTimer,
+  IconEvidence,
+  IconChat,
+  IconTerminal,
 } from "../../components/svg";
 import styles from "./page.module.css";
 
@@ -42,6 +47,18 @@ function getBestDimensions(subs: Submission[]): Record<string, { points: number;
     }
   }
   return best;
+}
+
+/* Metric icon per scoring dimension — falls back to the evidence mark */
+function DimIcon({ dim, size = 13 }: { dim: string; size?: number }) {
+  switch (dim) {
+    case "time_to_signal": return <IconTimer size={size} />;
+    case "local_offline_compliance": return <IconOffline size={size} />;
+    case "terminal_recovery": return <IconTerminal size={size} />;
+    case "communication_quality":
+    case "prompt_discipline": return <IconChat size={size} />;
+    default: return <IconEvidence size={size} checked={false} />;
+  }
 }
 
 const DIM_LABELS: Record<string, string> = {
@@ -314,7 +331,9 @@ export default async function OperatorRecordPage({ params }: Props) {
                       className={`${styles.badge} ${earned ? styles.badgeEarned : ""}`}
                       title={`${m.title}${earned ? " (completed)" : ""}`}
                     >
-                      <MissionGlyph eventType={m.event_type} missionId={m.id} size={18} />
+                      <HexBadge size={44} tone={earned ? "signal" : "muted"}>
+                        <MissionGlyph eventType={m.event_type} missionId={m.id} size={18} />
+                      </HexBadge>
                       <span className="mono">{String(i + 1).padStart(2, "0")}</span>
                     </Link>
                   );
@@ -325,6 +344,11 @@ export default async function OperatorRecordPage({ params }: Props) {
             {Object.keys(bestDims).length > 0 && (
               <div className={`panel ${styles.sideCard}`}>
                 <div className="section-label">Best Scores by Dimension</div>
+                {avgScore !== null && (
+                  <div className={styles.aarRing}>
+                    <ScoreRing score={avgScore} size={96} label="avg score" />
+                  </div>
+                )}
                 {Object.entries(bestDims)
                   .filter(([, v]) => v.max > 0)
                   .sort(([, a], [, b]) => b.points / b.max - a.points / a.max)
@@ -333,8 +357,14 @@ export default async function OperatorRecordPage({ params }: Props) {
                     const pct = Math.round((val.points / val.max) * 100);
                     return (
                       <div key={key} className={styles.dimRow}>
-                        <div className={styles.dimLabel}>
-                          {DIM_LABELS[key] ?? key.replace(/_/g, " ")}
+                        <div className={styles.dimHead}>
+                          <span className={styles.dimLabel}>
+                            <DimIcon dim={key} />
+                            {DIM_LABELS[key] ?? key.replace(/_/g, " ")}
+                          </span>
+                          <span className={`mono ${styles.dimPct}`}>
+                            {pct}<span className={styles.dimMax}> /100</span>
+                          </span>
                         </div>
                         <div className={styles.dimBar}>
                           <div
@@ -346,7 +376,6 @@ export default async function OperatorRecordPage({ params }: Props) {
                             }}
                           />
                         </div>
-                        <div className={`mono ${styles.dimPct}`}>{pct}%</div>
                       </div>
                     );
                   })}

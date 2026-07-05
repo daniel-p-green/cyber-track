@@ -221,10 +221,18 @@
   opacity: 0;
   animation: feed-line 300ms ease-out forwards;
 }
-.msg:nth-child(2) { animation-delay: 300ms; }
-.msg:nth-child(3) { animation-delay: 900ms; }
-.msg:nth-child(4) { animation-delay: 1500ms; }
-.msg:nth-child(5) { animation-delay: 2100ms; }
+.d1 { animation-delay: 300ms; }
+.d2 { animation-delay: 900ms; }
+.d3 { animation-delay: 1300ms; }
+.d4 { animation-delay: 1900ms; }
+.d5 { animation-delay: 2500ms; }
+.d6 { animation-delay: 2900ms; }
+.chipRow {
+  padding: 0;
+  display: flex;
+}
+.chipRow:nth-of-type(3) { justify-content: flex-start; }
+.chipRow:last-child { justify-content: flex-start; }
 .msgYou {
   align-self: flex-end;
   max-width: 92%;
@@ -373,9 +381,41 @@
 .railLine {
   position: absolute;
   top: 22px;
-  right: calc(50% + 30px);
-  width: calc(100% - 60px);
-  border-top: 1.5px dashed var(--line-strong);
+  right: calc(50% + 34px);
+  width: calc(100% - 68px);
+  border-top: 2px dashed var(--line-strong);
+}
+/* Route line states per the brand sheet */
+.lineCompleted { border-top-style: solid; border-top-color: var(--signal); }
+.lineActive    { border-top-style: solid; border-top-color: var(--ice); }
+.lineAvailable { border-top-style: dashed; border-top-color: var(--line-strong); }
+.lineLocked    { border-top-style: dotted; border-top-color: var(--line-strong); }
+
+/* Route key — compact line-style legend */
+.routeKey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.routeKeyItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.routeSample {
+  display: inline-block;
+  width: 34px;
+  border-top: 2px dashed var(--line-strong);
 }
 .railIndex {
   font-size: 10px;
@@ -400,9 +440,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px 22px;
-  margin-top: 18px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
+  margin-top: 12px;
 }
 
 /* ── Bottom grid ──────────────────────────────────────────────────────── */
@@ -449,7 +487,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.leaderTable td:first-child { width: 44px; }
+.leaderTable td:first-child { width: 58px; }
 .leaderTable td {
   padding: 10px 18px;
   border-bottom: 1px solid var(--line);

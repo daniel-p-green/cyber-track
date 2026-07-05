@@ -39,7 +39,7 @@ export function Wordmark({ height = 22, className }: { height?: number; classNam
         fontWeight: 800,
         fontSize: height,
         lineHeight: 1,
-        letterSpacing: "0.02em",
+        letterSpacing: "0.09em",
         color: "var(--text)",
         textTransform: "uppercase",
       }}
@@ -48,8 +48,8 @@ export function Wordmark({ height = 22, className }: { height?: number; classNam
       <span
         aria-hidden
         style={{
-          width: Math.max(6, height * 0.42),
-          height: Math.max(3, height * 0.14),
+          width: Math.max(7, height * 0.5),
+          height: Math.max(3, height * 0.16),
           background: "var(--signal)",
           alignSelf: "flex-end",
           marginBottom: 1,
@@ -258,7 +258,8 @@ export function RankPlate({
   );
 }
 
-/* Rank chevron strip — filled diamonds per rank tier */
+/* Rank mark strip — tiered geometry per the brand sheet: triangles for the
+   early tiers, diamonds for the senior ones. Filled count = tier. */
 export function RankChevrons({
   tier,
   max = 7,
@@ -278,17 +279,75 @@ export function RankChevrons({
         const cy = size / 2 + 1;
         const r = size / 2;
         const filled = i < tier;
+        const isTriangle = i < 3;
+        const d = isTriangle
+          ? `M${cx} ${cy - r} L${cx + r} ${cy + r} L${cx - r} ${cy + r} Z`
+          : `M${cx} ${cy - r} L${cx + r} ${cy} L${cx} ${cy + r} L${cx - r} ${cy} Z`;
         return (
           <path
             key={i}
-            d={`M${cx} ${cy - r} L${cx + r} ${cy} L${cx} ${cy + r} L${cx - r} ${cy} Z`}
+            d={d}
             fill={filled ? "var(--signal)" : "transparent"}
             stroke={filled ? "var(--signal)" : "var(--line-strong)"}
             strokeWidth="1.2"
+            strokeLinejoin="round"
           />
         );
       })}
     </svg>
+  );
+}
+
+/* ── Hex mission badge — hexagonal outline plate around a glyph ─────────── */
+
+export function HexBadge({
+  size = 44,
+  tone = "muted",
+  children,
+  className,
+}: {
+  size?: number;
+  tone?: "muted" | "signal" | "ice";
+  children?: React.ReactNode;
+  className?: string;
+}) {
+  const stroke =
+    tone === "signal" ? "var(--signal)" : tone === "ice" ? "var(--ice)" : "var(--line-strong)";
+  return (
+    <span
+      className={className}
+      style={{
+        position: "relative",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: size,
+        height: size,
+        flexShrink: 0,
+      }}
+    >
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 48 48"
+        fill="none"
+        aria-hidden
+        style={{ position: "absolute", inset: 0 }}
+      >
+        <path
+          d="M24 2.5 42.6 13.25v21.5L24 45.5 5.4 34.75v-21.5Z"
+          stroke={stroke}
+          strokeWidth="2"
+          strokeLinejoin="round"
+          fill={
+            tone === "signal"
+              ? "color-mix(in srgb, var(--signal) 7%, transparent)"
+              : "var(--panel-2)"
+          }
+        />
+      </svg>
+      <span style={{ position: "relative", display: "inline-flex" }}>{children}</span>
+    </span>
   );
 }
 
@@ -308,19 +367,98 @@ export function GemmaStatus({
         display: "inline-flex",
         alignItems: "center",
         gap: 7,
-        padding: compact ? "3px 9px" : "5px 12px",
-        border: "1px solid color-mix(in srgb, var(--signal) 35%, transparent)",
-        background: "color-mix(in srgb, var(--signal) 8%, transparent)",
-        borderRadius: 2,
+        padding: compact ? "3px 10px" : "6px 14px",
+        border: "1.4px solid color-mix(in srgb, var(--signal) 55%, transparent)",
+        background: "color-mix(in srgb, var(--signal) 5%, transparent)",
+        borderRadius: 6,
         fontSize: compact ? 10 : 11,
         fontWeight: 700,
-        letterSpacing: "0.09em",
+        letterSpacing: "0.11em",
         color: "var(--signal)",
         whiteSpace: "nowrap",
       }}
     >
       <span className="pulse-dot" />
       LOCAL GEMMA4 {compact ? "" : "ONLINE"}
+    </span>
+  );
+}
+
+/** "100% LOCAL" chip — outlined, no dot, per the brand sheet */
+export function LocalChip({
+  className,
+  compact = false,
+}: {
+  className?: string;
+  compact?: boolean;
+}) {
+  return (
+    <span
+      className={`display ${className ?? ""}`}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        padding: compact ? "3px 10px" : "6px 14px",
+        border: "1.4px solid color-mix(in srgb, var(--signal) 55%, transparent)",
+        borderRadius: 6,
+        fontSize: compact ? 10 : 11,
+        fontWeight: 700,
+        letterSpacing: "0.11em",
+        color: "var(--signal)",
+        whiteSpace: "nowrap",
+      }}
+    >
+      100% LOCAL
+    </span>
+  );
+}
+
+/* ── Model-verification chips — amber warning / green corrected ────────── */
+
+export function VerifyChip({
+  kind,
+  className,
+  compact = false,
+}: {
+  kind: "warning" | "corrected";
+  className?: string;
+  compact?: boolean;
+}) {
+  const isWarn = kind === "warning";
+  const tone = isWarn ? "var(--amber)" : "var(--signal)";
+  const label = isWarn ? "HYPOTHESIS NEEDS VERIFICATION" : "OPERATOR CORRECTED";
+  const iconSize = compact ? 11 : 13;
+  return (
+    <span
+      className={`display ${className ?? ""}`}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 7,
+        padding: compact ? "3px 9px" : "5px 12px",
+        border: `1.4px solid color-mix(in srgb, ${tone} 55%, transparent)`,
+        background: `color-mix(in srgb, ${tone} 5%, transparent)`,
+        borderRadius: 6,
+        fontSize: compact ? 9.5 : 10.5,
+        fontWeight: 700,
+        letterSpacing: "0.1em",
+        color: tone,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {isWarn ? (
+        <svg {...base(iconSize)}>
+          <path d="M12 3.5 21.5 20h-19Z" />
+          <path d="M12 10v4.4" />
+          <circle cx="12" cy="17.2" r="0.9" fill="currentColor" stroke="none" />
+        </svg>
+      ) : (
+        <svg {...base(iconSize)}>
+          <circle cx="12" cy="12" r="8.5" />
+          <path d="m8.4 12.2 2.4 2.5 4.8-5.2" />
+        </svg>
+      )}
+      {label}
     </span>
   );
 }
@@ -397,8 +535,12 @@ export function IconSuspicious({ size = 15, className }: IconProps) {
 
 /* ── Progression rail node ─────────────────────────────────────────────── */
 
-export type NodeState = "completed" | "active" | "available" | "locked";
+export type NodeState = "completed" | "active" | "available" | "locked" | "advanced";
 
+/* Five node states per the brand sheet:
+   completed = green check ring · active = cyan reticle ring with tick marks
+   available = plain dark ring · locked = dashed ring + padlock
+   advanced = amber diamond ring */
 export function RailNode({
   state,
   size = 40,
@@ -413,11 +555,13 @@ export function RailNode({
   const ring =
     state === "completed" ? "var(--signal)"
     : state === "active" ? "var(--ice)"
+    : state === "advanced" ? "var(--amber)"
     : state === "available" ? "var(--line-strong)"
-    : "var(--line)";
+    : "var(--line-strong)";
   const color =
     state === "completed" ? "var(--signal)"
     : state === "active" ? "var(--ice)"
+    : state === "advanced" ? "var(--amber)"
     : state === "available" ? "var(--muted)"
     : "var(--line-strong)";
   return (
@@ -431,12 +575,14 @@ export function RailNode({
         width: size,
         height: size,
         borderRadius: "50%",
-        border: `1.6px ${state === "available" ? "dashed" : "solid"} ${ring}`,
+        border: `1.8px ${state === "locked" ? "dashed" : "solid"} ${ring}`,
         background:
           state === "active"
             ? "color-mix(in srgb, var(--ice) 10%, transparent)"
             : state === "completed"
             ? "color-mix(in srgb, var(--signal) 8%, transparent)"
+            : state === "advanced"
+            ? "color-mix(in srgb, var(--amber) 8%, transparent)"
             : "transparent",
         color,
         flexShrink: 0,
@@ -451,17 +597,46 @@ export function RailNode({
           <rect x="5.5" y="10.5" width="13" height="9.5" rx="1.5" />
           <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" />
         </svg>
+      ) : state === "advanced" && !children ? (
+        <svg {...base(size * 0.44)}>
+          <path d="M12 4.5 19.5 12 12 19.5 4.5 12Z" />
+        </svg>
       ) : (
         children
       )}
       {state === "active" && (
+        <>
+          <span
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: -6,
+              borderRadius: "50%",
+              border: "1px solid color-mix(in srgb, var(--ice) 40%, transparent)",
+            }}
+          />
+          {/* Reticle tick marks at the compass points */}
+          <svg
+            aria-hidden
+            viewBox="0 0 48 48"
+            fill="none"
+            stroke="var(--ice)"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            style={{ position: "absolute", inset: -10, width: size + 20, height: size + 20 }}
+          >
+            <path d="M24 2v4.5M24 41.5V46M2 24h4.5M41.5 24H46" />
+          </svg>
+        </>
+      )}
+      {state === "advanced" && (
         <span
           aria-hidden
           style={{
             position: "absolute",
-            inset: -5,
+            inset: -6,
             borderRadius: "50%",
-            border: "1px solid color-mix(in srgb, var(--ice) 45%, transparent)",
+            border: "1px dashed color-mix(in srgb, var(--amber) 45%, transparent)",
           }}
         />
       )}
@@ -511,7 +686,7 @@ export function ScoreRing({
       />
       <text
         x="50"
-        y="50"
+        y="47"
         textAnchor="middle"
         dominantBaseline="central"
         fontFamily="var(--font-mono)"
@@ -521,19 +696,56 @@ export function ScoreRing({
       >
         {score}
       </text>
+      <text
+        x="50"
+        y="64"
+        textAnchor="middle"
+        fontFamily="var(--font-mono)"
+        fontSize="9"
+        fill="var(--muted)"
+      >
+        /{max}
+      </text>
       {label && (
         <text
           x="50"
-          y="68"
+          y="76"
           textAnchor="middle"
           fontFamily="var(--font-display)"
-          fontSize="9"
+          fontSize="8"
           letterSpacing="1"
           fill="var(--muted)"
         >
           {label.toUpperCase()}
         </text>
       )}
+    </svg>
+  );
+}
+
+/* ── Action glyphs — deploy / replay / scoreboard buttons ──────────────── */
+
+export function IconPlay({ size = 12, className }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <path d="M7 4.5 19 12 7 19.5Z" />
+    </svg>
+  );
+}
+
+export function IconReplay({ size = 12, className }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4 9.4" />
+      <path d="M4 4.5v4.9h4.9" />
+    </svg>
+  );
+}
+
+export function IconBars({ size = 12, className }: IconProps) {
+  return (
+    <svg {...base(size)} className={className}>
+      <path d="M5 20v-5M12 20V9M19 20V4" />
     </svg>
   );
 }

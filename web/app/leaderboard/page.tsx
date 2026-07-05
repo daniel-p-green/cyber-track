@@ -5,6 +5,7 @@ import { MISSIONS } from "@/lib/missions";
 import { formatElapsed, slopeForDifficulty } from "@/lib/utils";
 import {
   GemmaStatus,
+  LocalChip,
   RankChevrons,
   RankPlate,
   SlopeBadge,
@@ -130,7 +131,10 @@ export default async function ArenaPage({
             </div>
             <h1 className={`display ${styles.title}`}>Scoreboard</h1>
           </div>
-          <GemmaStatus />
+          <span className={styles.headerChips}>
+            <GemmaStatus />
+            <LocalChip />
+          </span>
         </div>
 
         {/* Podium — global standings */}
