@@ -1,14 +1,15 @@
 # CyberTrack
 
-**Call of Duty for AI Operators.**
-Offline AI operator readiness in Cursor, powered by local Gemma4.
+**Call of Duty for AI operators.**
+Timed technical operations where the enemy is uncertainty, bad AI guidance,
+and incomplete evidence.
 
-CyberTrack is a mission league that trains people to work with AI when the
-cloud is gone. Operators complete timed, synthetic, defensive missions inside
-a Cursor workspace with **a local Gemma4 model as their only AI**, then get
-deterministically scored on evidence discipline, model skepticism, decision
-quality, and recovery from bad AI guidance. It looks like a game. Under the
-hood it is a flight simulator for AI-era technical judgment.
+Every mission runs with **local Gemma only**, simulating edge deployments
+where cloud AI is unavailable, untrusted, or too slow. Operators work inside
+Cursor, submit evidence, and get deterministically scored on whether they
+**verified, challenged, and recovered** — evidence discipline, model
+skepticism, decision quality, recovery from bad AI guidance. It looks like a
+game. Under the hood it is a flight simulator for AI-era technical judgment.
 
 > RAISE Summit Hackathon 2026 · Google DeepMind Remote track
 > (Edge / On-Device: best app running Gemma locally for offline,

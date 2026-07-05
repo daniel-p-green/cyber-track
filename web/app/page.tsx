@@ -92,7 +92,7 @@ export default async function Home() {
           <div className={styles.heroGrid}>
             <div className={`boot boot-1 ${styles.heroCopy}`}>
               <p className={`display ${styles.heroKicker}`}>
-                Timed missions for AI operators
+                Call of Duty for AI operators
               </p>
               <h1 className={`display ${styles.heroTitle}`}>
                 Fly the mission in Cursor.
@@ -101,10 +101,11 @@ export default async function Home() {
                 only AI. Scored here.
               </h1>
               <p className={styles.heroText}>
-                Open the workspace in Cursor, read the evidence, and work the
-                problem with Cursor Chat running Gemma on your own machine — no
-                cloud, no internet. Submit your answer to this arena for score,
-                AAR, and rank.
+                Timed technical operations where the enemy is uncertainty, bad
+                AI guidance, and incomplete evidence. Gemma runs on your own
+                machine — for edge deployments where cloud AI is unavailable,
+                untrusted, or too slow. Submit your evidence here and get
+                scored on whether you verified, challenged, and recovered.
               </p>
               <div className={styles.heroActions}>
                 <Link href="/qualification" className="btn btn-primary">

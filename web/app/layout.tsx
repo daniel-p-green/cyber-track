@@ -19,9 +19,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CyberTrack — Train decision quality when the cloud goes dark",
+  title: "CyberTrack — Call of Duty for AI operators",
   description:
-    "CyberTrack is a mission arena for AI operators. Complete timed missions in Cursor using only local Gemma4, then climb the Season Zero scoreboard.",
+    "Timed technical operations where the enemy is uncertainty, bad AI guidance, and incomplete evidence. Local Gemma only — edge deployments where cloud AI is unavailable, untrusted, or too slow. Work in Cursor, submit evidence, get scored on whether you verified, challenged, and recovered.",
 };
 
 const THEME_BOOT = `(function(){try{var t=localStorage.getItem("cybertrack-theme");if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t}}catch(e){}})();`;
