@@ -28,8 +28,9 @@
 .subtitle {
   color: var(--muted);
   font-size: 15px;
-  line-height: 1.7;
-  max-width: 56ch;
+  line-height: 1.55;
+  max-width: 34ch;
+  text-wrap: balance;
 }
 .edgeStatus {
   display: flex;
@@ -52,16 +53,39 @@
 
 /* Progression rail */
 .railPanel {
-  padding: 18px 12px 14px;
+  padding: 14px 12px 14px;
   margin-bottom: 14px;
+}
+.railHead {
+  padding: 0 8px 12px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 14px;
+}
+.railHead div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.railHead span:first-child {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  text-transform: uppercase;
+}
+.railHead span:last-child {
+  font-size: 10.5px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
 }
 .rail {
   display: flex;
 }
 .railStop {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 38px 34px 14px;
+  justify-items: center;
   align-items: center;
   gap: 7px;
   flex: 1;
@@ -69,6 +93,7 @@
   padding: 0 6px;
   text-decoration: none;
   text-align: center;
+  min-height: 112px;
 }
 .railStop:hover { text-decoration: none; }
 .railStop:hover .railLabel { color: var(--ice); }
@@ -114,6 +139,16 @@
   color: var(--muted);
   line-height: 1.15;
   transition: color 120ms ease-out;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-wrap: balance;
+}
+.railRating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .slopeKey {
@@ -126,7 +161,7 @@
 /* Campaign grid */
 .missionGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
   gap: 18px;
 }
 
@@ -134,14 +169,16 @@
 .dossier {
   display: flex;
   flex-direction: column;
-  gap: 13px;
-  padding: 20px;
+  gap: 14px;
+  padding: 22px;
   min-width: 0;
+  min-height: 330px;
 }
 .dossierHead {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 13px;
+  padding-bottom: 2px;
 }
 .dossierIcon {
   color: var(--signal);
@@ -149,17 +186,18 @@
 .dossierId {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
+  flex-wrap: wrap;
   min-width: 0;
 }
 .dossierNum { font-size: 11px; color: var(--muted); }
 .dossierSlope { margin-left: auto; flex-shrink: 0; }
 
 .dossierTitle {
-  font-size: 21px;
+  font-size: 20px;
   font-weight: 800;
   color: var(--text);
-  line-height: 1.1;
+  line-height: 1.12;
 }
 
 .fieldLabel {
@@ -174,7 +212,9 @@
 .hook {
   color: var(--text);
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 1.6;
+  max-width: 44ch;
+  text-wrap: balance;
 }
 .decision {
   color: var(--muted);
@@ -185,8 +225,8 @@
 
 .metaGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   padding: 10px 0;
@@ -226,39 +266,41 @@
 .dossierFoot {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
   margin-top: auto;
-  padding-top: 4px;
+  padding-top: 6px;
 }
-.boardLink {
-  font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--muted);
+.dossierFoot :global(.btn) {
+  padding: 9px 14px;
+  font-size: 12.5px;
 }
-.boardLink:hover { color: var(--ice); }
+
+@media (max-width: 960px) {
+  .missionGrid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+}
 
 @media (max-width: 900px) {
   .header { flex-direction: column; align-items: flex-start; }
   .edgeStatus { align-items: flex-start; }
-
   /* Rail becomes a vertical route */
   .rail { flex-direction: column; }
   .railStop {
+    display: flex;
     flex-direction: row;
     text-align: left;
     gap: 12px;
     padding: 9px 4px;
+    min-height: 0;
   }
   .railStop + .railStop { border-top: 1px solid var(--line); }
   .railLine { display: none; }
   .railLabel { flex: 1; }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 640px) {
   .missionGrid { grid-template-columns: 1fr; }
   .metaGrid { grid-template-columns: repeat(2, 1fr); row-gap: 10px; }
+  .dossierFoot { flex-wrap: wrap; }
 }

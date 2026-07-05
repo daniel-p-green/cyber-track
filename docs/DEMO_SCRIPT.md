@@ -1,12 +1,12 @@
 # CyberTrack: 60-Second Demo Script
 
 **Track:** Google DeepMind Remote · Edge / on-device Gemma4
-**Tagline:** Verify AI under pressure
-**Arena:** https://cybertrack-arena.vercel.app
+**Tagline:** Call of Duty for AI Operations Readiness
+**Arena:** http://localhost:3000
 
-One complete loop, no feature tour. The beat that carries the product: local
-Gemma confidently gives a wrong answer, the operator catches it against the
-evidence, the deterministic score rewards the catch.
+One complete loop, no feature tour. The beat that carries the product:
+Gemma4 local inference gives incomplete guidance, the operator catches it
+against the evidence, and deterministic scoring rewards the catch.
 
 ---
 
@@ -18,7 +18,7 @@ python3 -m cybertf.cli verify-model
 python3 -m cybertf.cli enlist NIGHTOWL
 
 # Arena target for publish
-export CYBERTF_ARENA_URL=https://cybertrack-arena.vercel.app
+export CYBERTF_ARENA_URL=http://localhost:3000
 ```
 
 Open in Cursor: repo root, terminal panel visible,
@@ -30,23 +30,30 @@ Pre-check audio: `say "check"` should be audible.
 
 ## The 10 beats
 
-### Beat 1 · 0:00–0:04 · Cursor is the cockpit
+### Beat 1 · 0:00–0:06 · Crisis premise
 
 **Show:** Cursor workspace with the mission repo: evidence files in the tree,
 brief open, terminal ready.
 
-**Say:** "This is CyberTrack. Missions are flown inside Cursor."
+**Say:** "National-security teams cannot assume cloud AI will be available,
+trusted, or allowed. CyberTrack trains technical operators for that moment."
 
-### Beat 2 · 0:04–0:09 · Prove local Gemma
+### Beat 2 · 0:06–0:12 · Prove local inference
 
 **Run:**
 ```bash
 python3 -m cybertf.cli verify-model
 ```
 
-**Show:** `GEMMA4 · LOCAL · OFFLINE. Field AI ready.`
+**Show:** local Gemma/Gemma4 detected, local endpoint, canary reply.
 
-**Say:** "The only AI here is Gemma4, verified local and offline."
+**Say:** "Missions run inside Cursor. Gemma4 is the local inference, verified
+on-device before the mission starts."
+
+Do not imply Cursor's native chat is being reconfigured. Cursor-native local
+model chat is optional advanced setup and usually needs an OpenAI-compatible
+gateway, such as ngrok. The demo path is Cursor's terminal calling
+`cybertf ask`, which routes to local Ollama.
 
 ### Beat 3 · 0:09–0:13 · Launch the mission
 
@@ -61,15 +68,12 @@ python3 -m cybertf.cli run sprint_signal_lost
 
 ### Beat 4 · 0:13–0:24 · Voice briefing
 
-**Run:**
-```bash
-python3 -m cybertf.cli brief sprint_signal_lost --voice
-```
+**Show:** mission detail in the localhost arena. Click **Play voice briefing**.
 
 **Show:** brief text on screen while the 8–12 second radio briefing plays.
 No talking over it; the briefing carries this beat.
 
-### Beat 5 · 0:24–0:33 · Ask the field AI
+### Beat 5 · 0:24–0:33 · Ask local inference
 
 **Run:**
 ```bash
@@ -80,7 +84,8 @@ python3 -m cybertf.cli ask "What caused the packet loss after the 02:10 config p
 **Show:** the model's answer leaning toward weather or the noisy node 17
 antenna: plausible, tempting, wrong.
 
-**Say:** "The field AI blames the weather. The logs disagree."
+**Say:** "The local model follows the weather theory. Plausible, but
+incomplete."
 
 ### Beat 6 · 0:33–0:42 · Catch and correct
 
@@ -117,12 +122,12 @@ python3 -m cybertf.cli publish <run_id>
 ```
 
 **Show:** leaderboard row appears at
-https://cybertrack-arena.vercel.app/leaderboard.
+http://localhost:3000/leaderboard.
 
 ### Beat 10 · 0:56–1:00 · Close
 
-**Say:** "Cursor is the interface. Gemma4 is the local edge AI. CyberTrack
-scores what matters when the cloud goes dark and the stakes are high."
+**Say:** "Cursor is the interface. Gemma4 is the local inference. CyberTrack
+measures what matters when the cloud goes dark."
 
 ---
 
@@ -134,6 +139,6 @@ scores what matters when the cloud goes dark and the stakes are high."
 | Built during hackathon | ✓ git history + HACKATHON_BUILD.md |
 | Not hiring/screening | ✓ training/readiness language |
 | Deterministic scoring, no model in grading loop | ✓ scoring.py, reproducible from run artifacts |
-| Voice briefing is fully offline | ✓ macOS `say`, no cloud TTS in demo path |
+| Voice briefing has no runtime cloud call | ✓ committed OpenAI/onyx MP3s play locally; mission inference stays local Gemma |
 | Server-side answer validation | ✗ say "salted hash demo tier" |
-| Durable Vercel leaderboard | ✗ say "ephemeral demo store; local scorecard is authoritative" |
+| Durable hosted leaderboard | ✗ say "local demo store; local scorecard is authoritative" |

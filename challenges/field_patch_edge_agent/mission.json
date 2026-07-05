@@ -1,6 +1,6 @@
 {
   "id": "field_patch_edge_agent",
-  "season": "season-zero",
+  "season": "season-one",
   "title": "Patch the Edge Agent",
   "event_type": "field",
   "difficulty": 3,
@@ -63,7 +63,7 @@
       "min_asks": 1,
       "points": 10,
       "dimension": "prompt_discipline",
-      "label": "Local field AI consulted at least once"
+      "label": "Local Gemma consulted at least once"
     },
     {
       "id": "evidence_severity_spec",

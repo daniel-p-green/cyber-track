@@ -1,6 +1,6 @@
 {
   "id": "relay_gemma_handoff",
-  "season": "season-zero",
+  "season": "season-one",
   "title": "Relay: Human + Gemma Handoff",
   "event_type": "relay",
   "difficulty": 3,
@@ -9,12 +9,12 @@
   "par_seconds": 540,
   "time_points": 5,
   "xp_base": 400,
-  "summary": "Write a handoff brief for the local field model, then test whether Gemma can use it to continue a sensor calibration incident.",
+  "summary": "Write a handoff brief for the local model, then test whether Gemma can use it to continue a sensor calibration incident.",
   "skills": ["shift handoff", "prompt discipline", "communication quality", "recovery"],
   "answer_fields": [
-    { "key": "handoff_brief",      "type": "string", "prompt": "Write your shift-2 handoff brief for the field model. Must include remaining node IDs and the corrected offset value (≥200 chars)." },
-    { "key": "gemma_followed",     "type": "string", "prompt": "Did the field model correctly identify node_21 and node_23 and state the +0.6 offset when you passed it your brief? (yes/no, with brief explanation)" },
-    { "key": "continuation_critique", "type": "string", "prompt": "In 2–4 sentences: assess the quality of the field model's continuation. What was useful? What was missing or wrong? (≥100 chars)" },
+    { "key": "handoff_brief",      "type": "string", "prompt": "Write your shift-2 handoff brief for the local model. Must include remaining node IDs and the corrected offset value (≥200 chars)." },
+    { "key": "gemma_followed",     "type": "string", "prompt": "Did the local model correctly identify node_21 and node_23 and state the +0.6 offset when you passed it your brief? (yes/no, with brief explanation)" },
+    { "key": "continuation_critique", "type": "string", "prompt": "In 2–4 sentences: assess the quality of the local model's continuation. What was useful? What was missing or wrong? (≥100 chars)" },
     { "key": "evidence",           "type": "list",   "prompt": "Workspace file paths consulted." }
   ],
   "checks": [
@@ -60,7 +60,7 @@
       "min_asks": 2,
       "points": 15,
       "dimension": "prompt_discipline",
-      "label": "Local field AI consulted at least twice"
+      "label": "Local Gemma consulted at least twice"
     },
     {
       "id": "evidence_incident_context",

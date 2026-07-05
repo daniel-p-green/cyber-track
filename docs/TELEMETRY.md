@@ -11,14 +11,14 @@ the complete inventory of what is and is not captured.
 - Opt out entirely: `cybertf enlist <CALLSIGN> --no-telemetry`, or per-run
   with `cybertf run <mission> --no-telemetry`.
 - With telemetry off, missions still run and score; checks that need the
-  decision trace (like "consulted the field AI") simply score zero.
+  decision trace (like "consulted the local model") simply score zero.
 
 ## What is captured (workspace-scoped, only during an active run)
 
 | Event | Contents |
 |---|---|
 | `mission_start` | mission id, callsign, local model info, timestamp |
-| `ask` | your prompt, the evidence files you attached, the field AI's response, model name, latency |
+| `ask` | your prompt, the evidence files you attached, the local model's response, model name, latency |
 | `submission` | mission id, elapsed seconds |
 | `score` | totals and XP awarded |
 

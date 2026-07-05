@@ -30,7 +30,7 @@ def _fmt_time(seconds: int) -> str:
 def generate_scorecard() -> Path:
     scores = collect_scores()
     lines: list[str] = []
-    lines.append("# Season Zero Local Scorecard")
+    lines.append("# Season One Local Scorecard")
     lines.append("")
     lines.append(
         "Generated from local run artifacts in `runs/`. This is the offline "

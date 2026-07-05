@@ -38,7 +38,7 @@ def _post(path: str, payload: dict) -> tuple[int, dict]:
     except (urllib.error.URLError, OSError) as e:
         raise ConnectionError(
             f"Arena unreachable at {arena_url()} ({e}). Mission scoring still "
-            "works offline. See runs/season-zero-scorecard.md."
+            "works offline. See runs/season-one-scorecard.md."
         ) from e
 
 
@@ -73,6 +73,7 @@ def publish_run(run_dir: Path) -> dict:
                 "elapsed_seconds",
                 "submitted_at",
                 "dimensions",
+                "checks",
                 "flags",
                 "local_model",
                 "xp_awarded",

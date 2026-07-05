@@ -289,7 +289,19 @@ input, textarea, select {
   height: 7px;
   border-radius: 50%;
   background: var(--signal);
-  animation: pulse-dot 2.2s ease-in-out infinite;
+}
+
+.ollama-icon-black {
+  display: none;
+}
+.ollama-icon-white {
+  display: block;
+}
+[data-theme="light"] .ollama-icon-black {
+  display: block;
+}
+[data-theme="light"] .ollama-icon-white {
+  display: none;
 }
 
 /* Wordmark cursor blink */

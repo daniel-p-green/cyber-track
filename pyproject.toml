@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "cybertf"
 version = "0.1.0"
-description = "CyberTrack mission league engine: offline AI operator readiness in Cursor, powered by local Gemma4."
+description = "CyberTrack mission league engine: offline AI operations readiness in Cursor, powered by local Gemma."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

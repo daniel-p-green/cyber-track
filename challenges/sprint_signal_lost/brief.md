@@ -25,7 +25,7 @@ the config, fast.
    - `config/uplink.conf`: live gateway config (as pushed at 02:10)
    - `config/uplink.conf.prev`: config before the push
    - `notes/maintenance_note.md`: shift maintenance notes
-3. Consult your field AI. Try asking before and after showing it evidence;
+3. Consult local Gemma. Try asking before and after showing it evidence;
    notice how its answer changes:
    `cybertf ask "Sensors started dropping packets after a config push. Where do I look first?"`
    `cybertf ask "What changed between these configs and could it drop packets?" --file challenges/sprint_signal_lost/data/config/uplink.conf --file challenges/sprint_signal_lost/data/config/uplink.conf.prev`
@@ -36,7 +36,7 @@ the config, fast.
 
 ## Constraints
 
-- Local Gemma4 field AI only (`cybertf ask`). No cloud assistants.
+- Local Gemma4 via `cybertf ask` only. No cloud assistants.
 - The model's first instinct may match the previous shift's. Verify against
   the logs before you commit to a root cause.
 - Cite your evidence files in the answer.

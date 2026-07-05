@@ -57,6 +57,10 @@ def _fmt_time(seconds: int) -> str:
     return f"{seconds // 60}:{seconds % 60:02d}"
 
 
+def _local_provider(provider: str) -> bool:
+    return provider in {"ollama", "openai-compatible-local"}
+
+
 # --- commands ---------------------------------------------------------------
 
 
@@ -91,7 +95,7 @@ def cmd_enlist(args) -> int:
 
 def cmd_list(args) -> int:
     missions = list_missions()
-    banner("season zero mission board")
+    banner("season one mission board")
     if not missions:
         warn("No missions found in challenges/.")
         return 1
@@ -131,7 +135,7 @@ def cmd_run(args) -> int:
     ok(f"Timer started. Timebox: {m.timebox_minutes} minutes.")
     print(_c(DIM, f"\n  Brief:    cybertf brief {m.id}"))
     print(_c(DIM, f"  Evidence: challenges/{m.id}/data/"))
-    print(_c(DIM, f"  Field AI: cybertf ask \"your question\" [--file <evidence-file>]"))
+    print(_c(DIM, f"  Local inference: cybertf ask \"your question\" [--file <evidence-file>]"))
     print(_c(DIM, f"  Answers:  edit {run_dir.name}/answer.json, then"))
     print(_c(DIM, f"  Submit:   cybertf submit {m.id} runs/{run_dir.name}/answer.json"))
     if args.audio:
@@ -161,11 +165,20 @@ def cmd_ask(args) -> int:
         fail(str(e))
         return 1
     record_ask(args.question, context_files, out)
-    tag = "SIMULATION" if out["simulated"] else f"{out['model']} · local · {out['latency_ms']}ms"
-    banner(f"field ai: {tag}")
+    provider = out.get("provider", "unknown")
+    if out["simulated"]:
+        tag = "TEST FALLBACK"
+        surface = "model guidance"
+    else:
+        location = "local" if _local_provider(provider) else "cloud fallback"
+        tag = f"{out['model']} · {location} · {out['latency_ms']}ms"
+        surface = "local inference" if _local_provider(provider) else "fallback inference"
+    banner(f"{surface}: {tag}")
     print(out["response"].strip())
-    if not out["simulated"]:
-        print(_c(DIM, "\n  Verify before you trust: the field AI only knows what you show it."))
+    if not out["simulated"] and _local_provider(provider):
+        print(_c(DIM, "\n  Verify before you trust: local inference only knows what you show it."))
+    elif not out["simulated"]:
+        warn("Cloud fallback used. Useful for testing, but not local/offline compliant for scored demo claims.")
     return 0
 
 
@@ -248,7 +261,7 @@ def cmd_season(args) -> int:
 
 
 def cmd_verify_model(args) -> int:
-    banner("local model verification")
+    banner("model verification")
     try:
         result = gemma.verify()
     except gemma.GemmaUnavailable as e:
@@ -257,13 +270,19 @@ def cmd_verify_model(args) -> int:
     if result.get("simulated"):
         warn(result["note"])
         return 0
-    ok(f"Endpoint: {result['endpoint']} (local: {result['endpoint_is_local']})")
+    provider = result.get("provider", "unknown")
+    is_local = bool(result.get("endpoint_is_local"))
+    ok(f"Endpoint: {result['endpoint']} (local: {is_local})")
+    ok(f"Provider: {provider}")
     for m in result["detected_gemma_models"]:
         ok(f"Detected: {m['name']} ({m.get('parameter_size')}, {m.get('quantization')})")
     ok(f"Selected model: {result['selected_model']}")
     ok(f"Canary response: {result['canary_response']!r}")
     ok(f"Round-trip latency: {result['latency_ms']}ms")
-    print(_c(GREEN, "\n  ● GEMMA4 · LOCAL · OFFLINE. Field AI ready."))
+    if is_local and _local_provider(provider):
+        print(_c(GREEN, "\n  ● GEMMA4 · LOCAL · OFFLINE. Local inference ready."))
+    else:
+        warn("Endpoint is not local/offline. Do not use this path as proof for local compliance.")
     return 0
 
 
@@ -294,7 +313,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="cybertf",
         description=(
-            "CyberTrack mission league: offline AI operator readiness in "
+            "CyberTrack mission league: offline AI operations readiness in "
             "Cursor, powered by local Gemma4."
         ),
     )
@@ -308,7 +327,7 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--register", action="store_true", help="Also register with the web arena")
     s.set_defaults(func=cmd_enlist)
 
-    s = sub.add_parser("list", help="Show the Season Zero mission board")
+    s = sub.add_parser("list", help="Show the Season One mission board")
     s.set_defaults(func=cmd_list)
 
     s = sub.add_parser("brief", help="Print a mission brief")
@@ -319,8 +338,8 @@ def build_parser() -> argparse.ArgumentParser:
         nargs="?",
         const="offline",
         default=None,
-        choices=["offline", "elevenlabs"],
-        help="Play the mission voice briefing (default: offline macOS say)",
+        choices=["offline", "openai"],
+        help="Play the mission voice briefing (default: offline macOS say; openai uses OPENAI_TTS_VOICE)",
     )
     s.set_defaults(func=cmd_brief)
 
@@ -328,10 +347,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("mission_id")
     s.add_argument("--no-telemetry", action="store_true")
     s.add_argument("--audio", action="store_true")
-    s.add_argument("--voice", default="offline", choices=["offline", "elevenlabs"])
+    s.add_argument("--voice", default="offline", choices=["offline", "openai"])
     s.set_defaults(func=cmd_run)
 
-    s = sub.add_parser("ask", help="Ask the local Gemma4 field AI")
+    s = sub.add_parser("ask", help="Ask local Gemma4 inference")
     s.add_argument("question")
     s.add_argument("--file", action="append", help="Evidence file(s) to include as context")
     s.set_defaults(func=cmd_ask)

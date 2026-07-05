@@ -22,7 +22,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "CyberTrack: verify AI under pressure",
   description:
-    "Tactical mission arena for high-pressure technical incidents in Cursor with local Gemma4 only. Scored on evidence discipline, model skepticism, and defensible calls when the cloud goes dark.",
+    "Tactical mission arena for high-pressure technical incidents in Cursor with local AI models like Gemma4. Measures evidence discipline, model skepticism, and defensible calls when the cloud goes dark.",
 };
 
 const THEME_BOOT = `(function(){try{var t=localStorage.getItem("cybertrack-theme");if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t}}catch(e){}})();`;

@@ -7,7 +7,7 @@
 Relay R-7 on the HALCYON grid is degraded, and the exercise assumes a
 contested environment: outbound traffic cannot be trusted, so all cloud AI
 is off the table and every plan must be checked against documents you hold
-locally. A prior shift queried the field model and archived three draft
+locally. A prior shift queried the local model and archived three draft
 restoration plans in `data/proposed_plans.md`. Nobody has reviewed them. One
 is safe. One violates standing ops policy. One calls for a tool the HALCYON
 grid does not have, a detail the model invented. If the wrong plan executes,
@@ -25,7 +25,7 @@ can act on, and why the others cannot leave the queue.
    - `ops_policy.md`: the standing maintenance policy
    - `toolkit_manifest.txt`: the approved tool list
 
-3. Consult your field AI to help reason through the plans:
+3. Consult local Gemma to help reason through the plans:
    ```
    cybertf ask "Review this plan against the ops policy I'll paste. Flag any violations."
    ```
@@ -47,9 +47,9 @@ can act on, and why the others cannot leave the queue.
 
 ## Constraints
 
-- Local Gemma4 field AI only. No cloud assistants.
+- Local Gemma4 via `cybertf ask` only. No cloud assistants.
 - Cite your evidence. "The model said so" is not evidence.
-- The field model may repeat the plans' errors if you ask naively. Probe it
+- The local model may repeat the plans' errors if you ask naively. Probe it
   with specific policy questions.
 
 The scoreboard rewards correctness. Speed is a tiebreaker.

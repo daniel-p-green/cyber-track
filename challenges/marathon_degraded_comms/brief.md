@@ -11,7 +11,7 @@ degraded since last night. Three of its sensors went unresponsive around
 dropout, a delayed log batch arrived out of order mixing events from
 different hours, and two human sitreps partially contradict each other.
 Cloud AI is out of reach and would be too slow anyway; round trips over the
-degraded backhaul take longer than the decisions do. The local field AI has
+degraded backhaul take longer than the decisions do. The local model has
 already filed a high-confidence recommendation, and you suspect it is wrong.
 Acting on a bad recommendation could restart the wrong subsystem and extend
 the outage. Your decision: what actually failed, and whether the model's
@@ -25,9 +25,9 @@ recommendation is safe to execute.
    - `telemetry_snapshot.csv`: sensor readings showing the outage pattern
    - `delayed_logs.log`: event log batch that arrived out of order (read timestamps carefully)
    - `situation_reports.md`: two human sitreps with conflicting assessments
-   - `model_recommendation.md`: the field AI's recommendation (evaluate critically)
+   - `model_recommendation.md`: the local model's recommendation (evaluate critically)
 
-3. Consult your field AI at least twice:
+3. Consult local Gemma at least twice:
    ```
    cybertf ask "I have out-of-order logs. How do I correlate a delayed log batch to find the true event sequence?"
    cybertf ask "A comms daemon restart is recommended for a multi-node outage. What evidence would confirm or refute this?"
@@ -49,7 +49,7 @@ recommendation is safe to execute.
 
 ## Constraints
 
-- Local Gemma4 field AI only. No cloud assistants.
+- Local Gemma4 via `cybertf ask` only. No cloud assistants.
 - The logs arrived out of order. Check timestamps before drawing causal conclusions.
 - The model recommendation is confidently stated. Confidence is not correctness.
 - Use uncertainty language in your memo where the evidence is partial or unverified.

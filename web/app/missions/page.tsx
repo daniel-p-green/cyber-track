@@ -4,13 +4,12 @@ import { eventTypeLabel, eventTypeColor, slopeForDifficulty } from "@/lib/utils"
 import {
   MissionGlyph,
   RailNode,
-  GemmaStatus,
   HexBadge,
   SlopeBadge,
   IconTimer,
   type NodeState,
 } from "../components/svg";
-import VoiceBriefing from "../components/VoiceBriefing";
+import LocalRuntimeStatus from "../components/LocalRuntimeStatus";
 import styles from "./page.module.css";
 
 function nodeState(index: number): NodeState {
@@ -35,24 +34,26 @@ export default function MissionsPage() {
               <span className="pulse-dot" />
               Season One
             </div>
-            <h1 className={`display ${styles.title}`}>Mission Board</h1>
+            <h1 className={`display ${styles.title}`}>Missions</h1>
             <p className={styles.subtitle}>
-              Six incidents on the HALCYON grid, a synthetic training
-              environment. Each one plants at least one confident model claim
-              the evidence disproves. The mission is flown in Cursor; the
-              score posts here.
+              Six incidents. Find the AI claim that breaks.
             </p>
           </div>
           <div className={styles.edgeStatus}>
             <span className={styles.chipRow}>
-              <GemmaStatus />
+              <LocalRuntimeStatus />
             </span>
-            <span className={`mono ${styles.edgeNote}`}>edge mode · offline inference</span>
           </div>
         </div>
 
         {/* Progression rail */}
         <div className={`panel ${styles.railPanel}`}>
+          <div className={styles.railHead}>
+            <div>
+              <span className="display">Season Path</span>
+              <span className="mono">Easy to hard. Click a node for the briefing.</span>
+            </div>
+          </div>
           <div className={styles.rail}>
             {MISSIONS.map((m, i) => {
               const slope = slopeForDifficulty(m.difficulty);
@@ -68,7 +69,9 @@ export default function MissionsPage() {
                     <MissionGlyph eventType={m.event_type} missionId={m.id} size={19} />
                   </RailNode>
                   <span className={`display ${styles.railLabel}`}>{m.title}</span>
-                  <SlopeBadge slope={slope.id} label={slope.label} withLabel={false} size={11} />
+                  <span className={styles.railRating}>
+                    <SlopeBadge slope={slope.id} label={slope.label} withLabel={false} size={11} />
+                  </span>
                 </Link>
               );
             })}
@@ -114,7 +117,7 @@ export default function MissionsPage() {
 
                 <div className={styles.metaGrid}>
                   <div>
-                    <span className={`display ${styles.fieldLabel}`}>Timebox</span>
+                    <span className={`display ${styles.fieldLabel}`}>Time</span>
                     <span className="mono amber">
                       <IconTimer size={11} /> {m.timebox_minutes}m
                     </span>
@@ -123,33 +126,11 @@ export default function MissionsPage() {
                     <span className={`display ${styles.fieldLabel}`}>Reward</span>
                     <span className="mono signal">+{m.xp_base} XP</span>
                   </div>
-                  <div>
-                    <span className={`display ${styles.fieldLabel}`}>Evidence</span>
-                    <span className="mono">
-                      {m.evidence.length} file{m.evidence.length > 1 ? "s" : ""}
-                    </span>
-                  </div>
-                </div>
-
-                <div className={styles.scoredOn}>
-                  <span className={`display ${styles.fieldLabel}`}>Skills tested</span>
-                  <div className={styles.dimChips}>
-                    {m.skills.map((s) => (
-                      <span key={s} className="tag tag-muted">{s}</span>
-                    ))}
-                  </div>
                 </div>
 
                 <footer className={styles.dossierFoot}>
                   <Link href={`/missions/${m.id}`} className="btn btn-primary">
                     Open Briefing →
-                  </Link>
-                  <VoiceBriefing text={m.briefing} label="Voice" compact />
-                  <Link
-                    href={`/leaderboard?scope=mission&mission_id=${m.id}`}
-                    className={styles.boardLink}
-                  >
-                    Top runs
                   </Link>
                 </footer>
               </article>

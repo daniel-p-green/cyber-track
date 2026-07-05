@@ -83,8 +83,8 @@ Log each result in incident HALCYON-INC-0078 with timestamp.
 ## Shift-2 Question
 
 After writing your handoff brief, use `cybertf ask` to pass it to the local
-field model and ask: **"Based on this handoff, which nodes need calibration
+local model and ask: **"Based on this handoff, which nodes need calibration
 and what offset should be applied?"**
 
-Report whether the field model's response correctly identifies node_21 and
+Report whether the local model's response correctly identifies node_21 and
 node_23 as the remaining nodes and states the +0.6 degree offset.

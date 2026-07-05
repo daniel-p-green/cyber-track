@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="120" viewBox="0 0 720 120" role="img" aria-labelledby="title desc">
+  <title id="title">CyberTrack wordmark</title>
+  <desc id="desc">CyberTrack wordmark with signal green terminal accent</desc>
+  <rect width="720" height="120" rx="0" fill="#0B0F14"/>
+  <text x="48" y="76" fill="#E6E9EE" font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-size="54" font-weight="800" letter-spacing="8">
+    CYBERTRACK
+  </text>
+  <rect x="467" y="69" width="36" height="7" fill="#3BD671"/>
+  <circle cx="615" cy="59" r="7" fill="#3BD671"/>
+  <text x="636" y="66" fill="#3BD671" font-family="JetBrains Mono, SFMono-Regular, Menlo, Consolas, monospace" font-size="16" font-weight="700" letter-spacing="2">
+    LOCAL GEMMA4
+  </text>
+</svg>

@@ -30,7 +30,7 @@ export interface SubmissionCheck {
 export interface Submission {
   run_id: string;
   mission_id: string;
-  season: "season-zero";
+  season: "season-one";
   callsign: string;
   total: number;
   max_total: number;
@@ -66,6 +66,7 @@ function buildSeedData(): StoreData {
     { callsign: "RIDGELINE", xp: 1650, rank: "Sentinel", created_at: "2026-06-03T11:00:00Z", seeded: true },
     { callsign: "VECTOR-6", xp: 920, rank: "Specialist", created_at: "2026-06-04T12:00:00Z", seeded: true },
     { callsign: "LOWLIGHT", xp: 410, rank: "Operator", created_at: "2026-06-05T13:00:00Z", seeded: true },
+    { callsign: "NIGHTOWL", xp: 375, rank: "Operator", created_at: "2026-07-04T19:50:19Z" },
     { callsign: "MERIDIAN", xp: 80, rank: "Recruit", created_at: "2026-06-06T14:00:00Z", seeded: true },
     { callsign: "APEX-7", xp: 1280, rank: "Sentinel", created_at: "2026-06-07T08:00:00Z", seeded: true },
     { callsign: "IRONCLAD", xp: 3100, rank: "Commander", created_at: "2026-06-08T07:00:00Z", seeded: true },
@@ -81,11 +82,112 @@ function buildSeedData(): StoreData {
   });
 
   const submissions: Submission[] = [
+    // NIGHTOWL – real verified local Gemma run captured for the judge demo.
+    {
+      run_id: "20260704-195019-nightowl",
+      mission_id: "sprint_signal_lost",
+      season: "season-one",
+      callsign: "NIGHTOWL",
+      total: 100,
+      max_total: 100,
+      elapsed_seconds: 157,
+      submitted_at: "2026-07-04T19:52:56Z",
+      dimensions: {
+        mission_completion: { points: 35, max: 35 },
+        evidence_discipline: { points: 20, max: 20 },
+        tool_reliability: { points: 0, max: 0 },
+        prompt_discipline: { points: 5, max: 5 },
+        recovery_from_bad_ai_guidance: { points: 15, max: 15 },
+        terminal_recovery: { points: 5, max: 5 },
+        hallucination_resistance: { points: 0, max: 0 },
+        time_to_signal: { points: 5, max: 5 },
+        communication_quality: { points: 10, max: 10 },
+        local_offline_compliance: { points: 5, max: 5 },
+      },
+      checks: [
+        {
+          id: "root_cause_parameter",
+          label: "Root-cause parameter identified",
+          passed: true,
+          points: 20,
+          max: 20,
+          dimension: "mission_completion",
+        },
+        {
+          id: "config_patched",
+          label: "Config patched back to a safe value",
+          passed: true,
+          points: 15,
+          max: 15,
+          dimension: "mission_completion",
+        },
+        {
+          id: "bad_value_removed",
+          label: "Faulty value no longer present in live config",
+          passed: true,
+          points: 5,
+          max: 5,
+          dimension: "terminal_recovery",
+        },
+        {
+          id: "outage_start_utc",
+          label: "Outage start time pinned from the gateway log",
+          passed: true,
+          points: 10,
+          max: 10,
+          dimension: "evidence_discipline",
+        },
+        {
+          id: "false_lead",
+          label: "False lead identified and ruled out",
+          passed: true,
+          points: 15,
+          max: 15,
+          dimension: "recovery_from_bad_ai_guidance",
+        },
+        {
+          id: "evidence_gateway_log",
+          label: "Gateway log cited as evidence",
+          passed: true,
+          points: 5,
+          max: 5,
+          dimension: "evidence_discipline",
+        },
+        {
+          id: "evidence_maintenance_note",
+          label: "Maintenance note cited as evidence",
+          passed: true,
+          points: 5,
+          max: 5,
+          dimension: "evidence_discipline",
+        },
+        {
+          id: "asked_field_ai",
+          label: "Consulted local Gemma inference at least once",
+          passed: true,
+          points: 5,
+          max: 5,
+          dimension: "prompt_discipline",
+        },
+        {
+          id: "ops_note",
+          label: "Operational note filed with root cause, evidence, and fix",
+          passed: true,
+          points: 10,
+          max: 10,
+          dimension: "communication_quality",
+        },
+      ],
+      ask_count: 2,
+      flags: { suspicious_fast: false, missing_telemetry: false },
+      local_model: { provider: "ollama", model: "gemma4:latest", simulated: false },
+      xp_awarded: 375,
+    },
     // HELIX-9 – marathon (top score)
     {
       run_id: "seed-helix9-marathon-01",
       mission_id: "marathon_degraded_comms",
-      season: "season-zero",
+      season: "season-one",
       callsign: "HELIX-9",
       total: 91,
       max_total: 100,
@@ -101,7 +203,7 @@ function buildSeedData(): StoreData {
     {
       run_id: "seed-helix9-sprint-01",
       mission_id: "sprint_signal_lost",
-      season: "season-zero",
+      season: "season-one",
       callsign: "HELIX-9",
       total: 88,
       max_total: 100,
@@ -117,7 +219,7 @@ function buildSeedData(): StoreData {
     {
       run_id: "seed-kestrel-field-01",
       mission_id: "field_patch_edge_agent",
-      season: "season-zero",
+      season: "season-one",
       callsign: "KESTREL",
       total: 84,
       max_total: 100,
@@ -133,7 +235,7 @@ function buildSeedData(): StoreData {
     {
       run_id: "seed-kestrel-relay-01",
       mission_id: "relay_gemma_handoff",
-      season: "season-zero",
+      season: "season-one",
       callsign: "KESTREL",
       total: 77,
       max_total: 100,
@@ -149,7 +251,7 @@ function buildSeedData(): StoreData {
     {
       run_id: "seed-ridgeline-qual-01",
       mission_id: "basic_qualification",
-      season: "season-zero",
+      season: "season-one",
       callsign: "RIDGELINE",
       total: 95,
       max_total: 100,
@@ -165,7 +267,7 @@ function buildSeedData(): StoreData {
     {
       run_id: "seed-vector6-sprint-sus",
       mission_id: "sprint_signal_lost",
-      season: "season-zero",
+      season: "season-one",
       callsign: "VECTOR-6",
       total: 100,
       max_total: 100,
@@ -181,7 +283,7 @@ function buildSeedData(): StoreData {
     {
       run_id: "seed-lowlight-field-01",
       mission_id: "field_prompt_under_fire",
-      season: "season-zero",
+      season: "season-one",
       callsign: "LOWLIGHT",
       total: 72,
       max_total: 100,
@@ -197,7 +299,7 @@ function buildSeedData(): StoreData {
     {
       run_id: "seed-meridian-qual-01",
       mission_id: "basic_qualification",
-      season: "season-zero",
+      season: "season-one",
       callsign: "MERIDIAN",
       total: 55,
       max_total: 100,
@@ -213,7 +315,7 @@ function buildSeedData(): StoreData {
     {
       run_id: "seed-apex7-field-01",
       mission_id: "field_prompt_under_fire",
-      season: "season-zero",
+      season: "season-one",
       callsign: "APEX-7",
       total: 89,
       max_total: 100,
@@ -229,7 +331,7 @@ function buildSeedData(): StoreData {
     {
       run_id: "seed-ironclad-marathon-01",
       mission_id: "marathon_degraded_comms",
-      season: "season-zero",
+      season: "season-one",
       callsign: "IRONCLAD",
       total: 86,
       max_total: 100,
@@ -245,7 +347,7 @@ function buildSeedData(): StoreData {
     {
       run_id: "seed-ironclad-relay-01",
       mission_id: "relay_gemma_handoff",
-      season: "season-zero",
+      season: "season-one",
       callsign: "IRONCLAD",
       total: 80,
       max_total: 100,
@@ -261,7 +363,7 @@ function buildSeedData(): StoreData {
     {
       run_id: "seed-vector6-field-01",
       mission_id: "field_patch_edge_agent",
-      season: "season-zero",
+      season: "season-one",
       callsign: "VECTOR-6",
       total: 78,
       max_total: 100,
@@ -280,24 +382,7 @@ function buildSeedData(): StoreData {
 
 // ── Persistence ────────────────────────────────────────────────────────────
 
-function isVercel(): boolean {
-  return !!process.env.VERCEL;
-}
-
-let _memoryStore: StoreData | null = null;
-
-async function getMemoryStore(): Promise<StoreData> {
-  if (!_memoryStore) {
-    _memoryStore = buildSeedData();
-  }
-  return _memoryStore;
-}
-
 async function readStore(): Promise<StoreData> {
-  if (isVercel()) {
-    return getMemoryStore();
-  }
-  // Local file store
   const { promises: fs } = await import("fs");
   const path = await import("path");
   const dataDir = path.join(process.cwd(), ".data");
@@ -315,10 +400,6 @@ async function readStore(): Promise<StoreData> {
 }
 
 async function writeStore(data: StoreData): Promise<void> {
-  if (isVercel()) {
-    _memoryStore = data;
-    return;
-  }
   const { promises: fs } = await import("fs");
   const path = await import("path");
   const dataDir = path.join(process.cwd(), ".data");

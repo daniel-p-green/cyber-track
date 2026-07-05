@@ -7,7 +7,7 @@ interface Props {
   files: string[];
 }
 
-/** Interactive evidence tracker — checking files off makes the cockpit feel
+/** Interactive evidence tracker. Checking files off makes the run feel
  *  live. State is per-session; the CLI is the source of truth for scoring. */
 export default function EvidenceChecklist({ missionId, files }: Props) {
   const [checked, setChecked] = useState<Set<string>>(new Set());
@@ -46,12 +46,14 @@ export default function EvidenceChecklist({ missionId, files }: Props) {
       >
         {files.map((f) => {
           const on = checked.has(f);
+          const fullPath = `challenges/${missionId}/data/${f}`;
           return (
             <li key={f}>
               <button
                 type="button"
                 onClick={() => toggle(f)}
                 aria-pressed={on}
+                title={fullPath}
                 style={{
                   width: "100%",
                   display: "inline-flex",
@@ -69,6 +71,7 @@ export default function EvidenceChecklist({ missionId, files }: Props) {
                   textAlign: "left",
                   cursor: "pointer",
                   transition: "border-color 120ms ease-out, background 120ms ease-out",
+                  minWidth: 0,
                 }}
               >
                 <svg
@@ -86,7 +89,16 @@ export default function EvidenceChecklist({ missionId, files }: Props) {
                   <rect x="4" y="4" width="16" height="16" rx="1.5" />
                   {on && <path d="m8.5 12.3 2.4 2.5 4.8-5.4" />}
                 </svg>
-                challenges/{missionId}/data/{f}
+                <span
+                  style={{
+                    minWidth: 0,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {f}
+                </span>
               </button>
             </li>
           );

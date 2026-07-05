@@ -5,13 +5,11 @@ import { getSubmissionsForMission, getAllOperators } from "@/lib/store";
 import { eventTypeLabel, eventTypeColor, formatElapsed, slopeForDifficulty } from "@/lib/utils";
 import {
   MissionGlyph,
-  GemmaStatus,
   HexBadge,
   ScoreRing,
   SlopeBadge,
   IconTimer,
   IconFile,
-  IconChat,
   IconSuspicious,
   IconOffline,
   IconBars,
@@ -19,6 +17,7 @@ import {
 } from "../../components/svg";
 import CopyCmd from "../../components/CopyCmd";
 import EvidenceChecklist from "../../components/EvidenceChecklist";
+import LocalRuntimeStatus from "../../components/LocalRuntimeStatus";
 import VoiceBriefing from "../../components/VoiceBriefing";
 import styles from "./page.module.css";
 
@@ -62,11 +61,11 @@ export default async function MissionBriefing({ params }: Props) {
         {/* Status bar */}
         <div className={styles.statusBar}>
           <div className={styles.breadcrumb}>
-            <Link href="/missions">← Mission Board</Link>
+            <Link href="/missions">← Missions</Link>
             <span className="muted">/ {mission.title}</span>
           </div>
           <span className={styles.statusChips}>
-            <GemmaStatus compact />
+            <LocalRuntimeStatus compact />
           </span>
         </div>
 
@@ -85,7 +84,11 @@ export default async function MissionBriefing({ params }: Props) {
             <h1 className={`display ${styles.title}`}>{mission.title}</h1>
             <p className={styles.summary}>{mission.hook}</p>
             <div className={styles.headVoice}>
-              <VoiceBriefing text={mission.briefing} label="Play voice briefing" />
+              <VoiceBriefing
+                briefingId={mission.id}
+                text={mission.briefing}
+                label="Play voice briefing"
+              />
             </div>
           </div>
         </header>
@@ -171,22 +174,6 @@ export default async function MissionBriefing({ params }: Props) {
               </div>
             </section>
 
-            {/* Model hypothesis */}
-            <section className={`panel ${styles.zone} ${styles.zoneTrap}`}>
-              <div className={styles.zoneHead}>
-                <IconChat size={15} />
-                <span className="display">The Model Will Get This Wrong</span>
-              </div>
-              <div className={styles.zoneBody}>
-                <p className={styles.prose}>{mission.model_trap}</p>
-                <p className={styles.trapNote}>
-                  Catching a planted bad claim is scored. Missing it costs you.
-                  The model is your field AI, not your judge: deterministic
-                  checks grade the run.
-                </p>
-              </div>
-            </section>
-
             {/* Operator decision */}
             <section className={`panel ${styles.zone}`}>
               <div className={styles.zoneHead}>
@@ -203,14 +190,14 @@ export default async function MissionBriefing({ params }: Props) {
               </div>
             </section>
 
-            {/* Flight ops — commands demoted to one compact block */}
+            {/* Commands demoted to one compact block */}
             <section className={`panel ${styles.supportZone}`}>
               <div className={styles.supportHead}>
                 <span className={`display ${styles.supportLabel}`}>
-                  Flight ops · terminal
+                  Cursor terminal
                 </span>
                 <span className={styles.supportSub}>
-                  start and submit bookend the run; everything between happens in the editor
+                  Use these commands inside Cursor; the web app tracks the score.
                 </span>
               </div>
               <div className={styles.supportBody}>
@@ -227,7 +214,7 @@ export default async function MissionBriefing({ params }: Props) {
                     <span className={styles.prompt}>$ </span>
                     cybertf ask &quot;...&quot; --file &lt;evidence&gt;
                   </code>
-                  <span className={styles.cmdNote}>query local Gemma</span>
+                  <span className={styles.cmdNote}>ask local Gemma</span>
                   <CopyCmd text={`cybertf ask "your question" --file <evidence-file>`} />
                 </div>
                 <div className={styles.seqCmdRow}>
@@ -243,7 +230,7 @@ export default async function MissionBriefing({ params }: Props) {
                     <span className={styles.prompt}>$ </span>
                     cybertf publish &lt;run_id&gt;
                   </code>
-                  <span className={styles.cmdNote}>post to the arena</span>
+                  <span className={styles.cmdNote}>post score</span>
                   <CopyCmd text={`cybertf publish <run_id>`} />
                 </div>
               </div>
@@ -260,7 +247,7 @@ export default async function MissionBriefing({ params }: Props) {
 
               <div className={styles.arenaBody}>
                 <div>
-                  <span className={`display ${styles.fieldLabel}`}>Scored on</span>
+                  <span className={`display ${styles.fieldLabel}`}>Measured on</span>
                   <div className={styles.dimChips}>
                     {mission.dimensions.map((d) => (
                       <span key={d} className="tag tag-muted">{d}</span>
@@ -366,7 +353,7 @@ export default async function MissionBriefing({ params }: Props) {
               </div>
 
               <Link href="/leaderboard" className={`btn btn-outline ${styles.fullBoard}`}>
-                <IconBars size={13} /> Full Arena
+                <IconBars size={13} /> Leaderboard
               </Link>
             </section>
           </aside>

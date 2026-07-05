@@ -19,7 +19,7 @@ export interface Mission {
   /** Radio-operator voice briefing, 8 to 15 seconds spoken. */
   briefing: string;
   skills: string[];
-  season: "season-zero";
+  season: "season-one";
   /** Workspace evidence files with a short role note. */
   evidence: { file: string; role: string }[];
   /** Scoring dimensions this mission emphasizes (mirrors mission.json checks). */
@@ -37,17 +37,17 @@ export const MISSIONS: Mission[] = [
     xp_base: 200,
     hook: "An archived AI advisory doesn't match the relay roster. Find the claim that breaks.",
     situation:
-      "You are reporting to the HALCYON training annex, a sealed replica of the relay grid built for operator certification. A previous shift left an archived field-AI advisory in the workspace, and part of it does not match the relay roster.",
+      "You are reporting to the HALCYON training annex, a sealed replica of the relay grid built for AI operations readiness. A previous shift left an archived model advisory in the workspace, and part of it does not match the relay roster.",
     edge_condition:
-      "Standing policy keeps the annex air-gapped. No cloud AI, no outside networks. Only the local Gemma model on your machine.",
+      "Air-gapped annex. No cloud AI. Only local Gemma on your machine.",
     model_trap:
-      "The advisory contains at least one confident claim the roster disproves. The model will repeat it if you don't check.",
+      "The advisory includes a confident claim the roster disproves. Check before you repeat it.",
     decision:
       "Which claims in the advisory survive contact with the evidence, and which do not.",
     briefing:
-      "Operator, HALCYON control. Welcome to the training annex. A prior shift archived a field A I advisory, and part of it does not match the relay roster. No cloud on this grid. Verify before you trust. Clock starts on your mark.",
+      "Operator, HALCYON control. Welcome to the training annex. A prior shift archived a model advisory, and part of it does not match the relay roster. No cloud on this grid. Verify before you trust. Clock starts on your mark.",
     skills: ["evidence discipline", "model verification", "submission workflow"],
-    season: "season-zero",
+    season: "season-one",
     evidence: [
       { file: "relay_roster.txt", role: "ground truth for the relay grid" },
       { file: "field_ai_advisory.txt", role: "the archived AI advisory to verify" },
@@ -72,9 +72,9 @@ export const MISSIONS: Mission[] = [
     decision:
       "The real root cause, and the config patch that brings the warning feed back before the next front.",
     briefing:
-      "Operator, HALCYON control. A config push broke the coastal uplink. Sensors are dropping packets ahead of the storm front. No cloud on this link, just you and the local field A I. The last shift blamed the weather. Verify before you trust. Clock is running.",
+      "Operator, HALCYON control. A config push broke the coastal uplink. Sensors are dropping packets ahead of the storm front. No cloud on this link, just you and the local model. The last shift blamed the weather. Verify before you trust. Clock is running.",
     skills: ["log triage", "config diffing", "recovery from bad guidance"],
-    season: "season-zero",
+    season: "season-one",
     evidence: [
       { file: "gateway.log", role: "uplink gateway events" },
       { file: "node_17.log", role: "field node radio log (the tempting red herring)" },
@@ -97,9 +97,9 @@ export const MISSIONS: Mission[] = [
     timebox_minutes: 10,
     expected_seconds: { min: 120, max: 2400 },
     xp_base: 300,
-    hook: "Three AI-drafted restoration plans. One is safe. One breaks policy. One cites a tool that doesn't exist.",
+    hook: "Three AI-drafted plans. One is safe. One breaks policy. One invents a tool.",
     situation:
-      "Relay R-7 on the HALCYON grid is degraded. A prior shift queried the field model and archived three draft restoration plans. Nobody has reviewed them. If the wrong plan executes, R-7 goes from degraded to down.",
+      "Relay R-7 on the HALCYON grid is degraded. A prior shift queried the local model and archived three draft restoration plans. Nobody has reviewed them. If the wrong plan executes, R-7 goes from degraded to down.",
     edge_condition:
       "The exercise assumes a contested environment: outbound traffic cannot be trusted, so all cloud AI is off the table and every plan must be checked against documents you hold locally.",
     model_trap:
@@ -109,7 +109,7 @@ export const MISSIONS: Mission[] = [
     briefing:
       "Operator, HALCYON control. Relay R seven is degraded and three A I drafted restoration plans are sitting in the queue, unreviewed. One is safe. One breaks policy. One cites a tool this grid has never carried. Approve only what you can verify.",
     skills: ["plan critique", "hallucination detection", "policy verification"],
-    season: "season-zero",
+    season: "season-one",
     evidence: [
       { file: "proposed_plans.md", role: "the three AI-drafted plans to review" },
       { file: "ops_policy.md", role: "standing maintenance policy" },
@@ -125,7 +125,7 @@ export const MISSIONS: Mission[] = [
     timebox_minutes: 15,
     expected_seconds: { min: 180, max: 3600 },
     xp_base: 400,
-    hook: "A severity classifier mislabels boundary events. Warnings escalate late across the forward line.",
+    hook: "Boundary events are mislabeled. Forward-line warnings escalate late.",
     situation:
       "The severity classifier deployed on HALCYON's forward sensor nodes has a bug. Events at a specific boundary score are mislabeled, so real warnings escalate late. The fix ships tonight with the next maintenance window, and multiple tests are failing right now.",
     edge_condition:
@@ -137,7 +137,7 @@ export const MISSIONS: Mission[] = [
     briefing:
       "Operator, HALCYON control. The severity classifier on the forward line is mislabeling boundary events, and warnings are escalating late. The fix ships tonight. Minimal change only, and the spec is the ground truth, not the model's intuition.",
     skills: ["debugging under constraint", "minimal patching", "spec discipline"],
-    season: "season-zero",
+    season: "season-one",
     evidence: [
       { file: "severity_spec.md", role: "authoritative threshold specification" },
       { file: "edge_agent.py", role: "the buggy classifier" },
@@ -159,13 +159,13 @@ export const MISSIONS: Mission[] = [
     edge_condition:
       "Sector 4 handles positional data classified grid-internal. Incident details never leave the local network: no cloud AI sees this traffic, by policy, ever.",
     model_trap:
-      "The field model only knows what you tell it. A vague handoff produces a confident but wrong continuation, and grading that continuation is part of the mission.",
+      "The local model only knows what you tell it. A vague handoff produces a confident but wrong continuation, and grading that continuation is part of the mission.",
     decision:
       "What the handoff brief must contain so the model can actually continue the work, then whether its continuation holds up.",
     briefing:
       "Operator, HALCYON control. Your shift ends mid incident. Two nodes still read drifted values and the next operator inherits only your brief and the local model. If the handoff is vague, the wrong nodes get recalibrated. Write it tight, then test it.",
     skills: ["handoff clarity", "context engineering", "output grading"],
-    season: "season-zero",
+    season: "season-one",
     evidence: [
       { file: "incident_context.md", role: "what Shift 1 did and what remains" },
     ],
@@ -185,18 +185,18 @@ export const MISSIONS: Mission[] = [
     edge_condition:
       "Cloud AI is out of reach and would be too slow anyway. Round trips over the degraded backhaul take longer than the decisions do.",
     model_trap:
-      "The field AI has already filed a high-confidence recommendation. Acting on it could restart the wrong subsystem and extend the outage. Confidence is not correctness.",
+      "The local model has already filed a high-confidence recommendation. Acting on it could restart the wrong subsystem and extend the outage. Confidence is not correctness.",
     decision:
       "What actually failed, when the power event began, and whether the model's recommendation is safe to execute. Then the memo that holds up.",
     briefing:
-      "Operator, HALCYON control. Forward cluster F W D seven went dark at oh three forty two. The logs arrived out of order, the sitreps disagree, and the field A I has already filed a confident recommendation. Confidence is not correctness. Take the time to be right.",
+      "Operator, HALCYON control. Forward cluster F W D seven went dark at oh three forty two. The logs arrived out of order, the sitreps disagree, and the local model has already filed a confident recommendation. Confidence is not correctness. Take the time to be right.",
     skills: ["multi-source correlation", "uncertainty communication", "decision quality"],
-    season: "season-zero",
+    season: "season-one",
     evidence: [
       { file: "telemetry_snapshot.csv", role: "sensor readings showing the outage pattern" },
       { file: "delayed_logs.log", role: "log batch that arrived out of order" },
       { file: "situation_reports.md", role: "two conflicting human sitreps" },
-      { file: "model_recommendation.md", role: "the field AI's confident recommendation" },
+      { file: "model_recommendation.md", role: "the local model's confident recommendation" },
     ],
     dimensions: [
       "mission completion",

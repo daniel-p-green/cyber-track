@@ -24,7 +24,7 @@ class Mission:
     skills: list
     answer_fields: list
     checks: list
-    season: str = "season-zero"
+    season: str = "season-one"
     par_seconds: int | None = None
     time_points: int = 5
     path: Path = field(default_factory=Path)

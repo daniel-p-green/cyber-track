@@ -3,9 +3,9 @@ import EnlistForm from "../components/EnlistForm";
 import DeploymentProtocol, { ProtocolStep } from "../components/DeploymentProtocol";
 import { RANKS } from "@/lib/ranks";
 import {
+  IconExternal,
   IconOffline,
   IconTerminal,
-  IconExternal,
   RankChevrons,
   SlopeBadge,
 } from "../components/svg";
@@ -18,14 +18,15 @@ function Code({ children }: { children: React.ReactNode }) {
 const STEPS: ProtocolStep[] = [
   {
     id: "cursor",
-    title: "Install Cursor, your cockpit",
+    title: "Install Cursor",
     body: (
       <>
         <p>
-          Missions are flown inside Cursor: evidence in the editor,{" "}
-          <code className={`mono ${styles.inline}`}>cybertf ask</code> as your
-          field AI, this arena in the in-app browser. Already use Cursor?
-          This step is done.
+          Cursor is the workspace: editor, terminal, and in-app browser.
+        </p>
+        <p>
+          The default demo path uses <code className={`mono ${styles.inline}`}>cybertf ask</code>{" "}
+          in Cursor&apos;s terminal. Cursor-native model chat is optional.
         </p>
         <div className={styles.linkRow}>
           <a href="https://cursor.com?ref=CyberTrack" target="_blank" rel="noopener noreferrer">
@@ -63,7 +64,10 @@ const STEPS: ProtocolStep[] = [
     title: "Install Ollama, the local model runtime",
     body: (
       <>
-        <p>Ollama runs Gemma on your machine. No API key, no account, no cloud.</p>
+        <p>Ollama runs Gemma on your machine. Keep it running while you run missions.</p>
+        <Code>
+          <div><span className={styles.prompt}>$</span> <span className="signal">ollama serve</span> <span className="muted"># only if Ollama is not already running</span></div>
+        </Code>
         <div className={styles.linkRow}>
           <a href="https://ollama.com/download" target="_blank" rel="noopener noreferrer">
             Install Ollama <IconExternal size={11} />
@@ -77,17 +81,83 @@ const STEPS: ProtocolStep[] = [
     title: "Pull and verify local Gemma",
     body: (
       <>
-        <p>Pull the model, then prove the local path works before any mission:</p>
+        <p>Pull Gemma, then prove the local path before any mission:</p>
         <Code>
-          <div><span className={styles.prompt}>$</span> <span className="signal">ollama pull</span> gemma4</div>
+          <div><span className={styles.prompt}>$</span> <span className="signal">ollama pull</span> gemma4:latest</div>
           <div><span className={styles.prompt}>$</span> <span className="signal">cybertf verify-model</span></div>
         </Code>
         <p>
-          Green <code className={`mono ${styles.inline}`}>FIELD AI ONLINE</code>{" "}
-          means you&apos;re ready to fly offline. Every model query goes through{" "}
-          <code className={`mono ${styles.inline}`}>cybertf ask</code> on the
-          same local Gemma4 path.
+          Expected result:{" "}
+          <code className={`mono ${styles.inline}`}>Local inference ready</code>.
         </p>
+        <Code>
+          <div><span className={styles.prompt}>$</span> <span className="signal">cybertf ask</span> &quot;What claim should I verify?&quot; --file challenges/basic_qualification/data/field_ai_advisory.txt</div>
+        </Code>
+      </>
+    ),
+  },
+  {
+    id: "model-options",
+    title: "Choose the AI access path",
+    body: (
+      <>
+        <p>
+          For judging, use the local path. The other options are backups, not
+          the default demo flow.
+        </p>
+        <div className={styles.pathStack}>
+          <div className={`${styles.pathBlock} ${styles.pathRecommended}`}>
+            <div className={styles.pathHead}>
+              <span className={`display ${styles.optionEyebrow}`}>Use this</span>
+              <h3>Cursor terminal + cybertf ask</h3>
+            </div>
+            <p>
+              No Cursor model settings. Ask local Gemma from the Cursor
+              terminal with the evidence file attached.
+            </p>
+            <Code>
+              <div><span className={styles.prompt}>$</span> <span className="signal">cybertf ask</span> &quot;What should I verify?&quot; --file challenges/basic_qualification/data/field_ai_advisory.txt</div>
+            </Code>
+          </div>
+
+          <div className={styles.pathBlock}>
+            <div className={styles.pathHead}>
+              <span className={`display ${styles.optionEyebrow}`}>Advanced</span>
+              <h3>Cursor-native chat</h3>
+            </div>
+            <p>
+              Cursor cannot call private localhost directly. Expose Ollama with
+              an HTTPS tunnel, then set Cursor&apos;s base URL to the tunnel plus{" "}
+              <code className={`mono ${styles.inline}`}>/v1</code>.
+            </p>
+            <Code>
+              <div><span className={styles.prompt}>$</span> <span className="signal">OLLAMA_ORIGINS</span>=&quot;*&quot; ollama serve</div>
+              <div><span className={styles.prompt}>$</span> <span className="signal">ngrok http</span> 11434 --host-header=&quot;localhost:11434&quot;</div>
+            </Code>
+            <ul className={styles.pathFacts}>
+              <li><span>Model</span><code className={`mono ${styles.inline}`}>gemma4:latest</code></li>
+              <li><span>API key</span><code className={`mono ${styles.inline}`}>Ollama</code></li>
+              <li><span>Base URL</span><code className={`mono ${styles.inline}`}>https://your-tunnel.ngrok-free.app/v1</code></li>
+            </ul>
+          </div>
+
+          <div className={styles.pathBlock}>
+            <div className={styles.pathHead}>
+              <span className={`display ${styles.optionEyebrow}`}>Fallback</span>
+              <h3>OpenRouter free Gemma</h3>
+            </div>
+            <p>
+              Cloud backup only. Useful if local hardware fails, but not valid
+              for local/offline compliance.
+            </p>
+            <Code>
+              <div><span className={styles.prompt}>$</span> <span className="signal">export</span> CYBERTF_OPENAI_BASE=&quot;https://openrouter.ai/api/v1&quot;</div>
+              <div><span className={styles.prompt}>$</span> <span className="signal">export</span> OPENROUTER_API_KEY=&quot;...&quot;</div>
+              <div><span className={styles.prompt}>$</span> <span className="signal">export</span> CYBERTF_MODEL=&quot;google/gemma-4-26b-a4b-it:free&quot;</div>
+              <div><span className={styles.prompt}>$</span> <span className="signal">cybertf verify-model</span></div>
+            </Code>
+          </div>
+        </div>
       </>
     ),
   },
@@ -97,8 +167,8 @@ const STEPS: ProtocolStep[] = [
     body: (
       <>
         <p>
-          Your arena identity. No email, no password. GitHub and X links
-          optional.
+          Pick the callsign that will appear on the leaderboard. Profile links
+          are optional demo metadata.
         </p>
         <EnlistForm />
       </>
@@ -106,7 +176,7 @@ const STEPS: ProtocolStep[] = [
   },
   {
     id: "first-mission",
-    title: "Fly Basic Qualification",
+    title: "Run Basic Qualification",
     body: (
       <>
         <p>
@@ -114,7 +184,7 @@ const STEPS: ProtocolStep[] = [
           run <code className={`mono ${styles.inline}`}>cybertf ask</code>,
           catch the one bad model claim, and write{" "}
           <code className={`mono ${styles.inline}`}>answer.json</code>.
-          15 minutes on the clock.
+          The clock starts at 15 minutes.
         </p>
         <Code>
           <div><span className={styles.prompt}>$</span> <span className="signal">cybertf run</span> basic_qualification</div>
@@ -134,12 +204,12 @@ const STEPS: ProtocolStep[] = [
 ];
 
 const QUICK_REF = [
-  { cmd: "cybertf verify-model", desc: "Prove local Gemma is online" },
+  { cmd: "cybertf verify-model", desc: "Prove local inference is online" },
   { cmd: "cybertf run <id>", desc: "Start a mission (arms timer)" },
-  { cmd: "cybertf ask \"...\"", desc: "Terminal fallback for model queries" },
+  { cmd: "cybertf ask \"...\"", desc: "Ask local Ollama/Gemma from Cursor terminal" },
   { cmd: "cybertf submit <id> answer.json", desc: "Score the run" },
   { cmd: "cybertf report <run_id>", desc: "Generate the AAR" },
-  { cmd: "cybertf publish <run_id>", desc: "Post score to the arena" },
+  { cmd: "cybertf publish <run_id>", desc: "Post score to the leaderboard" },
 ];
 
 export default function QualificationPage() {
@@ -152,12 +222,7 @@ export default function QualificationPage() {
             <span className="pulse-dot" />
             Season One · Setup
           </div>
-          <h1 className={`display ${styles.title}`}>Get Mission-Capable</h1>
-          <p className={styles.subtitle}>
-            Six steps from zero to your first scored run: Cursor as the
-            cockpit, Ollama running Gemma locally, a callsign, and one
-            qualification mission. About five minutes of setup.
-          </p>
+          <h1 className={`display ${styles.title}`}>Set Up CyberTrack</h1>
           <div className={styles.slopeRow}>
             <SlopeBadge slope="green" label="Green Circle: Basic Qualification" size={13} />
             <span className="mono muted">15:00 timebox · +200 XP</span>
@@ -172,10 +237,7 @@ export default function QualificationPage() {
               Mission constraint: local Gemma only
             </div>
             <p>
-              Missions run offline and private. Your only AI is a Gemma model
-              on your own machine. That constraint is the training: it
-              simulates the edge conditions where cloud AI is unavailable,
-              untrusted, or inappropriate.
+              Gemma runs on your machine. Missions stay offline and private.
             </p>
           </div>
         </div>
@@ -191,7 +253,7 @@ export default function QualificationPage() {
               </div>
               <p className={styles.refNote}>
                 Scaffolding for timing, scoring, and publishing. The mission
-                itself is flown in the editor and via{" "}
+                itself runs in Cursor and via{" "}
                 <code className={`mono ${styles.inline}`}>cybertf ask</code>.
               </p>
               <div className={styles.refList}>
@@ -217,34 +279,12 @@ export default function QualificationPage() {
               ))}
             </div>
 
-            <div className={`panel ${styles.originCard}`}>
-              <div className="section-label">Roadmap</div>
-              <div className={`display ${styles.originTitle}`}>Cursor Origin</div>
-              <p>
-                One-tap Cursor identity, coming in Season Two. Callsigns are all
-                you need today.
-              </p>
-              <a
-                href="https://cursor.com/origin?ref=CyberTrack"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.originLink}
-              >
-                About Cursor Origin <IconExternal size={11} />
-              </a>
-            </div>
-
-            <div className={styles.ruleNote}>
-              Scores are <strong>training feedback</strong>, never hiring
-              signals.
-            </div>
-
             <Link
               href="/missions/basic_qualification"
               className="btn btn-outline"
               style={{ width: "100%", justifyContent: "center" }}
             >
-              Open the Mission Cockpit →
+              Open Basic Qualification →
             </Link>
           </aside>
         </div>

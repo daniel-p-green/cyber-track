@@ -2,36 +2,6 @@
   padding-bottom: 56px;
 }
 
-/* ── Ops status strip ─────────────────────────────────────────────────── */
-.statusStrip {
-  border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--panel) 60%, var(--bg));
-}
-.statusInner {
-  display: flex;
-  align-items: center;
-  gap: clamp(14px, 3vw, 32px);
-  min-height: 34px;
-  overflow: hidden;
-}
-.statusItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-display);
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.11em;
-  color: var(--muted);
-  white-space: nowrap;
-}
-.statusClock {
-  margin-left: auto;
-  color: var(--ice);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-}
-
 /* ── Hero ──────────────────────────────────────────────────────────────
    Editorial copy over the command-deck atmosphere. Sized to fill a 16:9
    demo frame below the header (56px) and status strip (34px). */
@@ -39,9 +9,8 @@
   position: relative;
   overflow: hidden;
   display: flex;
-  align-items: center;
-  min-height: calc(100svh - 90px);
-  padding: clamp(48px, 8vw, 96px) 0;
+  align-items: flex-start;
+  padding: clamp(44px, 6vw, 72px) 0 clamp(40px, 5vw, 64px);
   border-bottom: 1px solid var(--line);
 }
 /* Command-deck atmosphere art — decorative only, fades into --bg so the
@@ -60,8 +29,8 @@
   opacity: 0.5;
 }
 :global([data-theme="light"]) .heroArt {
-  opacity: 0.12;
-  filter: saturate(0.6);
+  opacity: 0.34;
+  filter: saturate(0.72) contrast(0.96);
 }
 .hero > :global(.container) {
   position: relative;
@@ -75,16 +44,16 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   color: var(--signal);
-  margin-bottom: 22px;
+  margin-bottom: 16px;
 }
 .heroTitle {
   font-family: var(--font-display);
-  font-size: clamp(30px, 4.4vw, 52px);
+  font-size: clamp(30px, 4vw, 50px);
   font-weight: 600;
-  line-height: 1.14;
+  line-height: 1.1;
   letter-spacing: 0.005em;
   color: var(--text);
-  margin-bottom: 22px;
+  margin-bottom: 18px;
   text-transform: none;
 }
 .heroDim {
@@ -93,14 +62,14 @@
 .heroText {
   color: var(--muted);
   font-size: 16px;
-  line-height: 1.75;
+  line-height: 1.65;
   max-width: 58ch;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 .heroActions {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 16px 20px;
   flex-wrap: wrap;
 }
 .heroQuiet {
@@ -116,43 +85,17 @@
   text-decoration: none;
 }
 
-/* Fact line — replaces the mockup. Four quiet key/value pairs. */
-.heroFacts {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 28px;
-  margin: clamp(40px, 7vw, 72px) 0 0;
-  padding-top: 28px;
-  border-top: 1px solid var(--line);
-  max-width: 920px;
-}
-.heroFact dt {
-  font-family: var(--font-display);
-  font-size: 10.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.13em;
-  color: var(--muted);
-  margin-bottom: 6px;
-}
-.heroFact dd {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--text);
-}
-
 /* ── The loop ─────────────────────────────────────────────────────────── */
 .loopSection {
-  padding: clamp(48px, 7vw, 80px) 0;
+  padding: clamp(40px, 5vw, 64px) 0;
   border-bottom: 1px solid var(--line);
 }
 .loop {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 28px;
-  margin-top: 28px;
+  gap: 22px;
+  margin-top: 22px;
 }
 .loopStep {
   display: flex;
@@ -178,22 +121,23 @@
   line-height: 1.6;
 }
 .loopFoot {
-  margin-top: 36px;
+  margin-top: 26px;
   color: var(--muted);
   font-size: 14px;
   line-height: 1.7;
-  max-width: 64ch;
+  max-width: 58ch;
+  text-wrap: balance;
 }
 
 /* ── Scored on + AAR extract ──────────────────────────────────────────── */
 .scoredSection {
-  padding: clamp(48px, 7vw, 88px) 0;
+  padding: clamp(40px, 5vw, 68px) 0;
   border-bottom: 1px solid var(--line);
 }
 .scoredGrid {
   display: grid;
   grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-  gap: clamp(32px, 6vw, 80px);
+  gap: clamp(28px, 5vw, 64px);
   align-items: start;
 }
 .scoredCopy { min-width: 0; }
@@ -203,15 +147,16 @@
   font-weight: 600;
   line-height: 1.2;
   color: var(--text);
-  margin: 22px 0 12px;
+  margin: 16px 0 10px;
   text-transform: none;
 }
 .scoredText {
   color: var(--muted);
   font-size: 14.5px;
-  line-height: 1.75;
-  max-width: 52ch;
-  margin-bottom: 28px;
+  line-height: 1.65;
+  max-width: 49ch;
+  margin-bottom: 22px;
+  text-wrap: balance;
 }
 .scoredList {
   list-style: none;
@@ -353,18 +298,19 @@
 
 /* ── Campaign rail ────────────────────────────────────────────────────── */
 .railSection {
-  padding: clamp(48px, 7vw, 80px) 0;
+  padding: clamp(40px, 5vw, 64px) 0;
   border-bottom: 1px solid var(--line);
 }
 .rail {
   display: flex;
   align-items: flex-start;
-  padding: 24px 0 4px;
+  padding: 18px 0 4px;
 }
 .railStop {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 44px 13px 36px 16px;
+  justify-items: center;
   align-items: center;
   gap: 8px;
   flex: 1;
@@ -372,6 +318,7 @@
   padding: 0 8px;
   text-decoration: none;
   text-align: center;
+  min-height: 128px;
 }
 .railStop:hover { text-decoration: none; }
 .railStop:hover .railTitle { color: var(--ice); }
@@ -392,18 +339,25 @@
   margin-top: 2px;
 }
 .railTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 13.5px;
   font-weight: 700;
   color: var(--text);
   line-height: 1.15;
   transition: color 120ms ease-out;
+  min-height: 36px;
+  text-wrap: balance;
 }
 .railChips {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   font-size: 10px;
   color: var(--muted);
+  min-height: 16px;
 }
 .railFoot {
   display: flex;
@@ -411,8 +365,8 @@
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin-top: 28px;
-  padding-top: 16px;
+  margin-top: 22px;
+  padding-top: 14px;
   border-top: 1px solid var(--line);
 }
 .slopeKey {
@@ -431,7 +385,7 @@
 
 /* ── Setup CTA ────────────────────────────────────────────────────────── */
 .bottomSection {
-  padding: clamp(48px, 7vw, 80px) 0 12px;
+  padding: clamp(40px, 5vw, 64px) 0 12px;
 }
 .setupPanel {
   display: grid;
@@ -440,36 +394,13 @@
   align-items: center;
 }
 .setupCopy { min-width: 0; }
-.setupCopy p {
-  color: var(--muted);
-  font-size: 14.5px;
-  line-height: 1.7;
-  max-width: 58ch;
-  margin: 18px 0;
-}
-.setupLinks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.setupLinks a {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 14px;
-  border: 1px solid var(--line-strong);
-  color: var(--text);
+.setupTitle {
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: clamp(22px, 2.5vw, 30px);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border-radius: 2px;
-}
-.setupLinks a:hover {
-  border-color: var(--ice);
-  color: var(--ice);
-  text-decoration: none;
+  line-height: 1.2;
+  color: var(--text);
+  margin-top: 14px;
 }
 .setupActions {
   display: flex;
@@ -478,27 +409,8 @@
 }
 .setupActions :global(.btn) { justify-content: center; }
 
-/* ── Demo framing ─────────────────────────────────────────────────────────
-   On desktop each major section composes as a full 16:9 frame, so a
-   recorded scroll advances beat by beat. Mobile keeps natural flow. */
-@media (min-width: 960px) {
-  .loopSection,
-  .scoredSection,
-  .railSection {
-    display: flex;
-    align-items: center;
-    min-height: calc(100svh - 56px);
-  }
-  .loopSection > :global(.container),
-  .scoredSection > :global(.container),
-  .railSection > :global(.container) {
-    width: 100%;
-  }
-}
-
 /* ── Responsive ───────────────────────────────────────────────────────── */
 @media (max-width: 960px) {
-  .heroFacts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .loop { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .loopStep:last-child { grid-column: 1 / -1; }
   .scoredGrid { grid-template-columns: 1fr; }
@@ -508,11 +420,13 @@
   /* Campaign rail becomes a vertical route on small screens */
   .rail { flex-direction: column; align-items: stretch; gap: 0; padding-top: 8px; }
   .railStop {
+    display: flex;
     flex-direction: row;
     align-items: center;
     text-align: left;
     gap: 14px;
     padding: 10px 4px;
+    min-height: 0;
   }
   .railStop + .railStop { border-top: 1px solid var(--line); }
   .railLine { display: none; }
@@ -522,9 +436,7 @@
 }
 
 @media (max-width: 480px) {
-  .statusHideSm { display: none; }
   .loop { grid-template-columns: 1fr; }
-  .heroFacts { grid-template-columns: 1fr; }
   .railChips span.mono:last-child { display: none; }
   .scoredList li { grid-template-columns: 1fr; gap: 4px; }
   .aarDim { grid-template-columns: 130px minmax(0, 1fr) 32px; }

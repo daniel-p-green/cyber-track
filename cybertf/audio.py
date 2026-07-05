@@ -4,9 +4,9 @@ Default path is fully offline: macOS built-in `say` for briefings and a
 system sound for mission-complete cues. This matches the edge/offline
 thesis — no cloud voice required.
 
-ElevenLabs is an optional polish tier, used only when ELEVENLABS_API_KEY
-is present in the environment and --voice elevenlabs is requested.
-The key is never stored or committed.
+OpenAI TTS is an optional demo polish tier, used only when OPENAI_API_KEY
+is present in the environment and --voice openai is requested. The key is
+never stored or committed.
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ BRIEFING_SCRIPTS = {
     "sprint_signal_lost": (
         "Operator, HALCYON control. A config push broke the coastal uplink. "
         "Sensors are dropping packets ahead of the storm front. No cloud on "
-        "this link, just you and the local field AI. Verify before you "
+        "this link, just you and the local model. Verify before you "
         "trust. Clock is running."
     ),
 }
@@ -64,20 +64,27 @@ def play_cue(kind: str = "complete") -> bool:
     return True
 
 
-def speak_elevenlabs(text: str, out_path: Path) -> bool:
-    """Optional cloud polish tier. Requires ELEVENLABS_API_KEY in env."""
-    key = os.environ.get("ELEVENLABS_API_KEY")
+def speak_openai(text: str, out_path: Path) -> bool:
+    """Optional cloud polish tier. Requires OPENAI_API_KEY in env."""
+    key = os.environ.get("OPENAI_API_KEY")
     if not key:
         return False
-    voice = os.environ.get("ELEVENLABS_VOICE_ID", "21m00Tcm4TlvDq8ikWAM")
+    base = os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1").rstrip("/")
+    model = os.environ.get("OPENAI_TTS_MODEL", "tts-1-hd")
+    voice = os.environ.get("OPENAI_TTS_VOICE", "onyx")
     req = urllib.request.Request(
-        f"https://api.elevenlabs.io/v1/text-to-speech/{voice}",
-        data=json.dumps({"text": text, "model_id": "eleven_multilingual_v2"}).encode(),
-        headers={"Content-Type": "application/json", "xi-api-key": key},
+        f"{base}/audio/speech",
+        data=json.dumps(
+            {"model": model, "input": text, "voice": voice, "response_format": "mp3"}
+        ).encode(),
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {key}",
+        },
         method="POST",
     )
     try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
+        with urllib.request.urlopen(req, timeout=120) as resp:
             out_path.write_bytes(resp.read())
     except Exception:
         return False
@@ -90,10 +97,10 @@ def speak_elevenlabs(text: str, out_path: Path) -> bool:
 
 def speak(text: str, voice: str = "offline", out_dir: Path | None = None) -> str:
     """Speak text with the requested tier. Returns the tier actually used."""
-    if voice == "elevenlabs":
+    if voice == "openai":
         target = (out_dir or Path.cwd()) / "briefing.mp3"
-        if speak_elevenlabs(text, target):
-            return "elevenlabs"
+        if speak_openai(text, target):
+            return "openai"
     if speak_offline(text):
         return "offline"
     return "none"

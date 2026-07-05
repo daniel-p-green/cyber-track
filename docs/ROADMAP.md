@@ -1,7 +1,7 @@
 # CyberTrack Roadmap
 
-Season Zero (this repo) proves the pattern: a data-driven mission league
-engine, local Gemma4 as the only field AI, deterministic scoring, and a
+Season One (this repo) proves the pattern: a data-driven mission league
+engine, local Gemma4 as the mission inference path, deterministic scoring, and a
 competitive arena wrapper. Here is where it goes next.
 
 ## Validation & integrity

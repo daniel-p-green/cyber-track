@@ -1,5 +1,5 @@
 ARCHIVED FIELD-AI ADVISORY — PREVIOUS SHIFT
-Source: local field model session log, 2026-07-01 (synthetic training data)
+Source: local model session log, 2026-07-01 (synthetic training data)
 Status: UNVERIFIED — filed without evidence review
 
   "Summary of HALCYON grid posture: the grid operates nine active relay

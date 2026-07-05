@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="420" viewBox="0 0 1400 420" role="img" aria-labelledby="title desc">
+  <title id="title">CyberTrack README banner</title>
+  <desc id="desc">CyberTrack tactical mission arena banner showing a wordmark, AI operations readiness headline, and a Season One mission rail</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B0F14"/>
+      <stop offset="0.55" stop-color="#111923"/>
+      <stop offset="1" stop-color="#071017"/>
+    </linearGradient>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M 28 0 L 0 0 0 28" fill="none" stroke="#24303B" stroke-width="0.65" opacity="0.45"/>
+    </pattern>
+  </defs>
+
+  <rect width="1400" height="420" fill="url(#bg)"/>
+  <rect width="1400" height="420" fill="url(#grid)" opacity="0.55"/>
+
+  <g opacity="0.2">
+    <path d="M818 95 C910 45 982 92 1048 52 C1110 15 1210 56 1295 22" fill="none" stroke="#44C2FF" stroke-width="1.5"/>
+    <path d="M855 132 C962 102 1018 167 1115 125 C1196 90 1262 120 1346 87" fill="none" stroke="#3BD671" stroke-width="1.3"/>
+    <circle cx="913" cy="48" r="5" fill="#3BD671"/>
+    <circle cx="1048" cy="52" r="5" fill="#44C2FF"/>
+    <circle cx="1210" cy="56" r="5" fill="#3BD671"/>
+  </g>
+
+  <g transform="translate(56 48)">
+    <text x="0" y="0" fill="#E6E9EE" font-family="Arial Narrow, Arial, sans-serif" font-size="44" font-weight="800" letter-spacing="7" dominant-baseline="hanging" textLength="390" lengthAdjust="spacingAndGlyphs">
+      CYBERTRACK
+    </text>
+    <rect x="404" y="38" width="30" height="6" fill="#3BD671"/>
+  </g>
+
+  <g transform="translate(56 170)">
+    <text x="0" y="0" fill="#F4F7FA" font-family="Arial Narrow, Arial, sans-serif" font-size="56" font-weight="800" letter-spacing="1.4" textLength="500" lengthAdjust="spacingAndGlyphs">
+      AI OPERATIONS
+    </text>
+    <text x="0" y="63" fill="#F4F7FA" font-family="Arial Narrow, Arial, sans-serif" font-size="56" font-weight="800" letter-spacing="1.4" textLength="460" lengthAdjust="spacingAndGlyphs">
+      READINESS.
+    </text>
+    <text x="0" y="120" fill="#9BA3AB" font-family="Inter, Arial, sans-serif" font-size="22">
+      Cursor is the interface. Gemma is the edge AI.
+    </text>
+    <text x="0" y="154" fill="#9BA3AB" font-family="Inter, Arial, sans-serif" font-size="22">
+      CyberTrack scores the human judgment in between.
+    </text>
+  </g>
+
+  <g transform="translate(56 363)">
+    <line x1="0" y1="0" x2="642" y2="0" stroke="#2B3743" stroke-width="1.2"/>
+    <g transform="translate(0 0)">
+      <circle cx="0" cy="0" r="13" fill="#0B0F14" stroke="#3BD671" stroke-width="3"/>
+      <text x="-4" y="35" fill="#9BA3AB" font-family="JetBrains Mono, SFMono-Regular, Menlo, Consolas, monospace" font-size="11">01</text>
+    </g>
+    <g transform="translate(128 0)">
+      <rect x="-12" y="-12" width="24" height="24" fill="#0B0F14" stroke="#44C2FF" stroke-width="3"/>
+      <text x="-4" y="35" fill="#9BA3AB" font-family="JetBrains Mono, SFMono-Regular, Menlo, Consolas, monospace" font-size="11">02</text>
+    </g>
+    <g transform="translate(256 0)">
+      <rect x="-11" y="-11" width="22" height="22" fill="#0B0F14" stroke="#9BA3AB" stroke-width="2" transform="rotate(45)"/>
+      <text x="-4" y="35" fill="#9BA3AB" font-family="JetBrains Mono, SFMono-Regular, Menlo, Consolas, monospace" font-size="11">03</text>
+    </g>
+    <g transform="translate(384 0)">
+      <rect x="-11" y="-11" width="22" height="22" fill="#0B0F14" stroke="#9BA3AB" stroke-width="2" transform="rotate(45)"/>
+      <text x="-4" y="35" fill="#9BA3AB" font-family="JetBrains Mono, SFMono-Regular, Menlo, Consolas, monospace" font-size="11">04</text>
+    </g>
+    <g transform="translate(512 0)">
+      <rect x="-12" y="-10" width="20" height="20" fill="#0B0F14" stroke="#9BA3AB" stroke-width="2" transform="rotate(45)"/>
+      <rect x="0" y="-10" width="20" height="20" fill="#0B0F14" stroke="#9BA3AB" stroke-width="2" transform="rotate(45)"/>
+      <text x="-4" y="35" fill="#9BA3AB" font-family="JetBrains Mono, SFMono-Regular, Menlo, Consolas, monospace" font-size="11">05</text>
+    </g>
+    <g transform="translate(642 0)">
+      <rect x="-12" y="-10" width="20" height="20" fill="#0B0F14" stroke="#9BA3AB" stroke-width="2" transform="rotate(45)"/>
+      <rect x="0" y="-10" width="20" height="20" fill="#0B0F14" stroke="#9BA3AB" stroke-width="2" transform="rotate(45)"/>
+      <text x="-4" y="35" fill="#9BA3AB" font-family="JetBrains Mono, SFMono-Regular, Menlo, Consolas, monospace" font-size="11">06</text>
+    </g>
+  </g>
+</svg>

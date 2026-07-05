@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "./ThemeToggle";
 import { openWelcomeWizard } from "./WelcomeWizard";
-import { Wordmark, GemmaStatus } from "./svg";
+import { Wordmark } from "./svg";
 import styles from "./Header.module.css";
 
 const NAV = [
@@ -22,9 +22,6 @@ export default function Header() {
       <div className={`container ${styles.inner}`}>
         <Link href="/" className={styles.brand} aria-label="CyberTrack home">
           <Wordmark height={18} />
-          <span className={styles.badge}>
-            <GemmaStatus compact />
-          </span>
         </Link>
 
         <nav className={styles.nav} aria-label="Primary">

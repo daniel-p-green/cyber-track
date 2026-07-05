@@ -1,147 +1,210 @@
+<p align="center">
+  <img src="assets/cybertrack-readme-banner.svg" alt="CyberTrack: AI Operations Readiness" width="100%" />
+</p>
+
 # CyberTrack
 
-The next generation of operators will not be judged by whether they can get
-an AI answer. They will be judged by whether they can verify it under
-pressure.
+**Call of Duty for AI Operations Readiness.**
 
-CyberTrack is a tactical mission arena where players solve high-pressure
-technical incidents inside Cursor using only local Gemma4.
+CyberTrack is a training arena for AI operations readiness in defense,
+emergency, and critical-infrastructure settings. Players solve timed technical
+incidents inside Cursor using only local Gemma. The model can help, but some
+missions plant bad guidance on purpose. Players score by checking the evidence,
+catching the mistake, recovering, and making a defensible call.
 
-Each mission simulates the conditions operators face when cloud AI is
-unavailable, untrusted, or inappropriate: incomplete evidence, time
-pressure, imperfect model guidance, and the need to make a defensible call.
+Built for the **RAISE Summit Hackathon 2026 Google DeepMind Remote track**:
+Edge / On-Device, best app running Gemma locally for offline, privacy-first
+inference.
 
-Players are scored on the human-AI skills that matter under uncertainty:
-evidence discipline, model skepticism, recovery from bad guidance, decision
-quality, and local/offline compliance.
+<p>
+  <a href="HACKATHON_BUILD.md"><strong>Hackathon build log</strong></a>
+  ·
+  <a href="docs/build-status.md"><strong>Current build status</strong></a>
+  ·
+  <a href="DESIGN.md"><strong>Design system</strong></a>
+</p>
 
-After each mission, CyberTrack generates an after-action report showing where
-the operator's reasoning held up and where it broke.
+## The Thesis
 
-The prototype includes Gemma4-powered missions running locally via Ollama,
-deterministic scoring, after-action reports, Season One progression,
-XP/ranks, a mission map, and a public arena leaderboard.
+Most AI tools assume the cloud is available. Future operations will not.
 
-**Cursor is the interface. Gemma4 is the local edge AI. CyberTrack scores
-what matters when the cloud goes dark and the stakes are high.**
+Military, emergency, and critical-infrastructure teams will face moments where
+connectivity is degraded, data is sensitive, and a frontier cloud model is not
+available or appropriate. The human still has to reason, verify, and act.
 
-> RAISE Summit Hackathon 2026 · Google DeepMind Remote track
-> (Edge / On-Device: best app running Gemma locally for offline,
-> privacy-first inference). Built during the event. See
-> [HACKATHON_BUILD.md](HACKATHON_BUILD.md).
+CyberTrack simulates that edge condition. The available AI is local, smaller,
+and sometimes wrong. The player has to use it without being used by it.
 
-## Why local Gemma
+This is not a recruiting tool or a hiring screen. It is a practice environment
+for the human-AI judgment future operations will require.
 
-Real incidents do not always get cloud AI: connectivity fails, data is too
-sensitive, latency matters, frontier models are unavailable or untrusted.
-CyberTrack uses Gemma4 running locally (Ollama) because it is the exact
-constraint operators face at the edge. The training is learning to question,
-verify, and recover from a constrained model instead of blindly trusting it.
+## How It Works
 
-The entire mission loop (briefing, field-AI queries, scoring, after-action
-report) runs offline. The only network feature is the optional web arena
-leaderboard.
+| Surface | Role |
+|---|---|
+| **Cursor** | The cockpit. Players read files, inspect evidence, use Cursor Chat, and edit mission artifacts. |
+| **Local Gemma via Ollama** | The constrained edge AI. It can help, but it can also be confidently wrong. |
+| **`cybertf` engine** | Starts timed runs, queries local Gemma, records evidence, scores submissions, and generates AARs. |
+| **Local web arena** | Mission board, callsigns, leaderboard, ranks, mission records, and AAR views. |
 
-## The two surfaces
+Mission loop:
 
-1. **Cursor is the cockpit.** Missions are solved in a Cursor workspace:
-   read the brief, inspect synthetic evidence, patch configs and code,
-   interrogate the local field AI with `cybertf ask`.
-2. **The web arena is the scoreboard** (`web/`): callsigns, mission board,
-   live leaderboards, ranks, Season One framing. A wrapper around the
-   cockpit, never a replacement for it.
+1. Pick a mission.
+2. Inspect synthetic evidence in Cursor.
+3. Ask local Gemma for help.
+4. Verify or reject the model's hypothesis.
+5. Submit a decision with cited evidence.
+6. Read the after-action report and update the leaderboard.
 
-## Quickstart (the whole loop in ~5 minutes)
+## What It Measures
 
-Requirements: Python 3.10+, [Ollama](https://ollama.com) with a Gemma model
-(`ollama pull gemma4`), and this repo opened in Cursor.
+CyberTrack scores the human-AI skills that matter when the model is useful,
+local, and not fully trustworthy:
+
+- **Evidence discipline:** did you cite the files that prove the claim?
+- **Model skepticism:** did you catch the planted bad guidance?
+- **Recovery:** did you correct course after the model misled you?
+- **Decision quality:** was the final call right and defensible?
+- **Local compliance:** did the run use local Gemma instead of cloud AI?
+
+Scoring is deterministic and reproducible from run artifacts. No model grades
+the player.
+
+## What Is Included
+
+- Local Gemma-powered mission loop via Ollama.
+- Six Season One missions with timed sprints, field events, relay work, and a
+  marathon incident.
+- Deterministic scoring, suspicious-time flagging, XP, ranks, and local season
+  scorecards.
+- After-action reports showing what held up and where reasoning broke.
+- Next.js local web arena with mission board, leaderboard, callsigns, operator
+  profiles, and AAR pages.
+- Static brand assets in `assets/`, including the CyberTrack README banner and
+  wordmark.
+
+## Quickstart
+
+Requirements:
+
+- Python 3.10+
+- Node.js 20+
+- [Ollama](https://ollama.com)
+- A local Gemma model, for example `ollama pull gemma4`
+- Cursor for the intended cockpit workflow
+
+From the repo root:
 
 ```bash
-# 0. From the repo root. Everything runs as a module, no install needed
-python3 -m cybertf.cli verify-model        # prove local Gemma4 is serving
-python3 -m cybertf.cli enlist NIGHTOWL     # pick your callsign
-python3 -m cybertf.cli list                # Season One mission board
+# Create an isolated Python env
+python3 -m venv .venv
+source .venv/bin/activate
 
-# 1. Fly Basic Qualification
-python3 -m cybertf.cli run basic_qualification
-python3 -m cybertf.cli brief basic_qualification
-python3 -m cybertf.cli ask "How do I verify a claim about relay coverage?" \
-  --file challenges/basic_qualification/data/relay_roster.txt
-# ...inspect evidence in Cursor, fill in runs/<run_id>/answer.json...
-python3 -m cybertf.cli submit basic_qualification runs/<run_id>/answer.json
+# Install the CyberTrack CLI
+pip install -r requirements.txt
 
-# 2. Read your after-action report
-cat runs/<run_id>/aar.md
+# Install the local web arena
+cd web
+npm install
+cd ..
 
-# 3. Local season scorecard (offline leaderboard)
-python3 -m cybertf.cli season
+# Prove local Gemma is serving
+cybertf verify-model
 
-# 4. Optional: publish to the web arena leaderboard
-cd web && npm install && npm run dev &     # http://localhost:3000
-# Production arena (ephemeral demo store, see web/README.md):
-# export CYBERTF_ARENA_URL=https://cybertrack-arena.vercel.app
-python3 -m cybertf.cli publish <run_id>
+# Pick a callsign
+cybertf enlist NIGHTOWL
+
+# See the mission board
+cybertf list
+
+# Start the local arena in another terminal
+cd web
+npm run dev
 ```
 
-Prefer an installed entry point? `pip install -e .` gives you the `cybertf`
-command; the commands above then drop the `python3 -m` prefix.
+Open [http://localhost:3000](http://localhost:3000), then return to the repo
+root for mission play:
 
-## Season One events
+```bash
+source .venv/bin/activate
+
+# Start Basic Qualification
+cybertf run basic_qualification
+cybertf brief basic_qualification
+
+# Ask local Gemma about evidence
+cybertf ask "How do I verify a claim about relay coverage?" \
+  --file challenges/basic_qualification/data/relay_roster.txt
+
+# Fill in the generated answer artifact, then submit
+cybertf submit basic_qualification runs/<run_id>/answer.json
+
+# Read the after-action report
+cat runs/<run_id>/aar.md
+
+# Generate the offline leaderboard
+cybertf season
+
+# Publish to the local arena
+CYBERTF_ARENA_URL=http://localhost:3000 cybertf publish <run_id>
+```
+
+## Web Arena
+
+You can also run the arena directly:
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+Then open [http://localhost:3000](http://localhost:3000).
+
+The web arena is a local demo scoreboard, not the source of truth. The durable
+record is the run folder and local season scorecard.
+
+## Season One Missions
 
 | Mission | Type | What it trains |
 |---|---|---|
 | Basic Qualification | Tutorial | Cockpit basics, local-model verification, catching a bad AI claim |
-| Signal Lost | Sprint | Log triage, root-cause evidence vs. tempting false lead |
-| Prompt Under Fire | Field | Critiquing AI plans, spotting hallucinated tools and unsafe steps |
-| Patch the Edge Agent | Field | Minimal bug fixes under constraint, test-driven recovery |
+| Signal Lost | Sprint | Log triage, root-cause evidence vs. a tempting false lead |
+| Prompt Under Fire | Field | Critiquing AI plans, hallucinated tools, and unsafe steps |
+| Patch the Edge Agent | Field | Minimal bug fixes under constraint and test-driven recovery |
 | Relay: Human + Gemma Handoff | Relay | Writing handoffs a constrained model can actually execute |
-| Marathon: Degraded Comms | Marathon | Multi-source evidence reconciliation, rejecting confident bad AI advice |
+| Marathon: Degraded Comms | Marathon | Reconciling conflicting evidence and rejecting confident bad AI advice |
 
 Missions are data-driven packs under `challenges/`. See
-[docs/MISSION_DESIGN.md](docs/MISSION_DESIGN.md) for how new season/DLC packs
-are authored.
+[docs/MISSION_DESIGN.md](docs/MISSION_DESIGN.md) for authoring notes.
 
-## Scoring
+## Project Map
 
-Deterministic and reproducible from run artifacts alone. No model in the
-grading loop. Ten readiness dimensions: mission completion, evidence
-discipline, tool reliability, prompt discipline, recovery from bad AI
-guidance, terminal recovery, hallucination resistance, time-to-signal,
-communication quality, and local/offline compliance. Speed counts, but
-impossibly fast runs get flagged **UNVERIFIED · SUSPICIOUS TIME** and earn
-no XP.
+```text
+assets/        README banner and static CyberTrack wordmark
+cybertf/       mission engine: CLI, Gemma client, scoring, AAR, telemetry
+challenges/    Season One mission packs with synthetic evidence
+web/           Next.js arena: mission board, leaderboard, profiles, AAR views
+runs/          local run artifacts, gitignored
+docs/          architecture, mission design, telemetry, roadmap, build status
+DESIGN.md      product design system
+HACKATHON_BUILD.md   what was built during the hackathon
+```
+
+## Safety And Boundaries
+
+CyberTrack is training feedback only. It is not hiring, recruiting, screening,
+or job-suitability scoring. All scenarios are synthetic and defensive. No live
+targets, no offensive content.
+
+Telemetry is opt-in, local, and workspace-scoped: mission timestamps,
+`cybertf ask` prompts/responses, submissions, and scores. No keystrokes, no
+mouse tracking, no browser history, and nothing outside this repo. Details:
+[docs/TELEMETRY.md](docs/TELEMETRY.md).
 
 Expected answers are stored as salted SHA-256 hashes, so this public repo
-contains no plaintext answer keys. That is the honest demo validation tier;
-production seasons move validation fully server-side
-([docs/ROADMAP.md](docs/ROADMAP.md)).
-
-## Telemetry, honestly
-
-Opt-in, transparent, and scoped to this workspace only: mission timestamps,
-`cybertf ask` prompts/responses, submissions, and scores, written to a
-plain JSONL file in your run folder that you can read. No keystrokes, no
-mouse tracking, no browser history, nothing outside the workspace. Details
-in [docs/TELEMETRY.md](docs/TELEMETRY.md).
-
-## What CyberTrack is not
-
-Training and readiness feedback only. Not hiring, recruiting, screening, or
-job-suitability scoring. All scenarios are synthetic and defensive. No live
-targets, no offensive content. The web arena is a scoreboard, not the
-product.
-
-## Repo map
-
-```
-cybertf/       mission engine: CLI, Gemma4 client, scoring, AAR, telemetry
-challenges/    Season One mission packs (synthetic data)
-web/           web arena: mission board + leaderboard (Next.js)
-runs/          your run artifacts (gitignored)
-docs/          architecture, telemetry, mission design, roadmap
-DESIGN.md      product design bible
-HACKATHON_BUILD.md   what was built during the hackathon, exactly
-```
+contains no plaintext answer keys. That is the honest demo validation tier.
+Production seasons should move validation server-side.
 
 ## License
 

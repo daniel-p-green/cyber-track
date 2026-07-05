@@ -10,10 +10,10 @@ has five nodes reading drifted values; you have corrected three, and your
 shift is ending. Sector 4 handles raw positional data classified
 grid-internal, so incident details never leave the local network: no cloud
 AI sees this traffic, by policy, ever. Shift 2 inherits the incident with
-only the local Gemma field model to assist them. If your handoff is vague,
+only the local Gemma model to assist them. If your handoff is vague,
 the wrong nodes get recalibrated and the validation deadline is missed.
 
-Your decision: what must the handoff brief contain so the field model can
+Your decision: what must the handoff brief contain so the local model can
 actually continue the work. Write it, then test it against the model.
 
 The incident details are in `data/incident_context.md`. Read it carefully;
@@ -33,7 +33,7 @@ in your handoff.
    - The exact calibration offset value to apply
    - The validation deadline
 
-4. Use your field AI (at least twice: once to test the handoff, once to probe
+4. Use local Gemma (at least twice: once to test the handoff, once to probe
    a detail):
    ```
    cybertf ask "Here is my handoff brief: [paste your brief here]. Based on this, which nodes need calibration and what offset should be applied?"
@@ -50,15 +50,15 @@ in your handoff.
 ## What to File
 
 - **handoff_brief**: your shift-2 handoff brief (≥200 chars, must mention node_21, node_23, and the offset)
-- **gemma_followed**: did the field model correctly answer the shift-2 question? (yes/no + brief reason)
+- **gemma_followed**: did the local model correctly answer the shift-2 question? (yes/no + brief reason)
 - **continuation_critique**: assess the model's response quality: what was useful, what was missing (≥100 chars)
 - **evidence**: include incident_context.md
 
 ## Constraints
 
-- Local Gemma4 field AI only. No cloud assistants.
-- The field model only knows what you tell it. A vague handoff brief will produce a vague continuation.
+- Local Gemma4 via `cybertf ask` only. No cloud assistants.
+- The local model only knows what you tell it. A vague handoff brief will produce a vague continuation.
 - Use `cybertf ask` at least twice.
 - Cite your evidence.
 
-A good handoff brief is the primary deliverable. The field model's performance reflects the quality of your brief.
+A good handoff brief is the primary deliverable. The local model's performance reflects the quality of your brief.

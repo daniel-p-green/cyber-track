@@ -19,12 +19,12 @@ Ground rules for using this doc:
 
 ## 1. Product Identity
 
-**Thesis:** The next generation of operators will not be judged by whether
-they can get an AI answer. They will be judged by whether they can verify it
-under pressure.
+**Thesis:** National-security and critical-infrastructure teams cannot assume
+cloud AI will always be available, trusted, or allowed. CyberTrack trains AI
+operations readiness for that moment: verifying AI under pressure.
 
 **What it is:** CyberTrack is a tactical mission arena where players solve
-high-pressure technical incidents inside Cursor using only local Gemma4. Each
+high-pressure technical incidents inside Cursor using local AI models like Gemma4. Each
 mission simulates conditions when cloud AI is unavailable, untrusted, or
 inappropriate: incomplete evidence, time pressure, imperfect model guidance,
 and the need to make a defensible call.
@@ -34,13 +34,12 @@ guidance, decision quality, and local/offline compliance. After each mission,
 an after-action report shows where reasoning held up and where it broke.
 
 **Closing line (use in README, pitch, footer-adjacent copy):** Cursor is the
-interface. Gemma4 is the local edge AI. CyberTrack scores what matters when
+interface. Gemma is the local AI inference. CyberTrack measures what matters when
 the cloud goes dark and the stakes are high.
 
-**Hook (optional pitch shorthand):** "Call of Duty for AI operators." Say it
-at most once, then immediately explain the practical loop. CyberTrack is an
-original property: no copied game assets, UI, names, typography, or trade
-dress.
+**Hook (approved pitch shorthand):** "Call of Duty for AI Operations
+Readiness." The practical loop matters more than category shorthand: Cursor
+cockpit, local model, evidence, correction, score, AAR.
 
 **CyberTrack is:**
 
@@ -61,8 +60,8 @@ dress.
 
 Two surfaces, one loop.
 
-**Cursor is the cockpit.** Evidence files live in the editor, the local Gemma
-field AI is invoked through `cybertf ask` in the terminal, the answer artifact
+**Cursor is the cockpit.** Evidence files live in the editor, local Gemma
+inference is invoked through `cybertf ask` in the terminal, the answer artifact
 (`answer.json`) is edited in the workspace, and the arena runs in Cursor's
 in-app browser. We teach people to fly the editor they already have. We never
 rebuild an IDE on the web.
@@ -101,7 +100,7 @@ missions are solved.
 - **Operator record (`/operators/[callsign]`):** rank, XP progress, mission
   record with AAR links, badges, best dimension scores.
 
-**Local Gemma is the constrained field AI.** Useful, fast, sometimes wrong.
+**Local Gemma is the constrained mission inference.** Useful, fast, sometimes wrong.
 It simulates edge deployments where cloud AI is unavailable, untrusted, or
 too slow. It is the mission AI, not the judge. The `cybertf` CLI is the
 instrumented mission interface: it verifies the model, starts runs, sends
@@ -188,8 +187,8 @@ components. Never gradient-soup.
 - Background texture: faint grid (`.ops-grid-bg`) or scanline at 4% opacity
   or less. Atmosphere, never noise. One texture per page maximum.
 - Glow: allowed only as a soft box-shadow on the single hero element of a
-  page (score ring, hero panel) and on the pulse dot. Never on text, borders,
-  buttons, or more than one element per viewport.
+  page (score ring, hero panel) and on small status markers. Never on text,
+  borders, buttons, or more than one element per viewport.
 
 ## 4. Typography
 
@@ -248,12 +247,13 @@ Rules:
 Concrete patterns. Reuse these; do not invent parallel versions.
 
 - **Wordmark:** CYBERTRACK in display 800, all caps, followed by a small
-  signal-green underscore block that blinks like a terminal caret. Never
+  signal-green underscore block that reads like a terminal caret. Never
   italicized, never gradiented.
-- **Local Gemma status chip:** outlined pill, pulse dot, `LOCAL GEMMA4`
-  (+ `ONLINE` in full size) in signal green on a 8 to 13% signal tint.
-  Present in the header on every page. A `100% LOCAL` variant may appear on
-  scoring surfaces.
+- **Local runtime status chip:** outlined pill with an Ollama marker and
+  explicit connection text, e.g. `OLLAMA CONNECTED` plus the detected model
+  state such as `gemma4:latest installed` or `gemma4:latest loaded`. It should
+  be a real localhost probe in local demo mode, not a static online claim.
+  A `100% LOCAL` variant may appear on scoring surfaces.
 - **Season progress map:** horizontal rail of mission nodes joined by route
   lines. Node states: completed (green check ring), active (cyan reticle),
   available (plain ring), locked (dashed ring, padlock), advanced (amber
@@ -278,7 +278,7 @@ Concrete patterns. Reuse these; do not invent parallel versions.
 - **Evidence checklist:** toggleable file rows (`challenges/<id>/data/<file>`)
   with check marks and an `n/m REVIEWED` mono counter. Session-local state;
   the CLI is the scoring source of truth.
-- **Local Gemma field AI panel:** terminal-native `cybertf ask` exchange with
+- **Local Gemma inference panel:** terminal-native `cybertf ask` exchange with
   attached evidence files, model name, latency, and a clear "verify before you
   trust" note. This is the real instrumented mission AI path.
 - **Cursor cockpit sketch (illustrative):** stylized concept sketch only:
@@ -356,7 +356,7 @@ Concrete patterns. Reuse these; do not invent parallel versions.
   did about it, and an integrity footer (local model verified, time within
   bounds, telemetry state).
 - Gemma may narrate a debrief in the AAR. Label it as narrative that does
-  not affect the score. Gemma is the field AI being challenged; the grader
+  not affect the score. Gemma is the local inference being challenged; the grader
   is the deterministic scorer with the answer key. Keep those roles visually
   and verbally separate everywhere.
 - Suspicious times earn zero XP and a flag. Evidence beats speed.
@@ -374,7 +374,7 @@ Concrete patterns. Reuse these; do not invent parallel versions.
   seamless, leverage. Banned structures: "In summary", "Overall", "Let's
   walk through", "This guide explores", "Not only X but also Y", "From X to
   Y", "It is important to remember".
-- Preferred terms: Cursor, `cybertf ask`, local Gemma field AI, evidence, AAR,
+- Preferred terms: Cursor, `cybertf ask`, local Gemma inference, evidence, AAR,
   leaderboard, timed mission, callsign, XP, rank, Season One. Use
   "operator", "mission", and "arena" where they earn their place; use
   simpler words elsewhere.
@@ -420,8 +420,8 @@ Reject these on sight, in code review and in design review:
   from real forces, war imagery. Restrained tactical is a texture, not a
   costume.
 - Cloud AI confusion: any UI or copy implying a cloud model plays or grades.
-  The only player-facing model is local Gemma; simulation mode is always
-  labeled.
+  The only player-facing model is local Gemma; internal test fallbacks are
+  labeled in artifacts and stay out of the player setup path.
 - Decoration creep: second glow, second texture, second accent per
   component, animation loops, parallax, fake 3D.
 - Command-first product pages: `cybertf`, copy buttons, and `answer.json`

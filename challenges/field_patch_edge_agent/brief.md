@@ -37,7 +37,7 @@ find the boundary error, and make the minimal correct change.
    python -m unittest -v test_edge_agent
    ```
 
-4. Consult your field AI:
+4. Consult local Gemma:
    ```
    cybertf ask "I have a severity classifier with a boundary bug. The spec says score >= 50 is HIGH. What operator mistake could cause score 50 to be classified as MEDIUM instead?"
    ```
@@ -60,7 +60,7 @@ find the boundary error, and make the minimal correct change.
 
 ## Constraints
 
-- Local Gemma4 field AI only. No cloud assistants.
+- Local Gemma4 via `cybertf ask` only. No cloud assistants.
 - Minimal fix only. Do not refactor or restructure the module.
 - The spec is the ground truth, not the model's intuition.
 

@@ -1,8 +1,8 @@
 # Hackathon Build Disclosure
 
-Project: **CyberTrack** — a tactical mission arena where operators verify
-local Gemma4 guidance under pressure. RAISE Summit Hackathon 2026, Google
-DeepMind Remote track (Edge / On-Device: app running Gemma locally for
+Project: **CyberTrack** — Call of Duty for AI Operations Readiness. Players
+verify local AI guidance under pressure in Cursor. RAISE Summit Hackathon 2026,
+Google DeepMind Remote track (Edge / On-Device: app running Gemma locally for
 offline, privacy-first inference).
 
 Everything in this repository was designed and built during the hackathon on
@@ -17,7 +17,7 @@ reused dependencies, and roadmap.
   endpoints), opt-in telemetry, deterministic scorer, after-action report
   generator, local season scorecard, arena publishing client, offline TTS
   helper.
-- `challenges/`: all six Season Zero missions and every byte of their
+- `challenges/`: all six Season One missions and every byte of their
   synthetic fixture data (logs, configs, rosters, notes, code, tests).
 - `web/`: the web arena: Next.js app, mission board, callsign/profile flow,
   submissions API, leaderboards, rank/promotion system, suspicious-time
@@ -37,11 +37,11 @@ reused dependencies, and roadmap.
 - AI coding assistants (Cursor with Claude-family models) were used as
   build accelerators for this codebase, the same way any team member would
   be. The **player-facing model in the product is exclusively local
-  Gemma4**. No cloud model appears anywhere in mission play.
+  Gemma model**. No cloud model appears anywhere in mission play.
 
 ## Synthetic data disclosure
 
-Every scenario, log line, config, sitrep, roster, and "archived field-AI
+Every scenario, log line, config, sitrep, roster, and "archived model
 advisory" in `challenges/` is fictional, synthetic, defensive-only training
 data authored during the event. The HALCYON grid does not exist. No real
 network data, no real incidents, no offensive content.
@@ -55,10 +55,9 @@ network data, no real incidents, no offensive content.
 - **Arena trust model:** in demo mode the deterministic score is computed
   locally and the arena trusts the artifact (it re-checks time-based flags
   server-side and rejects duplicates). Server-side re-validation is roadmap.
-- **Simulation mode:** `CYBERTF_SIM=1` exists so the engine can be developed
-  and tested on machines without a local model. Simulated responses are
-  loudly labeled and score zero on local/offline compliance. All demo
-  footage uses the real local Gemma4 path.
+- **Development fallback:** automated tests can run without a local model, but
+  that fallback is not part of setup, demo footage, or scored mission play.
+  All demo footage uses the real local Gemma4 path.
 - **Seeded leaderboard rows** in the web arena are marked `seeded` and
   rendered with a "demo seed" tag so real submissions are distinguishable.
 

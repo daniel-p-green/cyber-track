@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (scope === "season") {
-    const seasonSubs = allSubs.filter((s) => s.season === "season-zero");
+    const seasonSubs = allSubs.filter((s) => s.season === "season-one");
     const xpBySeason = new Map<string, number>();
     for (const sub of seasonSubs) {
       if (!sub.flags.suspicious_fast) {
@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
           seeded: op?.seeded,
         };
       });
-    return NextResponse.json({ scope: "season", season: "season-zero", entries });
+    return NextResponse.json({ scope: "season", season: "season-one", entries });
   }
 
   if (scope === "mission") {

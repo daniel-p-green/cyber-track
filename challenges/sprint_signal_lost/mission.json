@@ -1,6 +1,6 @@
 {
   "id": "sprint_signal_lost",
-  "season": "season-zero",
+  "season": "season-one",
   "title": "Signal Lost",
   "event_type": "sprint",
   "difficulty": 2,
@@ -112,7 +112,7 @@
       "min_asks": 1,
       "points": 5,
       "dimension": "prompt_discipline",
-      "label": "Consulted the local field AI at least once"
+      "label": "Consulted local Gemma at least once"
     },
     {
       "id": "ops_note",

@@ -351,7 +351,7 @@ export function HexBadge({
   );
 }
 
-/* ── Local Gemma status badge ──────────────────────────────────────────── */
+/* ── Legacy local-runtime badge. Prefer LocalRuntimeStatus for live pages. ─ */
 
 export function GemmaStatus({
   className,
@@ -378,8 +378,7 @@ export function GemmaStatus({
         whiteSpace: "nowrap",
       }}
     >
-      <span className="pulse-dot" />
-      LOCAL GEMMA4 {compact ? "" : "ONLINE"}
+      OLLAMA {compact ? "" : "LOCAL"}
     </span>
   );
 }

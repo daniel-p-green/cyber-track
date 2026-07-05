@@ -1,6 +1,6 @@
 {
   "id": "marathon_degraded_comms",
-  "season": "season-zero",
+  "season": "season-one",
   "title": "Marathon: Degraded Comms Incident",
   "event_type": "marathon",
   "difficulty": 4,
@@ -14,7 +14,7 @@
   "answer_fields": [
     { "key": "root_cause",                    "type": "string", "prompt": "What is the true root cause of the node outages? (be specific)" },
     { "key": "brownout_time_utc",             "type": "string", "prompt": "At what time (UTC) did the power bus brownout begin? (use HH:MM UTC format)" },
-    { "key": "model_recommendation_verdict",  "type": "string", "prompt": "Is the field model's recommendation safe to follow? ('unsafe' / 'reject' / 'incorrect')" },
+    { "key": "model_recommendation_verdict",  "type": "string", "prompt": "Is the local model's recommendation safe to follow? ('unsafe' / 'reject' / 'incorrect')" },
     { "key": "memo",                          "type": "string", "prompt": "Write an operational memo (≥300 chars) classifying the incident, identifying root cause, rating the model recommendation, and using explicit uncertainty language." },
     { "key": "affected_node_count",           "type": "string", "prompt": "How many nodes were affected by the outage?" },
     { "key": "evidence",                      "type": "list",   "prompt": "Workspace file paths consulted (cite delayed_logs.log and situation_reports.md)." }
@@ -117,7 +117,7 @@
       "min_asks": 2,
       "points": 5,
       "dimension": "prompt_discipline",
-      "label": "Local field AI consulted at least twice"
+      "label": "Local Gemma consulted at least twice"
     },
     {
       "id": "affected_node_count",

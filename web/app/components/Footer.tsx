@@ -17,7 +17,8 @@ export default function Footer() {
             rel="noopener noreferrer"
             aria-label="Daniel Green on X (opens in new tab)"
           >
-            <IconX size={13} /> X
+            <IconX size={13} />
+            <span className={styles.srOnly}>X</span>
           </a>
           <a
             href="https://www.linkedin.com/in/danielpgreen"
@@ -25,7 +26,8 @@ export default function Footer() {
             rel="noopener noreferrer"
             aria-label="Daniel Green on LinkedIn (opens in new tab)"
           >
-            <IconLinkedIn size={13} /> LinkedIn
+            <IconLinkedIn size={13} />
+            <span className={styles.srOnly}>LinkedIn</span>
           </a>
         </div>
       </div>

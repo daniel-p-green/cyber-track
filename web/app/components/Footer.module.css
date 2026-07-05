@@ -34,8 +34,10 @@
 .credit a {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   border: 1px solid var(--line);
   color: var(--muted);
   background: var(--panel);

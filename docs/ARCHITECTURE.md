@@ -1,6 +1,6 @@
 # CyberTrack Architecture
 
-CyberTrack is a local-first mission league for AI operator readiness. It has two connected surfaces:
+CyberTrack is a local-first mission league for AI operations readiness. It has two connected surfaces:
 
 1. **Cursor mission workspace**: where operators complete missions using the `cybertf` CLI and a local Gemma4 model. Works fully offline.
 2. **Web arena**: the competitive scoreboard wrapper (callsigns, mission board, submissions, leaderboards, ranks). Requires network only for leaderboard submission.
@@ -23,13 +23,13 @@ CyberTrack is a local-first mission league for AI operator readiness. It has two
   - `cli.py`: command dispatcher.
   - `missions.py`: mission loading and validation.
   - `runner.py`: run lifecycle, timers, run directories.
-  - `gemma.py`: local Gemma4 client (Ollama HTTP API; optional OpenAI-compatible endpoint; clearly labeled simulation mode).
+  - `gemma.py`: local Gemma4 client (Ollama HTTP API; optional OpenAI-compatible endpoint; internal test fallback).
   - `telemetry.py`: opt-in, workspace-scoped JSONL event log.
   - `scoring.py`: deterministic check engine and dimension scoring.
   - `report.py`: after-action report (AAR) generator.
   - `season.py`: local season scorecard aggregation.
   - `arena.py`: publish submissions to the web arena.
-  - `audio.py`: offline TTS briefings (macOS `say`), optional ElevenLabs.
+  - `audio.py`: offline TTS briefings (macOS `say`), optional OpenAI TTS polish.
 - `challenges/`: mission packs (data-driven; see Mission Spec).
 - `runs/`: run artifacts (gitignored).
 - `web/`: Next.js web arena.
@@ -51,7 +51,7 @@ challenges/sprint_signal_lost/
 ```json
 {
   "id": "sprint_signal_lost",
-  "season": "season-zero",
+  "season": "season-one",
   "title": "Signal Lost",
   "event_type": "sprint",
   "difficulty": 2,
@@ -160,13 +160,15 @@ Base URL: `ARENA_URL` (default `http://localhost:3000`).
 | `/api/operators/[callsign]` | GET |: | profile: xp, rank, history |
 | `/api/submissions` | POST | submission artifact (below) | `{accepted, rank, promoted, new_rank?, leaderboard_position, flags}` |
 | `/api/leaderboard` | GET | `?scope=global\|mission\|season&mission_id=` | ordered entries |
+| `/api/briefing-audio` | GET | `id`, `text` | committed briefing MP3, or optional OpenAI/local TTS fallback |
+| `/api/local-ai-status` | GET |: | localhost Ollama connection + detected Gemma model for local demo |
 
 Submission artifact (what `cybertf publish` sends: exactly `score.json` plus):
 
 ```json
 {
   "schema": "cybertrack.submission.v1",
-  "season": "season-zero",
+  "season": "season-one",
   "telemetry_digest": "sha256:…",
   "ask_count": 4
 }
@@ -199,14 +201,18 @@ Promotions are learning-progression feedback, never job-suitability signals.
 
 ## Storage (web arena)
 
-Pluggable store module:
-
-- **Local/dev**: JSON file at `web/.data/store.json` (gitignored). Survives restarts, perfect for the localhost demo.
-- **Vercel**: in-memory store initialized from seeded demo entries (marked `seeded: true` and rendered with a "demo seed" tag). Live submissions persist for the lifetime of the serverless instance; durable Postgres persistence is a documented roadmap tier.
+The arena stores data in `web/.data/store.json` (gitignored). It survives
+local restarts and is seeded with demo entries marked `seeded: true` on first
+run. The local scorecard in `runs/` remains authoritative; durable hosted
+persistence is roadmap.
 
 ## Local Gemma4 integration
 
 - Provider auto-detect: query `GET http://localhost:11434/api/tags`, pick the first `gemma4*` model (override with `CYBERTF_MODEL`).
 - Chat via `POST /api/chat` (Ollama). Optional OpenAI-compatible endpoint via `CYBERTF_OPENAI_BASE` (e.g., LM Studio).
 - `cybertf verify-model` proves the local path: lists detected Gemma4 models, sends a canary prompt, reports latency, and confirms the endpoint is localhost.
-- **Simulation mode** (`CYBERTF_SIM=1`): canned responses for dev/tests only. Every simulated response is prefixed with `[SIMULATION: NOT A REAL MODEL RESPONSE]`, and `score.json.local_model.simulated` is set to `true`, which zeroes the `local_offline_compliance` dimension.
+- **Test fallback:** internal dev and CI runs can use canned responses when no
+  local model is available. Those runs are labeled in artifacts and
+  `score.json.local_model.simulated` is set to `true`, which zeroes the
+  `local_offline_compliance` dimension. This path is not part of player setup
+  or the demo flow.

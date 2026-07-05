@@ -1,13 +1,13 @@
 """CyberTrack mission league engine.
 
-Offline AI operator readiness in Cursor, powered by local Gemma4.
+Offline AI operations readiness in Cursor, powered by local Gemma4.
 Standard library only by design: the mission loop must run on an
 edge machine with no network and no package installs.
 """
 
 __version__ = "0.1.0"
 
-SEASON_ID = "season-zero"
+SEASON_ID = "season-one"
 
 # Original, fictional rank ladder. Progression feedback only —
 # never a job-suitability or selection signal.

@@ -4,7 +4,6 @@ import { getRankForXP, RANKS } from "@/lib/ranks";
 import { MISSIONS } from "@/lib/missions";
 import { formatElapsed, slopeForDifficulty } from "@/lib/utils";
 import {
-  GemmaStatus,
   RankChevrons,
   RankPlate,
   SlopeBadge,
@@ -34,7 +33,7 @@ function buildGlobalEntries(ops: Operator[], subs: Submission[]) {
 }
 
 function buildSeasonEntries(ops: Operator[], subs: Submission[]) {
-  const seasonSubs = subs.filter((s) => s.season === "season-zero");
+  const seasonSubs = subs.filter((s) => s.season === "season-one");
   const xpMap = new Map<string, number>();
   const countMap = new Map<string, number>();
   for (const s of seasonSubs) {
@@ -121,6 +120,11 @@ export default async function ArenaPage({
   const seasonAll = buildSeasonEntries([...ops], subs);
   const missionAll = buildMissionEntries(missionId, ops, subs);
   const activeMission = MISSIONS.find((m) => m.id === missionId) ?? MISSIONS[0];
+  const demoQuery = showDemo ? "" : "&demo=0";
+  const scopeHref = (nextScope: "global" | "season") =>
+    `/leaderboard?scope=${nextScope}${demoQuery}`;
+  const missionHref = (id: string) =>
+    `/leaderboard?scope=mission&mission_id=${id}${demoQuery}`;
 
   // Real runs lead. Demo seed rows are reference data, hidden by default.
   const globalEntries = showDemo ? globalAll : withPos(globalAll.filter((e) => !e.seeded));
@@ -131,20 +135,7 @@ export default async function ArenaPage({
         .filter((e) => !e.seeded)
         .map((e, i) => ({ ...e, pos: e.flags.suspicious_fast ? null : i + 1 }));
 
-  const demoCount =
-    scope === "mission"
-      ? missionAll.filter((e) => e.seeded).length
-      : (scope === "global" ? globalAll : seasonAll).filter((e) => e.seeded).length;
-
   const podium = globalEntries.slice(0, 3);
-
-  const demoToggleHref = (() => {
-    const params = new URLSearchParams();
-    params.set("scope", scope);
-    if (scope === "mission") params.set("mission_id", missionId);
-    if (showDemo) params.set("demo", "0");
-    return `/leaderboard?${params.toString()}`;
-  })();
 
   return (
     <div className={styles.root}>
@@ -154,13 +145,10 @@ export default async function ArenaPage({
           <div>
             <div className={styles.kicker}>
               <span className="pulse-dot" />
-              Season One Arena
+              Season One
             </div>
             <h1 className={`display ${styles.title}`}>Leaderboard</h1>
           </div>
-          <span className={styles.headerChips}>
-            <GemmaStatus />
-          </span>
         </div>
 
         {/* Podium — global standings */}
@@ -201,30 +189,45 @@ export default async function ArenaPage({
           </div>
         )}
 
-        {/* Scope tabs */}
-        <div className={styles.tabs}>
-          <Link
-            href="/leaderboard?scope=global"
-            className={`${styles.tab} ${scope === "global" ? styles.tabActive : ""}`}
-          >
-            Global
-          </Link>
-          <Link
-            href="/leaderboard?scope=season"
-            className={`${styles.tab} ${scope === "season" ? styles.tabActive : ""}`}
-          >
-            Season One
-          </Link>
-          <div className={styles.tabSep} />
-          {MISSIONS.map((m) => (
+        {/* Scope controls */}
+        <div className={styles.boardControls}>
+          <div className={styles.scopeGroup} aria-label="Leaderboard scope">
+            <span className={`display ${styles.controlLabel}`}>Scope</span>
             <Link
-              key={m.id}
-              href={`/leaderboard?scope=mission&mission_id=${m.id}`}
-              className={`${styles.tab} ${scope === "mission" && missionId === m.id ? styles.tabActive : ""}`}
+              href={scopeHref("global")}
+              className={`${styles.controlPill} ${scope === "global" ? styles.controlActive : ""}`}
             >
-              {m.title}
+              Global
             </Link>
-          ))}
+            <Link
+              href={scopeHref("season")}
+              className={`${styles.controlPill} ${scope === "season" ? styles.controlActive : ""}`}
+            >
+              Season
+            </Link>
+          </div>
+
+          <details className={styles.missionPicker}>
+            <summary>
+              <span className={`display ${styles.controlLabel}`}>Mission</span>
+              <span className={styles.pickerValue}>
+                {scope === "mission" ? activeMission.title : "Choose mission"}
+              </span>
+              <span className={styles.pickerIcon} aria-hidden />
+            </summary>
+            <div className={styles.missionMenu}>
+              {MISSIONS.map((m) => (
+                <Link
+                  key={m.id}
+                  href={missionHref(m.id)}
+                  className={`${styles.missionChoice} ${scope === "mission" && missionId === m.id ? styles.missionChoiceActive : ""}`}
+                >
+                  <span>{m.title}</span>
+                  <span className="mono">{m.timebox_minutes}m</span>
+                </Link>
+              ))}
+            </div>
+          </details>
         </div>
 
         {/* Global / Season table */}
@@ -234,7 +237,7 @@ export default async function ArenaPage({
               <div className={styles.emptyBoard}>
                 <p>No verified runs on the board yet.</p>
                 <p className={styles.emptySub}>
-                  Fly a mission in Cursor and publish the run to claim the top
+                  Run a mission in Cursor and publish it to claim the top
                   spot.
                 </p>
                 <Link href="/qualification" className="btn btn-primary">
@@ -370,18 +373,6 @@ export default async function ArenaPage({
               )}
             </div>
           </>
-        )}
-
-        {/* Demo data toggle — reference rows stay out of the way */}
-        {demoCount > 0 && (
-          <div className={styles.demoNote}>
-            <Link href={demoToggleHref} className={styles.demoToggle}>
-              {showDemo
-                ? "Show real runs only"
-                : `Show the full field (${demoCount} reference row${demoCount === 1 ? "" : "s"})`}
-            </Link>
-            <span>Reference rows carry a demo tag and never outrank a verified run for podium credit.</span>
-          </div>
         )}
 
         {/* Legend */}

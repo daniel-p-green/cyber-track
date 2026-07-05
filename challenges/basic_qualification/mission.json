@@ -1,6 +1,6 @@
 {
   "id": "basic_qualification",
-  "season": "season-zero",
+  "season": "season-one",
   "title": "Basic Qualification",
   "event_type": "qualification",
   "difficulty": 1,
@@ -9,12 +9,12 @@
   "par_seconds": 420,
   "time_points": 5,
   "xp_base": 200,
-  "summary": "Enlist, verify your local Gemma4 field AI, catch one bad model claim, and file your first mission artifact.",
+  "summary": "Claim a callsign, verify local Gemma, catch one bad model claim, and file your first mission artifact.",
   "skills": ["Cursor cockpit basics", "local model verification", "submission workflow"],
   "answer_fields": [
     { "key": "gemma_verified", "type": "boolean", "prompt": "Did `cybertf verify-model` confirm a real local Gemma model? (true/false)" },
     { "key": "relay_station_count", "type": "string", "prompt": "How many active relay stations does the HALCYON grid roster list?" },
-    { "key": "model_claim_verdict", "type": "string", "prompt": "Is the archived field-AI advisory's claim about the grid true or false?" },
+    { "key": "model_claim_verdict", "type": "string", "prompt": "Is the archived model advisory's claim about the grid true or false?" },
     { "key": "claim_correction", "type": "string", "prompt": "Which sector actually hosts the standby relay?" },
     { "key": "verification_note", "type": "string", "prompt": "2-3 sentences: what did the advisory get wrong, and how did you verify it?" },
     { "key": "evidence", "type": "list", "prompt": "Workspace file paths that support your answers." }
@@ -27,7 +27,7 @@
       "value": true,
       "points": 10,
       "dimension": "tool_reliability",
-      "label": "Local field AI verified with cybertf verify-model"
+      "label": "Local Gemma verified with cybertf verify-model"
     },
     {
       "id": "relay_station_count",
@@ -52,7 +52,7 @@
       "sha256": "252e10a674bfbd85663d179de9495d5abee46ed04659b4ad8956a1b197225f35",
       "points": 15,
       "dimension": "hallucination_resistance",
-      "label": "Bad field-AI advisory correctly identified as false"
+      "label": "Bad model advisory correctly identified as false"
     },
     {
       "id": "claim_correction",
@@ -83,7 +83,7 @@
       "min_asks": 1,
       "points": 10,
       "dimension": "prompt_discipline",
-      "label": "Consulted the local field AI at least once"
+      "label": "Consulted local Gemma at least once"
     },
     {
       "id": "verification_note",

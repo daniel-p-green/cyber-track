@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
   const submission: Submission = {
     run_id,
     mission_id,
-    season: (season as "season-zero") ?? "season-zero",
+    season: (season as "season-one") ?? "season-one",
     callsign,
     total: totalPoints,
     max_total: maxPoints,
